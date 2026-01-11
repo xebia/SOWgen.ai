@@ -239,7 +239,7 @@ export function generatePrintableHTML(sow: SOW): string {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-size: 9pt;
+          font-size: 8.5pt;
           color: oklch(0.35 0.18 295);
           padding-top: 8pt;
           border-top: 1px solid oklch(0.35 0.18 295 / 0.2);
@@ -256,6 +256,23 @@ export function generatePrintableHTML(sow: SOW): string {
           height: 20pt;
           width: auto;
           opacity: 0.7;
+        }
+
+        .page-footer-center {
+          display: flex;
+          align-items: center;
+          gap: 4pt;
+          font-weight: 600;
+          font-size: 8pt;
+          opacity: 0.8;
+        }
+
+        .page-footer-center .doc-id {
+          font-family: 'JetBrains Mono', monospace;
+          background: oklch(0.35 0.18 295 / 0.08);
+          padding: 2pt 6pt;
+          border-radius: 3pt;
+          letter-spacing: 0.5pt;
         }
 
         .page-footer-right {
@@ -582,6 +599,10 @@ export function generatePrintableHTML(sow: SOW): string {
         <div class="page-footer-left">
           <img src="${xebiaLogo}" alt="Xebia" />
           <span style="font-weight: 500;">Xebia SOWGen Platform</span>
+        </div>
+        <div class="page-footer-center">
+          <span>Doc ID:</span>
+          <span class="doc-id">${sow.id}</span>
         </div>
         <div class="page-footer-right"></div>
       </div>
