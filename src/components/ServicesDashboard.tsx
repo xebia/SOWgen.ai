@@ -26,7 +26,9 @@ import {
   Cloud,
   GoogleLogo,
   WindowsLogo,
-  Cube
+  Cube,
+  FunnelSimple,
+  X
 } from '@phosphor-icons/react'
 import { GitHubLogo } from '@/components/GitHubLogo'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
@@ -95,8 +97,36 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
   const [searchQuery, setSearchQuery] = useState('')
   const [filterPlatform, setFilterPlatform] = useState<string>('all')
   const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [filterCategory, setFilterCategory] = useState<string>('all')
   const [selectedService, setSelectedService] = useState<ServicePlatform | null>(null)
   const [showSOWOptions, setShowSOWOptions] = useState(false)
+
+  const platformCategories = {
+    'version-control': ['github', 'gitlab', 'bitbucket', 'azure-devops', 'tfs', 'svn', 'perforce', 'mercurial'],
+    'cloud': ['aws', 'gcp', 'azure'],
+    'infrastructure': ['terraform']
+  }
+
+  const getCategoryForPlatform = (platformId: ServicePlatform): string => {
+    for (const [category, platforms] of Object.entries(platformCategories)) {
+      if (platforms.includes(platformId)) {
+        return category
+      }
+    }
+    return 'other'
+  }
+
+  const filteredServices = useMemo(() => {
+    return services.filter(service => {
+      const matchesSearch = 
+        service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase())
+      
+      const matchesCategory = filterCategory === 'all' || getCategoryForPlatform(service.id) === filterCategory
+      
+      return matchesSearch && matchesCategory
+    })
+  }, [services, searchQuery, filterCategory])
 
   const filteredActivities = useMemo(() => {
     return activities.filter(activity => {
@@ -110,6 +140,13 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
       return matchesSearch && matchesPlatform && matchesStatus
     })
   }, [activities, searchQuery, filterPlatform, filterStatus])
+
+  const hasActiveFilters = searchQuery !== '' || filterCategory !== 'all'
+
+  const clearFilters = () => {
+    setSearchQuery('')
+    setFilterCategory('all')
+  }
 
   const getHealthBadge = (status: PlatformService['healthStatus']) => {
     const config = {
@@ -392,7 +429,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
   return (
     <div className="space-y-8">
       <div className="sticky top-[73px] z-20 bg-background/95 backdrop-blur-md border-b pb-4 -mx-6 px-6 -mt-8 pt-6 mb-6 shadow-sm">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold tracking-tight mb-1">Platform Services</h2>
             <p className="text-sm text-muted-foreground">Select a platform to generate your SOW</p>
@@ -402,128 +439,234 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             <span>Powered by Xebia</span>
           </div>
         </div>
+        
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <MagnifyingGlass 
+              size={18} 
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" 
+              weight="bold"
+            />
+            <Input
+              id="search-platforms"
+              placeholder="Search platforms..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10 h-11 border-2 focus-visible:ring-2 focus-visible:ring-primary/20 transition-all duration-200"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted"
+                onClick={() => setSearchQuery('')}
+              >
+                <X size={16} />
+              </Button>
+            )}
+          </div>
+          
+          <div className="flex gap-3">
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger id="filter-category" className="w-[180px] h-11 border-2 focus:ring-2 focus:ring-primary/20">
+                <div className="flex items-center gap-2">
+                  <FunnelSimple size={16} weight="bold" />
+                  <SelectValue placeholder="Category" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="version-control">Version Control</SelectItem>
+                <SelectItem value="cloud">Cloud Platforms</SelectItem>
+                <SelectItem value="infrastructure">Infrastructure</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {hasActiveFilters && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="h-11 gap-2 border-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-all duration-200"
+                >
+                  <X size={16} />
+                  Clear Filters
+                </Button>
+              </motion.div>
+            )}
+          </div>
+        </div>
+
+        {hasActiveFilters && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-3 flex items-center gap-2 text-sm text-muted-foreground"
+          >
+            <span className="font-medium">
+              Showing {filteredServices.length} of {services.length} platforms
+            </span>
+          </motion.div>
+        )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-7xl">
-        {services.map((service, idx) => {
-          const Icon = platformIcons[service.id]
-          
-          return (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="min-h-[400px]"
-            >
-              <Card
-                className="cursor-pointer transition-all duration-500 hover:border-primary/60 border-2 group relative overflow-hidden h-full"
-                style={{
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = `0 20px 40px -12px ${platformColors[service.id]}40, 0 10px 20px -8px ${platformColors[service.id]}30`
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
-                }}
-                onClick={() => handleServiceClick(service.id)}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-                
-                <div 
-                  className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700"
-                  style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 12%, transparent)` }}
-                />
-                
-                <div 
-                  className="absolute bottom-0 left-0 w-24 h-24 rounded-full blur-2xl transform -translate-x-12 translate-y-12 opacity-0 group-hover:opacity-80 group-hover:scale-125 transition-all duration-700 delay-75"
-                  style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 8%, transparent)` }}
-                />
-                
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{
-                    background: `radial-gradient(circle at 50% 0%, ${platformColors[service.id]}08, transparent 70%)`
-                  }}
-                />
-                
-                <CardHeader className="pb-4 relative">
-                  <div className="flex items-start justify-between mb-4">
-                    <motion.div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden p-2"
-                      style={{ 
-                        backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
-                        borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
-                      }}
-                      whileHover={{ 
-                        scale: 1.15,
-                        rotate: [0, -5, 5, 0],
-                        transition: { duration: 0.5, ease: "easeInOut" }
-                      }}
-                    >
-                      <div 
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                          background: `radial-gradient(circle at center, ${platformColors[service.id]}20, transparent 70%)`
-                        }}
-                      />
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <PlatformLogo platform={service.id} size={44} className="object-contain relative z-10" />
-                      </motion.div>
-                    </motion.div>
-                  </div>
-                  <CardTitle className="text-2xl mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">{service.name}</CardTitle>
-                  <CardDescription className="text-base leading-relaxed group-hover:text-foreground/70 transition-colors duration-300">{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4 relative">
-                  <div className="space-y-2 mb-3">
-                    {quickActions[service.id].slice(0, 3).map((action, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center gap-2 text-xs text-muted-foreground"
-                      >
-                        <div 
-                          className="w-1 h-1 rounded-full"
-                          style={{ backgroundColor: platformColors[service.id] }}
-                        />
-                        <span>{action}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
+      <AnimatePresence mode="wait">
+        {filteredServices.length === 0 ? (
+          <motion.div
+            key="no-results"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex flex-col items-center justify-center py-16 px-4"
+          >
+            <div className="w-20 h-20 rounded-full bg-muted/50 flex items-center justify-center mb-4">
+              <MagnifyingGlass size={40} className="text-muted-foreground" weight="duotone" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">No platforms found</h3>
+            <p className="text-muted-foreground text-center max-w-md mb-6">
+              We couldn't find any platforms matching your search criteria. Try adjusting your filters or search term.
+            </p>
+            <Button onClick={clearFilters} variant="outline" className="gap-2">
+              <X size={16} />
+              Clear Filters
+            </Button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="results"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-7xl"
+          >
+            {filteredServices.map((service, idx) => {
+              const Icon = platformIcons[service.id]
+              
+              return (
+                <motion.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4, delay: idx * 0.05 }}
+                  className="min-h-[400px]"
+                  layout
+                >
+                  <Card
+                    className="cursor-pointer transition-all duration-500 hover:border-primary/60 border-2 group relative overflow-hidden h-full"
+                    style={{
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = `0 20px 40px -12px ${platformColors[service.id]}40, 0 10px 20px -8px ${platformColors[service.id]}30`
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+                    }}
+                    onClick={() => handleServiceClick(service.id)}
                   >
-                    <Button 
-                      variant="ghost" 
-                      size="lg" 
-                      className="w-full gap-2 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 relative overflow-hidden"
-                    >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                      <span className="relative z-10">Generate SOW</span>
-                      <CaretRight size={18} className="group-hover:translate-x-2 transition-transform duration-300 relative z-10" weight="bold" />
-                    </Button>
-                  </motion.div>
-                </CardContent>
-                
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/0 to-transparent group-hover:via-primary/50 transition-all duration-500"
-                  style={{
-                    background: `linear-gradient(to right, transparent, ${platformColors[service.id]}00, ${platformColors[service.id]}, ${platformColors[service.id]}00, transparent)`
-                  }}
-                />
-              </Card>
-            </motion.div>
-          )
-        })}
-      </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+                    
+                    <div 
+                      className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700"
+                      style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 12%, transparent)` }}
+                    />
+                    
+                    <div 
+                      className="absolute bottom-0 left-0 w-24 h-24 rounded-full blur-2xl transform -translate-x-12 translate-y-12 opacity-0 group-hover:opacity-80 group-hover:scale-125 transition-all duration-700 delay-75"
+                      style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 8%, transparent)` }}
+                    />
+                    
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <div 
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                      style={{
+                        background: `radial-gradient(circle at 50% 0%, ${platformColors[service.id]}08, transparent 70%)`
+                      }}
+                    />
+                    
+                    <CardHeader className="pb-4 relative">
+                      <div className="flex items-start justify-between mb-4">
+                        <motion.div
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden p-2"
+                          style={{ 
+                            backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
+                            borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
+                          }}
+                          whileHover={{ 
+                            scale: 1.15,
+                            rotate: [0, -5, 5, 0],
+                            transition: { duration: 0.5, ease: "easeInOut" }
+                          }}
+                        >
+                          <div 
+                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                            style={{
+                              background: `radial-gradient(circle at center, ${platformColors[service.id]}20, transparent 70%)`
+                            }}
+                          />
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <PlatformLogo platform={service.id} size={44} className="object-contain relative z-10" />
+                          </motion.div>
+                        </motion.div>
+                      </div>
+                      <CardTitle className="text-2xl mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">{service.name}</CardTitle>
+                      <CardDescription className="text-base leading-relaxed group-hover:text-foreground/70 transition-colors duration-300">{service.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4 relative">
+                      <div className="space-y-2 mb-3">
+                        {quickActions[service.id].slice(0, 3).map((action, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center gap-2 text-xs text-muted-foreground"
+                          >
+                            <div 
+                              className="w-1 h-1 rounded-full"
+                              style={{ backgroundColor: platformColors[service.id] }}
+                            />
+                            <span>{action}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Button 
+                          variant="ghost" 
+                          size="lg" 
+                          className="w-full gap-2 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 relative overflow-hidden"
+                        >
+                          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                          <span className="relative z-10">Generate SOW</span>
+                          <CaretRight size={18} className="group-hover:translate-x-2 transition-transform duration-300 relative z-10" weight="bold" />
+                        </Button>
+                      </motion.div>
+                    </CardContent>
+                    
+                    <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/0 to-transparent group-hover:via-primary/50 transition-all duration-500"
+                      style={{
+                        background: `linear-gradient(to right, transparent, ${platformColors[service.id]}00, ${platformColors[service.id]}, ${platformColors[service.id]}00, transparent)`
+                      }}
+                    />
+                  </Card>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Card className="max-w-4xl bg-gradient-to-br from-muted/50 to-muted/30 border-muted relative overflow-hidden">
         <div className="absolute inset-0 xebia-pattern opacity-20" />
