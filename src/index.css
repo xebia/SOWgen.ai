@@ -17,16 +17,16 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.20 0.015 280);
   
-  --primary: oklch(0.42 0.20 295);
+  --primary: oklch(0.35 0.12 295);
   --primary-foreground: oklch(1 0 0);
   
-  --secondary: oklch(0.55 0.15 295);
+  --secondary: oklch(0.45 0.10 295);
   --secondary-foreground: oklch(1 0 0);
   
   --muted: oklch(0.96 0.01 280);
   --muted-foreground: oklch(0.50 0.02 280);
   
-  --accent: oklch(0.58 0.22 295);
+  --accent: oklch(0.50 0.15 295);
   --accent-foreground: oklch(1 0 0);
   
   --destructive: oklch(0.58 0.22 25);
@@ -40,7 +40,7 @@
   
   --border: oklch(0.90 0.01 280);
   --input: oklch(0.92 0.01 280);
-  --ring: oklch(0.42 0.20 295);
+  --ring: oklch(0.35 0.12 295);
   
   --radius: 0.625rem;
 }
@@ -108,24 +108,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .xebia-gradient {
-  background: oklch(0.42 0.20 295);
+  background: oklch(0.35 0.12 295);
 }
 
 .xebia-pattern {
   background-image: 
-    repeating-linear-gradient(45deg, transparent, transparent 10px, oklch(0.42 0.20 295 / 0.03) 10px, oklch(0.42 0.20 295 / 0.03) 20px),
-    repeating-linear-gradient(-45deg, transparent, transparent 10px, oklch(0.58 0.22 295 / 0.02) 10px, oklch(0.58 0.22 295 / 0.02) 20px);
+    repeating-linear-gradient(45deg, transparent, transparent 10px, oklch(0.35 0.12 295 / 0.03) 10px, oklch(0.35 0.12 295 / 0.03) 20px),
+    repeating-linear-gradient(-45deg, transparent, transparent 10px, oklch(0.50 0.15 295 / 0.02) 10px, oklch(0.50 0.15 295 / 0.02) 20px);
 }
 
 .xebia-dots-pattern {
-  background-image: radial-gradient(circle at 2px 2px, oklch(0.42 0.20 295 / 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(circle at 2px 2px, oklch(0.35 0.12 295 / 0.08) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .xebia-grid-pattern {
   background-image: 
-    linear-gradient(oklch(0.42 0.20 295 / 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.42 0.20 295 / 0.06) 1px, transparent 1px);
+    linear-gradient(oklch(0.35 0.12 295 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.35 0.12 295 / 0.06) 1px, transparent 1px);
   background-size: 30px 30px;
 }
 
