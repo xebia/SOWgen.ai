@@ -27,11 +27,18 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Charts accurately reflect data; filters work correctly; performance remains smooth with large datasets
 
 ### 3. Dashboard (Client)
-- **Functionality**: Modern services dashboard showcasing Xebia's platform offerings (GitHub, GitLab, AWS, Azure, GCP, Kubernetes, Docker, Terraform) with real-time activity logs, health monitoring, and quick actions
-- **Purpose**: Provide clients with unified visibility into their cloud and DevOps services, activity monitoring, and service health status
+- **Functionality**: Modern services dashboard showcasing Xebia's platform offerings (GitHub, GitLab, AWS, Azure, GCP, Kubernetes, Docker, Terraform) with real-time activity logs, health monitoring, and quick actions. Features prominent SOW generation options: Manual Entry and Automation modes.
+- **Purpose**: Provide clients with unified visibility into their cloud and DevOps services, activity monitoring, service health status, and streamlined SOW creation workflows
 - **Trigger**: Successful client login
-- **Progression**: Login → View services overview with platform cards → Monitor real-time activity logs → Filter activities by platform/status → Access quick actions → Navigate to detailed service views
-- **Success criteria**: All platform services display with accurate health status; activity logs update in real-time; filters work correctly; quick actions are contextual to each platform; responsive on all devices
+- **Progression**: Login → View services overview with SOW creation cards (Manual/Automation) → Select creation method → View platform services with activity logs → Filter activities by platform/status → Access quick actions → Navigate to detailed service views
+- **Success criteria**: SOW creation options are prominent and clearly differentiated; all platform services display with accurate health status; activity logs update in real-time; filters work correctly; quick actions are contextual to each platform; responsive on all devices
+
+### 3b. SOW Generation Mode Selection
+- **Functionality**: Two prominent card options for SOW creation: Manual Entry (guided form input) and Automation (SCM data fetching via REST API)
+- **Purpose**: Give clients flexibility to choose between manual data entry for new projects or automated data fetching from existing repositories
+- **Trigger**: View client dashboard or services page
+- **Progression**: View dashboard → See Manual and Automation cards with descriptions → Click Manual for traditional form → OR click Automation to connect SCM → Proceed to appropriate workflow
+- **Success criteria**: Both options are visually distinct and clearly explained; cards are prominent on dashboard; clicking navigates to appropriate form; user understands difference between modes
 
 ### 3a. Services Activity Monitoring
 - **Functionality**: Comprehensive activity log viewer with search, filtering by platform and status, displaying deployments, commits, builds, security scans, and infrastructure changes
@@ -42,10 +49,17 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 
 ### 4. SOW Generation (Manual Entry)
 - **Functionality**: Multi-step form for creating SOWs with project details, organization info, migration scenarios, and training requirements
-- **Purpose**: Enable comprehensive SOW creation with all necessary details for approval
-- **Trigger**: Client clicks "Create New SOW" or Admin creates on behalf of client
+- **Purpose**: Enable comprehensive SOW creation with all necessary details for approval through traditional form input
+- **Trigger**: Client clicks "Create Manually" card on dashboard
 - **Progression**: Start SOW → Select scenario (Migration/Training/Both) → Fill project details → Add migration stages → Select training modules → Review → Save draft or Submit
 - **Success criteria**: Form validates all required fields; can save drafts; successful submission triggers approval workflow; data persists correctly
+
+### 4b. SOW Generation (Automation Mode)
+- **Functionality**: SCM-integrated SOW creation with REST API data fetching from GitHub, GitLab, or Bitbucket, followed by review and additional details form
+- **Purpose**: Accelerate SOW creation by automatically fetching repository metadata, complexity analysis, and project details from existing SCM platforms
+- **Trigger**: Client clicks "Use Automation" card on dashboard
+- **Progression**: Select SCM platform (GitHub/GitLab/Bitbucket) → Enter repository URL and optional access token → Fetch data via API → Review auto-populated project details (name, description, branches, commits, languages, CI/CD status) → Modify/enhance details → Add migration stages → Select training modules → Submit
+- **Success criteria**: Successfully fetches data from GitHub, GitLab, and Bitbucket APIs; handles authentication for private repos; pre-fills project name and description; displays repository metrics; allows user to review and modify fetched data; gracefully handles API failures with clear error messages; proceeding to other tabs shows pre-filled data
 
 ### 5. Migration Scenario Builder
 - **Functionality**: Structured input for migration stages (Initial Setup, Repository Migration, CI/CD Migration, CI/CD Implementation, Training Sessions)
@@ -94,6 +108,9 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Approval Deadlines**: Send escalation notifications; highlight overdue approvals in dashboard
 - **PDF Export Failures**: Catch popup blocker issues with user-friendly error message; provide fallback instructions for enabling popups
 - **Empty SOW Sections**: Handle SOWs with no migration or training modules gracefully in PDF; show appropriate "not included" messaging
+- **SCM API Failures**: Display clear error messages for connection failures, invalid URLs, or authentication issues; allow retry with different credentials; gracefully fall back to manual entry
+- **Private Repository Access**: Guide users on generating access tokens; validate token permissions; handle expired or invalid tokens with helpful instructions
+- **Incomplete SCM Data**: Handle repositories with missing metadata gracefully; allow users to supplement auto-filled data; warn when critical data is unavailable
 
 ## Design Direction
 

@@ -11,7 +11,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { SOW, User } from '@/lib/types'
 import { House, FileText, Stack, SignOut } from '@phosphor-icons/react'
 
-type View = 'dashboard' | 'services' | 'sows' | 'sow-form' | 'sow-detail'
+type View = 'dashboard' | 'services' | 'sows' | 'sow-form' | 'sow-form-automation' | 'sow-detail'
 
 function AppContent() {
   const { currentUser, setCurrentUser, sows, setSows } = useApp()
@@ -112,7 +112,11 @@ function AppContent() {
 
       <main className="container mx-auto px-6 py-8">
         {currentView === 'dashboard' && isClient && (
-          <ServicesDashboard user={currentUser} />
+          <ServicesDashboard 
+            user={currentUser} 
+            onCreateSOWManual={() => setCurrentView('sow-form')}
+            onCreateSOWAutomation={() => setCurrentView('sow-form-automation')}
+          />
         )}
 
         {currentView === 'dashboard' && isXebia && (
@@ -120,7 +124,11 @@ function AppContent() {
         )}
 
         {currentView === 'services' && isClient && (
-          <ServicesDashboard user={currentUser} />
+          <ServicesDashboard 
+            user={currentUser}
+            onCreateSOWManual={() => setCurrentView('sow-form')}
+            onCreateSOWAutomation={() => setCurrentView('sow-form-automation')}
+          />
         )}
 
         {currentView === 'sow-form' && (
@@ -128,6 +136,15 @@ function AppContent() {
             user={currentUser}
             onSave={handleSaveSOW}
             onCancel={() => setCurrentView('dashboard')}
+          />
+        )}
+
+        {currentView === 'sow-form-automation' && (
+          <SOWForm
+            user={currentUser}
+            onSave={handleSaveSOW}
+            onCancel={() => setCurrentView('dashboard')}
+            automationMode={true}
           />
         )}
 

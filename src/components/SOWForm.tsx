@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,13 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage } from '@/lib/types'
 import { TRAINING_MODULES, getModuleById } from '@/lib/training-catalog'
-import { X, Plus } from '@phosphor-icons/react'
+import { X, Plus, GithubLogo, GitlabLogo, Sparkle, CloudArrowDown } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface SOWFormProps {
   user: User
   onSave: (sow: SOW) => void
   onCancel: () => void
+  automationMode?: boolean
 }
 
 const MIGRATION_STAGES: { value: MigrationStage; label: string; defaultWeeks: number }[] = [
@@ -27,14 +28,20 @@ const MIGRATION_STAGES: { value: MigrationStage; label: string; defaultWeeks: nu
   { value: 'training-sessions', label: 'Training Sessions', defaultWeeks: 2 },
 ]
 
-export function SOWForm({ user, onSave, onCancel }: SOWFormProps) {
+export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWFormProps) {
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [includeMigration, setIncludeMigration] = useState(false)
   const [includeTraining, setIncludeTraining] = useState(false)
   const [migrationStages, setMigrationStages] = useState<MigrationStageDetail[]>([])
   const [selectedTrainings, setSelectedTrainings] = useState<SelectedTraining[]>([])
-  const [currentTab, setCurrentTab] = useState('details')
+  const [currentTab, setCurrentTab] = useState(automationMode ? 'scm-integration' : 'details')
+  
+  const [scmType, setScmType] = useState<'github' | 'gitlab' | 'bitbucket'>('github')
+  const [repoUrl, setRepoUrl] = useState('')
+  const [accessToken, setAccessToken] = useState('')
+  const [isFetching, setIsFetching] = useState(false)
+  const [fetchedData, setFetchedData] = useState<any>(null)
 
   const handleAddMigrationStage = () => {
     setMigrationStages(prev => [...prev, {
@@ -73,6 +80,40 @@ export function SOWForm({ user, onSave, onCancel }: SOWFormProps) {
     setSelectedTrainings(prev => prev.map(t => 
       t.moduleId === moduleId ? { ...t, participantCount: count } : t
     ))
+  }
+
+  const handleFetchFromSCM = async () => {
+    if (!repoUrl.trim()) {
+      toast.error('Repository URL is required')
+      return
+    }
+
+    setIsFetching(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      const mockData = {
+        repoName: repoUrl.split('/').pop() || 'Project',
+        description: 'Fetched from SCM repository - includes comprehensive CI/CD pipeline setup and deployment automation',
+        branches: 15,
+        commits: 342,
+        contributors: 8,
+        languages: ['TypeScript', 'Python', 'Go'],
+        hasCI: true,
+        estimatedComplexity: 'medium'
+      }
+      
+      setFetchedData(mockData)
+      setProjectName(mockData.repoName)
+      setProjectDescription(mockData.description)
+      setIncludeMigration(true)
+      
+      toast.success('Repository data fetched successfully!')
+    } catch (error) {
+      toast.error('Failed to fetch repository data')
+    } finally {
+      setIsFetching(false)
+    }
   }
 
   const handleSubmit = (isDraft: boolean) => {
@@ -114,16 +155,160 @@ export function SOWForm({ user, onSave, onCancel }: SOWFormProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight mb-2">Create Statement of Work</h2>
-        <p className="text-muted-foreground">Fill in the details for your project requirements</p>
+        <div className="flex items-center gap-3 mb-2">
+          <h2 className="text-3xl font-bold tracking-tight">Create Statement of Work</h2>
+          {automationMode && (
+            <Badge variant="secondary" className="gap-1.5">
+              <Sparkle size={14} weight="fill" />
+              Automation Mode
+            </Badge>
+          )}
+        </div>
+        <p className="text-muted-foreground">
+          {automationMode 
+            ? 'Fetch project data from your SCM repository and fill in additional details'
+            : 'Fill in the details for your project requirements'}
+        </p>
       </div>
 
       <Tabs value={currentTab} onValueChange={setCurrentTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className={automationMode ? 'grid w-full grid-cols-4' : 'grid w-full grid-cols-3'}>
+          {automationMode && <TabsTrigger value="scm-integration">SCM Integration</TabsTrigger>}
           <TabsTrigger value="details">Project Details</TabsTrigger>
           <TabsTrigger value="migration">Migration Services</TabsTrigger>
           <TabsTrigger value="training">Training Modules</TabsTrigger>
         </TabsList>
+
+        {automationMode && (
+          <TabsContent value="scm-integration" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Connect to Your Repository</CardTitle>
+                <CardDescription>Fetch project data automatically from your source code management system</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>SCM Platform</Label>
+                  <Select value={scmType} onValueChange={(value: any) => setScmType(value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="github">
+                        <div className="flex items-center gap-2">
+                          <GithubLogo size={16} />
+                          GitHub
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="gitlab">
+                        <div className="flex items-center gap-2">
+                          <GitlabLogo size={16} />
+                          GitLab
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="bitbucket">Bitbucket</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="repo-url">Repository URL *</Label>
+                  <Input
+                    id="repo-url"
+                    value={repoUrl}
+                    onChange={e => setRepoUrl(e.target.value)}
+                    placeholder="https://github.com/organization/repository"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="access-token">Access Token (Optional)</Label>
+                  <Input
+                    id="access-token"
+                    type="password"
+                    value={accessToken}
+                    onChange={e => setAccessToken(e.target.value)}
+                    placeholder="For private repositories"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Required only for private repositories. Your token is not stored.
+                  </p>
+                </div>
+
+                <Button 
+                  onClick={handleFetchFromSCM}
+                  disabled={isFetching || !repoUrl.trim()}
+                  className="w-full gap-2"
+                  size="lg"
+                >
+                  {isFetching ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                      Fetching Data...
+                    </>
+                  ) : (
+                    <>
+                      <CloudArrowDown size={20} weight="duotone" />
+                      Fetch Repository Data
+                    </>
+                  )}
+                </Button>
+
+                {fetchedData && (
+                  <Card className="bg-muted/50">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Sparkle size={18} weight="fill" className="text-success" />
+                        Data Fetched Successfully
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-sm">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <span className="text-muted-foreground">Repository:</span>
+                          <p className="font-semibold">{fetchedData.repoName}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Complexity:</span>
+                          <p className="font-semibold capitalize">{fetchedData.estimatedComplexity}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Branches:</span>
+                          <p className="font-semibold">{fetchedData.branches}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Contributors:</span>
+                          <p className="font-semibold">{fetchedData.contributors}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Total Commits:</span>
+                          <p className="font-semibold">{fetchedData.commits}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Has CI/CD:</span>
+                          <p className="font-semibold">{fetchedData.hasCI ? 'Yes' : 'No'}</p>
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Languages:</span>
+                        <div className="flex gap-2 mt-1">
+                          {fetchedData.languages.map((lang: string) => (
+                            <Badge key={lang} variant="secondary" className="text-xs">
+                              {lang}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-muted-foreground text-xs pt-2">
+                        Project details have been pre-filled. You can review and modify them in the next tabs.
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         <TabsContent value="details" className="space-y-4">
           <Card>

@@ -21,12 +21,17 @@ import {
   CloudArrowUp,
   Article,
   Rocket,
-  CaretRight
+  CaretRight,
+  PencilSimple,
+  GitBranch,
+  Sparkle
 } from '@phosphor-icons/react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface ServicesDashboardProps {
   user: User
+  onCreateSOWManual?: () => void
+  onCreateSOWAutomation?: () => void
 }
 
 const platformIcons: Record<ServicePlatform, any> = {
@@ -69,7 +74,7 @@ const quickActions: Record<ServicePlatform, string[]> = {
   terraform: ['Plan', 'Apply', 'View State']
 }
 
-export function ServicesDashboard({ user }: ServicesDashboardProps) {
+export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomation }: ServicesDashboardProps) {
   const [services] = useState<PlatformService[]>(getPlatformServices())
   const [activities] = useState<ServiceActivity[]>(generateAllPlatformActivities(15))
   const [searchQuery, setSearchQuery] = useState('')
@@ -108,10 +113,101 @@ export function ServicesDashboard({ user }: ServicesDashboardProps) {
           <h2 className="text-3xl font-bold tracking-tight mb-2">Services Dashboard</h2>
           <p className="text-muted-foreground">Manage your cloud platforms and DevOps services</p>
         </div>
-        <Button size="lg" className="gap-2">
-          <Rocket size={20} weight="duotone" />
-          Request Service
-        </Button>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-primary/50 group relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <CardHeader className="relative">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <PencilSimple size={28} weight="duotone" className="text-primary" />
+              </div>
+              <CardTitle className="text-2xl mb-2">Manual Entry</CardTitle>
+              <CardDescription className="text-base">
+                Enter project details manually to generate your Statement of Work
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="relative space-y-4">
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                  <span>Complete control over all details</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                  <span>Step-by-step guided form</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                  <span>Perfect for new projects</span>
+                </div>
+              </div>
+              <Button 
+                size="lg" 
+                className="w-full gap-2 mt-4"
+                onClick={onCreateSOWManual}
+              >
+                <PencilSimple size={20} weight="duotone" />
+                Create Manually
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-accent/50 group relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <CardHeader className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <GitBranch size={28} weight="duotone" className="text-accent" />
+                </div>
+                <Badge variant="outline" className="gap-1">
+                  <Sparkle size={14} weight="fill" />
+                  Recommended
+                </Badge>
+              </div>
+              <CardTitle className="text-2xl mb-2">Automation</CardTitle>
+              <CardDescription className="text-base">
+                Fetch data from your SCM using REST API for faster SOW generation
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="relative space-y-4">
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                  <span>Auto-fetch from GitHub, GitLab, etc.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                  <span>Save time with automated data</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                  <span>Best for existing repositories</span>
+                </div>
+              </div>
+              <Button 
+                size="lg" 
+                variant="secondary"
+                className="w-full gap-2 mt-4"
+                onClick={onCreateSOWAutomation}
+              >
+                <GitBranch size={20} weight="duotone" />
+                Use Automation
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
