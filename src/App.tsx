@@ -120,7 +120,7 @@ function AppContent() {
                 <Button
                   variant={currentView === 'dashboard' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('dashboard')}
-                  className={`gap-2 transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+                  className={`gap-2 transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}bg-amber-900 bg-orange-900 bg-gray-50 text-slate-50 text-gray-900`}
                 >
                   <House size={18} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
                   Dashboard
@@ -191,9 +191,7 @@ function AppContent() {
           </div>
         </div>
       </motion.header>
-
       <UserProfile open={showProfileDialog} onOpenChange={setShowProfileDialog} />
-
       <main className="container mx-auto px-6 py-8 relative">
         <AnimatePresence mode="wait">
           {currentView === 'dashboard' && isClient && (
@@ -339,7 +337,6 @@ function AppContent() {
           )}
         </AnimatePresence>
       </main>
-
       <motion.footer 
         className="border-t bg-card/50 backdrop-blur-sm mt-16 relative overflow-hidden"
         initial={{ opacity: 0 }}
@@ -409,10 +406,9 @@ function AppContent() {
           </motion.div>
         </div>
       </motion.footer>
-
       <Toaster />
     </div>
-  )
+  );
 }
 
 function App() {
