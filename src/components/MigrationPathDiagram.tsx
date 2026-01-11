@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { GithubLogo, GitlabLogo, GitBranch, Cloud, ArrowRight, CheckCircle, Database, GitCommit, Robot, GraduationCap } from '@phosphor-icons/react'
+import { GithubLogo, GitlabLogo, GitBranch, Cloud, ArrowRight, CheckCircle, Database, GitCommit, Robot, GraduationCap, MagnifyingGlass, ShieldCheck, FolderOpen, GearSix, Wrench, Chalkboard, BookOpen } from '@phosphor-icons/react'
 import { GitHubLogo } from '@/components/GitHubLogo'
 import { PlatformLogo } from '@/components/PlatformLogo'
 import type { ServicePlatform } from '@/lib/types'
@@ -88,28 +88,46 @@ const platformConfig: Record<ServicePlatform, { name: string; icon: any; color: 
 
 const migrationSteps = [
   {
-    id: 'analysis',
-    icon: Database,
+    id: 'discovery',
+    icon: MagnifyingGlass,
     title: 'Discovery & Analysis',
-    description: 'Repository inventory and assessment'
+    description: 'Repository assessment and planning'
   },
   {
-    id: 'migration',
-    icon: GitCommit,
-    title: 'Repository Migration',
-    description: 'Code, history, and metadata transfer'
+    id: 'setup',
+    icon: ShieldCheck,
+    title: 'Initial Setup',
+    description: 'SAML SSO and security configuration'
   },
   {
-    id: 'cicd',
-    icon: Robot,
+    id: 'repo-migration',
+    icon: FolderOpen,
+    title: 'Repo Migration',
+    description: 'Code and history transfer'
+  },
+  {
+    id: 'cicd-migration',
+    icon: GearSix,
     title: 'CI/CD Migration',
-    description: 'Pipeline conversion to GitHub Actions'
+    description: 'Pipeline conversion and testing'
+  },
+  {
+    id: 'cicd-implementation',
+    icon: Wrench,
+    title: 'CI/CD Implementation',
+    description: 'Full automation deployment'
   },
   {
     id: 'training',
-    icon: GraduationCap,
+    icon: Chalkboard,
     title: 'Team Training',
-    description: 'GitHub platform onboarding'
+    description: 'Platform onboarding sessions'
+  },
+  {
+    id: 'support',
+    icon: BookOpen,
+    title: 'Support & Documentation',
+    description: 'Ongoing assistance and guides'
   }
 ]
 
@@ -228,10 +246,10 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
 
       <Card className="bg-gradient-to-br from-muted/40 to-muted/20 border-muted">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <h4 className="font-semibold flex items-center gap-2">
               <CheckCircle size={20} weight="fill" className="text-success" />
-              Migration Stages
+              Project Deliverables
             </h4>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>Migrating to</span>
@@ -241,33 +259,62 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
               </div>
             </div>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {migrationSteps.map((step, index) => {
-              const StepIcon = step.icon
-              return (
-                <motion.div
-                  key={step.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 * index }}
-                >
-                  <div className="relative">
-                    <div className="absolute -top-2 -left-2 w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center border-2 border-background shadow-sm">
-                      <span className="text-xs font-bold text-primary">{index + 1}</span>
+          <div className="relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8">
+              {migrationSteps.map((step, index) => {
+                const StepIcon = step.icon
+                const isNotLast = index < migrationSteps.length - 1
+                return (
+                  <motion.div
+                    key={step.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                    className="relative"
+                  >
+                    <div className="relative">
+                      <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center border-2 border-background shadow-md z-10">
+                        <span className="text-xs font-bold text-primary-foreground">{index + 1}</span>
+                      </div>
+                      <Card className="h-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-primary/20 bg-background relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <CardContent className="p-5 space-y-3 relative z-10">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center shadow-sm">
+                            <StepIcon size={24} weight="duotone" className="text-primary" />
+                          </div>
+                          <h5 className="font-bold text-sm leading-tight">{step.title}</h5>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{step.description}</p>
+                        </CardContent>
+                      </Card>
                     </div>
-                    <Card className="h-full hover:shadow-md transition-shadow border-primary/20 bg-background">
-                      <CardContent className="p-4 space-y-2">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <StepIcon size={20} weight="duotone" className="text-primary" />
+                    {isNotLast && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 * index + 0.2 }}
+                        className="hidden xl:block absolute top-1/2 -right-4 -translate-y-1/2 z-20"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-background shadow-md backdrop-blur-sm">
+                          <ArrowRight size={16} weight="bold" className="text-primary" />
                         </div>
-                        <h5 className="font-semibold text-sm leading-tight">{step.title}</h5>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{step.description}</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </motion.div>
-              )
-            })}
+                      </motion.div>
+                    )}
+                    {isNotLast && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 * index + 0.2 }}
+                        className="xl:hidden flex justify-center my-2"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-background shadow-md">
+                          <ArrowRight size={16} weight="bold" className="text-primary rotate-90" />
+                        </div>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                )
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>
