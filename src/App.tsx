@@ -104,7 +104,7 @@ function AppContent() {
               <Button
                 variant={currentView === 'dashboard' ? 'default' : 'ghost'}
                 onClick={() => setCurrentView('dashboard')}
-                className="gap-2 transition-all duration-200"
+                className={`gap-2 transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
               >
                 <House size={18} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
                 Dashboard
