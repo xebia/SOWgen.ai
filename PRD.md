@@ -34,11 +34,11 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Charts accurately reflect data; filters work correctly; performance remains smooth with large datasets
 
 ### 3. Dashboard (Client)
-- **Functionality**: Modern services dashboard showcasing Xebia's SCM platform offerings (GitHub, GitLab, Bitbucket, Azure DevOps) with real-time activity logs, health monitoring, and quick actions. Features prominent SOW generation options: Manual Entry and Automation modes. When selecting a platform for SOW generation, displays an interactive animated migration path diagram illustrating the complete migration journey from source platform to GitHub.
-- **Purpose**: Provide clients with unified visibility into their SCM services, activity monitoring, service health status, and streamlined SOW creation workflows. Visual migration diagram builds confidence by showing the clear, structured path from current platform to GitHub.
+- **Functionality**: Modern services dashboard showcasing Xebia's platform offerings including SCM platforms (GitHub, GitLab, Bitbucket, Azure DevOps) and cloud services (AWS, GCP, Azure, Terraform). Features prominent SOW generation options: Manual Entry and Automation modes. When selecting a platform for SOW generation, displays an interactive animated migration path diagram illustrating the complete migration journey from source platform to target.
+- **Purpose**: Provide clients with unified visibility into available platforms and streamlined SOW creation workflows. Visual migration diagram builds confidence by showing the clear, structured path for their project.
 - **Trigger**: Successful client login
-- **Progression**: Login → View SCM platform services with activity logs → Filter activities by platform/status → Access quick actions → Select platform for SOW generation → View animated migration path diagram showing source to GitHub flow → Choose creation method (Manual/Automation) → Navigate to form
-- **Success criteria**: SOW creation options are prominent and clearly differentiated; all SCM platform services display with accurate health status; activity logs update in real-time; filters work correctly; quick actions are contextual to each platform; responsive on all devices; migration path diagram displays when platform selected showing smooth animations of source platform icon, curved animated path, GitHub target icon, and four migration stages with numbered steps
+- **Progression**: Login → View platform services → Select platform for SOW generation → View animated migration path diagram showing source to target flow → Choose creation method (Manual/Automation) → Navigate to form
+- **Success criteria**: SOW creation options are prominent and clearly differentiated; all platform services display with accurate health status; responsive on all devices; migration path diagram displays when platform selected showing smooth animations of source platform icon, curved animated path, target icon, and migration stages with numbered steps
 
 ### 3b. SOW Generation Mode Selection
 - **Functionality**: Two prominent card options for SOW creation: Manual Entry (guided form input) and Automation (SCM data fetching via REST API)
@@ -132,23 +132,23 @@ The design should evoke **enterprise-grade professionalism with modern sophistic
 
 ## Color Selection
 
-A professional yet distinctive palette aligned with Xebia's official brand identity, featuring vibrant purple tones with enhanced saturation for a modern, premium enterprise feel that feels fresh and energetic.
+A professional yet distinctive palette aligned with Xebia's official brand identity, featuring rich purple tones that convey innovation and technical excellence with a modern, premium enterprise feel.
 
-- **Primary Color**: Xebia Brand Purple `oklch(0.42 0.20 295)` - Bold and vibrant official Xebia brand color, conveying innovation, creativity, and technical excellence
+- **Primary Color**: Deep Xebia Purple `oklch(0.35 0.18 295)` - Bold and refined official Xebia brand color, conveying innovation, creativity, and technical excellence
 - **Secondary Colors**: 
-  - Rich Violet `oklch(0.55 0.15 295)` - Supporting UI elements and secondary actions
-  - Light Lavender `oklch(0.96 0.008 280)` - Card backgrounds and subtle surfaces with reduced saturation for elegance
-- **Accent Color**: Vibrant Purple `oklch(0.58 0.22 295)` - High-energy highlight for CTAs, progress indicators, and active states; emphasizes brand dynamism
+  - Medium Violet `oklch(0.50 0.14 295)` - Supporting UI elements and secondary actions
+  - Light Lavender `oklch(0.96 0.008 295)` - Card backgrounds and subtle surfaces with reduced saturation for elegance
+- **Accent Color**: Vibrant Purple `oklch(0.52 0.20 295)` - High-energy highlight for CTAs, progress indicators, and active states; emphasizes brand dynamism
 - **Success/Status Colors**:
   - Success Green `oklch(0.62 0.17 145)` - Approved items
   - Warning Gold `oklch(0.72 0.15 70)` - Pending reviews
   - Alert Red `oklch(0.58 0.22 25)` - Rejections or required actions
 
 **Foreground/Background Pairings**:
-- Background (Light `oklch(0.99 0.005 280)`): Deep Purple text `oklch(0.18 0.02 280)` - Ratio 12.1:1 ✓
-- Primary (Xebia Purple `oklch(0.42 0.20 295)`): White text `oklch(1 0 0)` - Ratio 6.2:1 ✓
-- Accent (Vibrant Purple `oklch(0.58 0.22 295)`): White text `oklch(1 0 0)` - Ratio 4.8:1 ✓
-- Secondary (Rich Violet `oklch(0.55 0.15 295)`): White text `oklch(1 0 0)` - Ratio 5.1:1 ✓
+- Background (Light `oklch(0.99 0.005 295)`): Deep Purple text `oklch(0.18 0.02 295)` - Ratio 12.1:1 ✓
+- Primary (Deep Purple `oklch(0.35 0.18 295)`): White text `oklch(1 0 0)` - Ratio 7.8:1 ✓
+- Accent (Vibrant Purple `oklch(0.52 0.20 295)`): White text `oklch(1 0 0)` - Ratio 4.8:1 ✓
+- Secondary (Medium Violet `oklch(0.50 0.14 295)`): White text `oklch(1 0 0)` - Ratio 5.1:1 ✓
 
 ## Font Selection
 
@@ -190,8 +190,8 @@ A professional yet distinctive palette aligned with Xebia's official brand ident
 
 **Visual Patterns**:
 - **Diagonal Cross-Hatch Pattern**: Repeating 45° and -45° linear gradients with primary/accent colors at low opacity (2-3%) for sophisticated backgrounds
-- **Dot Grid Pattern**: Radial gradient circles creating subtle dotted texture, 20px spacing, 8% opacity in primary brand color
-- **Grid Pattern**: Linear gradient lines creating subtle grid overlay, 30px spacing, 6% opacity for technical aesthetic
+- **Dot Grid Pattern**: Radial gradient circles creating subtle dotted texture, 20px spacing, 10% opacity in primary brand color
+- **Grid Pattern**: Linear gradient lines creating subtle grid overlay, 30px spacing, 8% opacity for technical aesthetic
 - **Wave Pattern**: Repeating radial gradients creating organic wave texture for login and hero sections
 
 **Brand Taglines & Messaging**:

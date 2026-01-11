@@ -8,25 +8,25 @@
 }
 
 :root {
-  --background: oklch(0.99 0.005 280);
-  --foreground: oklch(0.18 0.02 280);
+  --background: oklch(0.99 0.005 295);
+  --foreground: oklch(0.18 0.02 295);
   
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 280);
+  --card-foreground: oklch(0.18 0.02 295);
   
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 280);
+  --popover-foreground: oklch(0.18 0.02 295);
   
-  --primary: oklch(0.42 0.20 295);
+  --primary: oklch(0.35 0.18 295);
   --primary-foreground: oklch(1 0 0);
   
-  --secondary: oklch(0.55 0.15 295);
+  --secondary: oklch(0.50 0.14 295);
   --secondary-foreground: oklch(1 0 0);
   
-  --muted: oklch(0.96 0.008 280);
-  --muted-foreground: oklch(0.48 0.02 280);
+  --muted: oklch(0.96 0.008 295);
+  --muted-foreground: oklch(0.48 0.02 295);
   
-  --accent: oklch(0.58 0.22 295);
+  --accent: oklch(0.52 0.20 295);
   --accent-foreground: oklch(1 0 0);
   
   --destructive: oklch(0.58 0.22 25);
@@ -36,11 +36,11 @@
   --success-foreground: oklch(1 0 0);
   
   --warning: oklch(0.72 0.15 70);
-  --warning-foreground: oklch(0.18 0.02 280);
+  --warning-foreground: oklch(0.18 0.02 295);
   
-  --border: oklch(0.90 0.008 280);
-  --input: oklch(0.92 0.008 280);
-  --ring: oklch(0.42 0.20 295);
+  --border: oklch(0.90 0.008 295);
+  --input: oklch(0.92 0.008 295);
+  --ring: oklch(0.35 0.18 295);
   
   --radius: 0.625rem;
 }
@@ -108,30 +108,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .xebia-gradient {
-  background: linear-gradient(135deg, oklch(0.42 0.20 295) 0%, oklch(0.58 0.22 295) 100%);
+  background: linear-gradient(135deg, oklch(0.35 0.18 295) 0%, oklch(0.52 0.20 295) 100%);
 }
 
 .xebia-pattern {
   background-image: 
-    repeating-linear-gradient(45deg, transparent, transparent 10px, oklch(0.42 0.20 295 / 0.04) 10px, oklch(0.42 0.20 295 / 0.04) 20px),
-    repeating-linear-gradient(-45deg, transparent, transparent 10px, oklch(0.58 0.22 295 / 0.03) 10px, oklch(0.58 0.22 295 / 0.03) 20px);
+    repeating-linear-gradient(45deg, transparent, transparent 10px, oklch(0.35 0.18 295 / 0.04) 10px, oklch(0.35 0.18 295 / 0.04) 20px),
+    repeating-linear-gradient(-45deg, transparent, transparent 10px, oklch(0.52 0.20 295 / 0.03) 10px, oklch(0.52 0.20 295 / 0.03) 20px);
 }
 
 .xebia-dots-pattern {
-  background-image: radial-gradient(circle at 2px 2px, oklch(0.42 0.20 295 / 0.10) 1px, transparent 1px);
+  background-image: radial-gradient(circle at 2px 2px, oklch(0.35 0.18 295 / 0.10) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .xebia-grid-pattern {
   background-image: 
-    linear-gradient(oklch(0.42 0.20 295 / 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.42 0.20 295 / 0.08) 1px, transparent 1px);
+    linear-gradient(oklch(0.35 0.18 295 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.35 0.18 295 / 0.08) 1px, transparent 1px);
   background-size: 30px 30px;
 }
 
 .xebia-wave-pattern {
   background-image: 
-    repeating-radial-gradient(circle at 0 0, transparent 0, oklch(0.99 0.005 280) 10px, transparent 20px, transparent 40px);
+    repeating-radial-gradient(circle at 0 0, transparent 0, oklch(0.99 0.005 295) 10px, transparent 20px, transparent 40px);
   background-size: 40px 40px;
   position: relative;
 }
@@ -141,7 +141,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   inset: 0;
   background-image: 
-    repeating-radial-gradient(circle at 100% 100%, transparent 0, oklch(0.99 0.005 280) 10px, transparent 20px, transparent 40px);
+    repeating-radial-gradient(circle at 100% 100%, transparent 0, oklch(0.99 0.005 295) 10px, transparent 20px, transparent 40px);
   background-size: 40px 40px;
 }
 
@@ -180,7 +180,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-effect-dark {
-  background: oklch(0.18 0.02 280 / 0.5);
+  background: oklch(0.18 0.02 295 / 0.5);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid oklch(1 0 0 / 0.1);
@@ -212,9 +212,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glow-primary {
-  box-shadow: 0 0 20px oklch(0.42 0.20 295 / 0.3);
+  box-shadow: 0 0 20px oklch(0.35 0.18 295 / 0.3);
 }
 
 .glow-accent {
-  box-shadow: 0 0 20px oklch(0.58 0.22 295 / 0.3);
+  box-shadow: 0 0 20px oklch(0.52 0.20 295 / 0.3);
 }

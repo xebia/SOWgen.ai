@@ -25,6 +25,30 @@ const activityTemplates: Record<ServicePlatform, Array<{ type: ActivityType; tit
     { type: 'pr', titleTemplate: 'Pull request completed', descTemplate: 'Implement user authentication service' },
     { type: 'build', titleTemplate: 'Pipeline succeeded', descTemplate: 'Build and test completed successfully' },
     { type: 'deployment', titleTemplate: 'Release deployed', descTemplate: 'Release v3.2.1 to production' }
+  ],
+  aws: [
+    { type: 'infrastructure', titleTemplate: 'EC2 instances scaled', descTemplate: 'Auto-scaling group adjusted capacity' },
+    { type: 'deployment', titleTemplate: 'Lambda function deployed', descTemplate: 'Updated payment-processor function' },
+    { type: 'security', titleTemplate: 'IAM policy updated', descTemplate: 'Enhanced security permissions' },
+    { type: 'build', titleTemplate: 'CloudFormation stack updated', descTemplate: 'Infrastructure changes applied' }
+  ],
+  gcp: [
+    { type: 'infrastructure', titleTemplate: 'GKE cluster updated', descTemplate: 'Kubernetes cluster scaled to 5 nodes' },
+    { type: 'deployment', titleTemplate: 'Cloud Function deployed', descTemplate: 'Updated data-processor function' },
+    { type: 'security', titleTemplate: 'IAM binding updated', descTemplate: 'Service account permissions modified' },
+    { type: 'build', titleTemplate: 'Cloud Build completed', descTemplate: 'Container images built successfully' }
+  ],
+  azure: [
+    { type: 'infrastructure', titleTemplate: 'VM scale set updated', descTemplate: 'Scaled to 8 instances' },
+    { type: 'deployment', titleTemplate: 'App Service deployed', descTemplate: 'Web app v2.3.0 deployed' },
+    { type: 'security', titleTemplate: 'Key Vault updated', descTemplate: 'Secrets rotation completed' },
+    { type: 'build', titleTemplate: 'ARM template deployed', descTemplate: 'Infrastructure provisioned successfully' }
+  ],
+  terraform: [
+    { type: 'infrastructure', titleTemplate: 'Terraform apply completed', descTemplate: '15 resources created' },
+    { type: 'deployment', titleTemplate: 'State updated', descTemplate: 'Remote backend synchronized' },
+    { type: 'security', titleTemplate: 'Plan validated', descTemplate: 'No security issues detected' },
+    { type: 'build', titleTemplate: 'Modules updated', descTemplate: 'Infrastructure modules v3.1.0' }
   ]
 }
 
@@ -85,7 +109,7 @@ export function generateMockActivities(platform: ServicePlatform, count: number 
 }
 
 export function generateAllPlatformActivities(countPerPlatform: number = 10): ServiceActivity[] {
-  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops']
+  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops', 'aws', 'gcp', 'azure', 'terraform']
   const allActivities: ServiceActivity[] = []
   
   platforms.forEach(platform => {
@@ -102,8 +126,7 @@ export function getPlatformServices(): PlatformService[] {
       name: 'GitHub',
       description: 'Source control, CI/CD, and collaboration platform',
       enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 15,
-      activityCount: 142,
+      activityCount: 0,
       healthStatus: 'healthy'
     },
     {
@@ -111,8 +134,7 @@ export function getPlatformServices(): PlatformService[] {
       name: 'GitLab',
       description: 'DevOps platform for the entire software lifecycle',
       enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 45,
-      activityCount: 89,
+      activityCount: 0,
       healthStatus: 'healthy'
     },
     {
@@ -120,17 +142,47 @@ export function getPlatformServices(): PlatformService[] {
       name: 'Bitbucket',
       description: 'Git repository management and CI/CD with Pipelines',
       enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 30,
-      activityCount: 76,
+      activityCount: 0,
       healthStatus: 'healthy'
     },
     {
       id: 'azure-devops',
       name: 'Azure DevOps',
-      description: 'DevOps services for version control, CI/CD, and project management',
+      description: 'DevOps services for version control and CI/CD',
       enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 20,
-      activityCount: 95,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'aws',
+      name: 'Amazon Web Services',
+      description: 'Cloud computing and infrastructure services',
+      enabled: true,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'gcp',
+      name: 'Google Cloud Platform',
+      description: 'Cloud services for computing, storage, and AI',
+      enabled: true,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'azure',
+      name: 'Microsoft Azure',
+      description: 'Enterprise cloud platform and services',
+      enabled: true,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'terraform',
+      name: 'Terraform',
+      description: 'Infrastructure as Code for multi-cloud provisioning',
+      enabled: true,
+      activityCount: 0,
       healthStatus: 'healthy'
     }
   ]

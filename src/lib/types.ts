@@ -109,7 +109,7 @@ export interface DashboardStats {
   avgApprovalTimeDays: number
 }
 
-export type ServicePlatform = 'github' | 'gitlab' | 'bitbucket' | 'azure-devops'
+export type ServicePlatform = 'github' | 'gitlab' | 'bitbucket' | 'azure-devops' | 'aws' | 'gcp' | 'azure' | 'terraform'
 
 export type ActivityType = 'deployment' | 'commit' | 'pr' | 'issue' | 'build' | 'security' | 'infrastructure' | 'access'
 

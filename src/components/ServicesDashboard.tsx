@@ -22,9 +22,12 @@ import {
   CaretRight,
   PencilSimple,
   Sparkle,
-  Info
+  Info,
+  Cloud,
+  GoogleLogo,
+  WindowsLogo,
+  Cube
 } from '@phosphor-icons/react'
-import { formatDistanceToNow } from 'date-fns'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
 
 interface ServicesDashboardProps {
@@ -37,14 +40,22 @@ const platformIcons: Record<ServicePlatform, any> = {
   github: GithubLogo,
   gitlab: GitlabLogo,
   bitbucket: GitBranch,
-  'azure-devops': GitBranch
+  'azure-devops': GitBranch,
+  aws: Cloud,
+  gcp: GoogleLogo,
+  azure: WindowsLogo,
+  terraform: Cube
 }
 
 const platformColors: Record<ServicePlatform, string> = {
   github: 'oklch(0.32 0.08 270)',
   gitlab: 'oklch(0.52 0.18 30)',
   bitbucket: 'oklch(0.42 0.16 250)',
-  'azure-devops': 'oklch(0.48 0.18 240)'
+  'azure-devops': 'oklch(0.48 0.18 240)',
+  aws: 'oklch(0.52 0.15 35)',
+  gcp: 'oklch(0.52 0.20 25)',
+  azure: 'oklch(0.45 0.18 245)',
+  terraform: 'oklch(0.48 0.16 290)'
 }
 
 const statusConfig: Record<ActivityStatus, { icon: any; color: string; label: string }> = {
@@ -58,7 +69,11 @@ const quickActions: Record<ServicePlatform, string[]> = {
   github: ['View Repositories', 'Create PR', 'Run Workflow'],
   gitlab: ['View Projects', 'Create MR', 'Run Pipeline'],
   bitbucket: ['View Repositories', 'Create PR', 'Run Pipeline'],
-  'azure-devops': ['View Repositories', 'Create PR', 'Run Pipeline']
+  'azure-devops': ['View Repositories', 'Create PR', 'Run Pipeline'],
+  aws: ['View EC2 Instances', 'Deploy Lambda', 'Check CloudWatch'],
+  gcp: ['View GKE Clusters', 'Deploy Function', 'Check Logs'],
+  azure: ['View Resources', 'Deploy App Service', 'Check Monitor'],
+  terraform: ['Apply Configuration', 'View State', 'Validate Plan']
 }
 
 export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomation }: ServicesDashboardProps) {
@@ -297,8 +312,8 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
     <div className="space-y-8">
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">SCM Platforms</h2>
-          <p className="text-muted-foreground">Select a source code management platform to generate your Statement of Work</p>
+          <h2 className="text-3xl font-bold tracking-tight mb-2">Platform Services</h2>
+          <p className="text-muted-foreground">Select a platform to generate your Statement of Work</p>
           <div className="flex items-center gap-2 mt-3 text-sm font-medium text-accent">
             <Sparkle size={14} weight="fill" />
             <span>Powered by Xebia's intelligent automation</span>
@@ -342,18 +357,6 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                   <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 relative">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <span className="text-xs text-muted-foreground">Activity Count</span>
-                      <p className="text-2xl font-bold">{service.activityCount}</p>
-                    </div>
-                    {service.lastActivity && (
-                      <div className="space-y-1">
-                        <span className="text-xs text-muted-foreground">Last Active</span>
-                        <p className="text-sm font-semibold">{formatDistanceToNow(service.lastActivity, { addSuffix: true })}</p>
-                      </div>
-                    )}
-                  </div>
                   <Button variant="ghost" size="lg" className="w-full gap-2 mt-4 group-hover:bg-primary/5">
                     Generate SOW
                     <CaretRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -370,7 +373,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
         <CardHeader className="relative z-10">
           <CardTitle className="text-xl flex items-center gap-2">
             <Rocket size={24} weight="duotone" className="text-accent" />
-            Why Use Automated SCM Integration?
+            Why Use Automated Platform Integration?
           </CardTitle>
           <p className="text-sm text-muted-foreground mt-2 font-medium">
             Leveraging Xebia's expertise in DevOps and cloud transformation
@@ -383,7 +386,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
               Accuracy & Speed
             </h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Eliminate manual data entry errors by connecting directly to your repository. Fetch accurate metrics, CI/CD configurations, and codebase statistics in seconds.
+              Eliminate manual data entry errors by connecting directly to your platform. Fetch accurate metrics, configurations, and statistics in seconds.
             </p>
           </div>
           <div className="space-y-3">
