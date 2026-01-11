@@ -175,14 +175,37 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
+            whileHover={{ y: -6, scale: 1.02 }}
           >
-            <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 hover:border-primary/60 group relative overflow-hidden h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-3xl transform translate-x-20 -translate-y-20 group-hover:scale-150 transition-transform duration-500" />
+            <Card 
+              className="cursor-pointer transition-all duration-500 border-2 hover:border-primary/60 group relative overflow-hidden h-full"
+              style={{
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 20px 40px -12px oklch(0.35 0.18 295 / 0.25), 0 10px 20px -8px oklch(0.35 0.18 295 / 0.15)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-3xl transform translate-x-20 -translate-y-20 opacity-60 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/3 rounded-full blur-2xl transform -translate-x-16 translate-y-16 opacity-0 group-hover:opacity-80 group-hover:scale-125 transition-all duration-700 delay-100" />
               <CardHeader className="relative pb-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-primary/10">
-                  <PencilSimple size={32} weight="duotone" className="text-primary" />
-                </div>
+                <motion.div 
+                  className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center mb-5 shadow-sm border border-primary/10 relative overflow-hidden"
+                  whileHover={{ 
+                    scale: 1.15,
+                    rotate: [0, -8, 8, 0],
+                    transition: { duration: 0.6, ease: "easeInOut" }
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <PencilSimple size={32} weight="duotone" className="text-primary relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                </motion.div>
                 <CardTitle className="text-2xl mb-2 tracking-tight">Manual Entry</CardTitle>
                 <CardDescription className="text-base leading-relaxed">
                   Craft your SOW by entering project details through our guided form interface
@@ -215,14 +238,17 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                     <span className="text-foreground/80">Save drafts and iterate at your own pace</span>
                   </div>
                 </div>
-                <Button 
-                  size="lg" 
-                  className="w-full gap-2 mt-6 shadow-sm hover:shadow-md transition-shadow"
-                  onClick={() => onCreateSOWManual?.(selectedService)}
-                >
-                  <PencilSimple size={20} weight="duotone" />
-                  Start Manual Entry
-                </Button>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                  <Button 
+                    size="lg" 
+                    className="w-full gap-2 mt-6 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden group/btn"
+                    onClick={() => onCreateSOWManual?.(selectedService)}
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                    <PencilSimple size={20} weight="duotone" className="relative z-10" />
+                    <span className="relative z-10">Start Manual Entry</span>
+                  </Button>
+                </motion.div>
               </CardContent>
             </Card>
           </motion.div>
@@ -231,18 +257,61 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
+            whileHover={{ y: -8, scale: 1.03 }}
           >
-            <Card className="cursor-pointer hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] border-2 border-accent/40 hover:border-accent/70 group relative overflow-hidden h-full ring-2 ring-accent/20 shadow-lg">
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-accent/4 to-transparent opacity-100 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute inset-0 xebia-dots-pattern opacity-[0.15]" />
-              <div className="absolute top-0 right-0 w-48 h-48 bg-accent/15 rounded-full blur-3xl transform translate-x-20 -translate-y-20 group-hover:scale-150 transition-transform duration-500 animate-pulse-soft" />
-              <div className="absolute -top-12 -right-12 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
+            <Card 
+              className="cursor-pointer transition-all duration-500 border-2 border-accent/40 hover:border-accent/70 group relative overflow-hidden h-full ring-2 ring-accent/20 shadow-lg"
+              style={{
+                boxShadow: '0 10px 20px -5px oklch(0.52 0.20 295 / 0.15), 0 4px 6px -2px oklch(0.52 0.20 295 / 0.1)',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 25px 50px -12px oklch(0.52 0.20 295 / 0.35), 0 15px 30px -10px oklch(0.52 0.20 295 / 0.25)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 10px 20px -5px oklch(0.52 0.20 295 / 0.15), 0 4px 6px -2px oklch(0.52 0.20 295 / 0.1)'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-accent/4 to-transparent opacity-100 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 xebia-dots-pattern opacity-[0.15] group-hover:opacity-[0.25] transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-white/[0.08] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="absolute top-0 right-0 w-48 h-48 bg-accent/15 rounded-full blur-3xl transform translate-x-20 -translate-y-20 group-hover:scale-175 transition-all duration-700 animate-pulse-soft" />
+              <div className="absolute bottom-0 left-0 w-40 h-40 bg-accent/10 rounded-full blur-2xl transform -translate-x-16 translate-y-16 opacity-60 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700 delay-150" />
+              <div className="absolute -top-12 -right-12 w-32 h-32 bg-accent/10 rounded-full blur-2xl group-hover:blur-3xl group-hover:scale-125 transition-all duration-700" />
+              
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                style={{
+                  background: 'radial-gradient(circle at 50% 0%, oklch(0.52 0.20 295 / 0.12), transparent 70%)'
+                }}
+              />
+              
               <CardHeader className="relative pb-4">
                 <div className="flex items-center justify-between mb-5">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md border-2 border-accent/30 ring-2 ring-accent/10">
-                    <GitBranch size={32} weight="duotone" className="text-accent" />
-                  </div>
-                  <Badge className="gap-1.5 bg-accent/90 text-white border-accent shadow-md hover:bg-accent animate-pulse-soft">
+                  <motion.div 
+                    className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center shadow-md border-2 border-accent/30 ring-2 ring-accent/10 relative overflow-hidden"
+                    whileHover={{ 
+                      scale: 1.2,
+                      rotate: [0, 10, -10, 0],
+                      transition: { duration: 0.7, ease: "easeInOut" }
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-accent/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <motion.div
+                      animate={{
+                        rotate: [0, 360],
+                      }}
+                      transition={{
+                        duration: 20,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/20 to-transparent opacity-0 group-hover:opacity-100"
+                    />
+                    <GitBranch size={32} weight="duotone" className="text-accent relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                  </motion.div>
+                  <Badge className="gap-1.5 bg-accent/90 text-white border-accent shadow-md hover:bg-accent animate-pulse-soft group-hover:scale-110 transition-transform duration-300">
                     <Sparkle size={14} weight="fill" />
                     Recommended
                   </Badge>
@@ -279,15 +348,19 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                     <span className="text-foreground/80">Drastically reduces data entry time and errors</span>
                   </div>
                 </div>
-                <Button 
-                  size="lg" 
-                  className="w-full gap-2 mt-6 shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent text-white border-0 font-semibold text-base h-12"
-                  onClick={() => onCreateSOWAutomation?.(selectedService)}
-                >
-                  <GitBranch size={22} weight="duotone" />
-                  Connect & Auto-Import
-                  <Sparkle size={18} weight="fill" className="ml-auto animate-pulse-soft" />
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                  <Button 
+                    size="lg" 
+                    className="w-full gap-2 mt-6 shadow-lg hover:shadow-2xl transition-all duration-300 bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent text-white border-0 font-semibold text-base h-12 relative overflow-hidden group/btn"
+                    onClick={() => onCreateSOWAutomation?.(selectedService)}
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover/btn:opacity-100 animate-pulse-soft" />
+                    <GitBranch size={22} weight="duotone" className="relative z-10" />
+                    <span className="relative z-10">Connect & Auto-Import</span>
+                    <Sparkle size={18} weight="fill" className="ml-auto animate-pulse-soft relative z-10 group-hover/btn:rotate-180 transition-transform duration-500" />
+                  </Button>
+                </motion.div>
               </CardContent>
             </Card>
           </motion.div>
@@ -347,41 +420,101 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: idx * 0.1 }}
+              whileHover={{ y: -8 }}
             >
               <Card
-                className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:border-primary/60 border-2 group relative overflow-hidden h-full"
+                className="cursor-pointer transition-all duration-500 hover:border-primary/60 border-2 group relative overflow-hidden h-full"
+                style={{
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
                 onClick={() => handleServiceClick(service.id)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = `0 20px 40px -12px ${platformColors[service.id]}40, 0 10px 20px -8px ${platformColors[service.id]}30`
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+                }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-500"
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+                
+                <div 
+                  className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700"
+                  style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 12%, transparent)` }}
+                />
+                
+                <div 
+                  className="absolute bottom-0 left-0 w-24 h-24 rounded-full blur-2xl transform -translate-x-12 translate-y-12 opacity-0 group-hover:opacity-80 group-hover:scale-125 transition-all duration-700 delay-75"
                   style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 8%, transparent)` }}
                 />
+                
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  style={{
+                    background: `radial-gradient(circle at 50% 0%, ${platformColors[service.id]}08, transparent 70%)`
+                  }}
+                />
+                
                 <CardHeader className="pb-4 relative">
                   <div className="flex items-start justify-between mb-4">
-                    <div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm border relative overflow-hidden"
+                    <motion.div
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden"
                       style={{ 
                         backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
                         borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
                       }}
+                      whileHover={{ 
+                        scale: 1.15,
+                        rotate: [0, -5, 5, 0],
+                        transition: { duration: 0.5, ease: "easeInOut" }
+                      }}
                     >
-                      {service.id === 'github' ? (
-                        <GitHubLogo size={32} className="object-contain" />
-                      ) : (
-                        <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} />
-                      )}
-                    </div>
+                      <div 
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{
+                          background: `radial-gradient(circle at center, ${platformColors[service.id]}20, transparent 70%)`
+                        }}
+                      />
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {service.id === 'github' ? (
+                          <GitHubLogo size={32} className="object-contain relative z-10" />
+                        ) : (
+                          <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} className="relative z-10" />
+                        )}
+                      </motion.div>
+                    </motion.div>
                   </div>
-                  <CardTitle className="text-2xl mb-2 tracking-tight">{service.name}</CardTitle>
-                  <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
+                  <CardTitle className="text-2xl mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">{service.name}</CardTitle>
+                  <CardDescription className="text-base leading-relaxed group-hover:text-foreground/70 transition-colors duration-300">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 relative">
-                  <Button variant="ghost" size="lg" className="w-full gap-2 mt-4 group-hover:bg-primary/5">
-                    Generate SOW
-                    <CaretRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                  </Button>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Button 
+                      variant="ghost" 
+                      size="lg" 
+                      className="w-full gap-2 mt-4 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 relative overflow-hidden"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                      <span className="relative z-10">Generate SOW</span>
+                      <CaretRight size={18} className="group-hover:translate-x-2 transition-transform duration-300 relative z-10" weight="bold" />
+                    </Button>
+                  </motion.div>
                 </CardContent>
+                
+                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/0 to-transparent group-hover:via-primary/50 transition-all duration-500"
+                  style={{
+                    background: `linear-gradient(to right, transparent, ${platformColors[service.id]}00, ${platformColors[service.id]}, ${platformColors[service.id]}00, transparent)`
+                  }}
+                />
               </Card>
             </motion.div>
           )
