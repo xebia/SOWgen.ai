@@ -76,21 +76,6 @@ const statusConfig: Record<ActivityStatus, { icon: any; color: string; label: st
   warning: { icon: Warning, color: 'text-warning', label: 'Warning' }
 }
 
-const quickActions: Record<ServicePlatform, string[]> = {
-  github: ['View Repositories', 'Create PR', 'Run Workflow'],
-  gitlab: ['View Projects', 'Create MR', 'Run Pipeline'],
-  bitbucket: ['View Repositories', 'Create PR', 'Run Pipeline'],
-  'azure-devops': ['View Repositories', 'Create PR', 'Run Pipeline'],
-  tfs: ['View Source Control', 'Check In Changes', 'Create Branch'],
-  svn: ['View Repositories', 'Commit Changes', 'Create Branch'],
-  perforce: ['View Depots', 'Submit Changelist', 'Create Branch'],
-  mercurial: ['View Repositories', 'Push Changes', 'Create Branch'],
-  aws: ['View EC2 Instances', 'Deploy Lambda', 'Check CloudWatch'],
-  gcp: ['View GKE Clusters', 'Deploy Function', 'Check Logs'],
-  azure: ['View Resources', 'Deploy App Service', 'Check Monitor'],
-  terraform: ['Apply Configuration', 'View State', 'Validate Plan']
-}
-
 export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomation }: ServicesDashboardProps) {
   const [services] = useState<PlatformService[]>(getPlatformServices())
   const [activities] = useState<ServiceActivity[]>(generateAllPlatformActivities(15))
@@ -554,7 +539,6 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.4, delay: idx * 0.05 }}
-                  className="min-h-[400px]"
                   layout
                 >
                   <Card
@@ -625,20 +609,6 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                       <CardDescription className="text-base leading-relaxed group-hover:text-foreground/70 transition-colors duration-300">{service.description}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4 relative">
-                      <div className="space-y-2 mb-3">
-                        {quickActions[service.id].slice(0, 3).map((action, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-2 text-xs text-muted-foreground"
-                          >
-                            <div 
-                              className="w-1 h-1 rounded-full"
-                              style={{ backgroundColor: platformColors[service.id] }}
-                            />
-                            <span>{action}</span>
-                          </div>
-                        ))}
-                      </div>
                       <motion.div
                         whileHover={{ scale: 1.02 }}
                         transition={{ duration: 0.2 }}

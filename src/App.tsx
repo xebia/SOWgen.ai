@@ -392,7 +392,7 @@ function AppContent() {
             transition={{ duration: 0.5, delay: 0.8 }}
           >
             <p>© 2026 Xebia. All rights reserved.</p>
-            <p className="font-medium text-primary">Building Tomorrow, Today</p>
+            <p className="font-medium text-primary">Shaping Tomorrow with AI Today</p>
           </motion.div>
         </div>
       </motion.footer>
