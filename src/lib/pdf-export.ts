@@ -157,7 +157,10 @@ export function generatePrintableHTML(sow: SOW): string {
       <style>
         @page {
           size: A4;
-          margin: 20mm;
+          margin: 20mm 20mm 30mm 20mm;
+          @bottom-center {
+            content: '';
+          }
         }
 
         * {
@@ -172,6 +175,7 @@ export function generatePrintableHTML(sow: SOW): string {
           color: #1a1a1a;
           font-size: 11pt;
           position: relative;
+          counter-reset: page;
         }
 
         body::before {
@@ -225,6 +229,49 @@ export function generatePrintableHTML(sow: SOW): string {
           height: 18pt;
           width: auto;
           opacity: 0.5;
+        }
+
+        .page-footer {
+          position: fixed;
+          bottom: 10mm;
+          left: 20mm;
+          right: 20mm;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 9pt;
+          color: oklch(0.35 0.18 295);
+          padding-top: 8pt;
+          border-top: 1px solid oklch(0.35 0.18 295 / 0.2);
+          z-index: 1000;
+        }
+
+        .page-footer-left {
+          display: flex;
+          align-items: center;
+          gap: 8pt;
+        }
+
+        .page-footer-left img {
+          height: 20pt;
+          width: auto;
+          opacity: 0.7;
+        }
+
+        .page-footer-right {
+          display: flex;
+          align-items: center;
+          gap: 6pt;
+          font-weight: 600;
+        }
+
+        .page-footer-right::before {
+          content: 'Page ';
+        }
+
+        .page-footer-right::after {
+          counter-increment: page;
+          content: counter(page);
         }
 
         h1, h2, h3 {
@@ -510,6 +557,10 @@ export function generatePrintableHTML(sow: SOW): string {
           }
 
           .page-watermark {
+            display: none;
+          }
+
+          .page-footer {
             position: fixed;
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
@@ -526,6 +577,13 @@ export function generatePrintableHTML(sow: SOW): string {
       <div class="page-watermark">
         <img src="${xebiaLogo}" alt="Xebia" />
         <span>Xebia Confidential</span>
+      </div>
+      <div class="page-footer">
+        <div class="page-footer-left">
+          <img src="${xebiaLogo}" alt="Xebia" />
+          <span style="font-weight: 500;">Xebia SOWGen Platform</span>
+        </div>
+        <div class="page-footer-right"></div>
       </div>
       <div class="header">
         <div class="header-content">
