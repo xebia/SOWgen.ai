@@ -165,6 +165,50 @@ A professional yet distinctive palette aligned with Xebia's official brand ident
 
 **Animations should reinforce workflow progression and provide confident feedback**. Use subtle transitions for state changes (200ms ease), smooth page transitions with gentle slides (300ms), progress indicators with purposeful motion, and micro-interactions on buttons/cards with quick snaps (150ms). Approval state changes should feel decisive with satisfying confirmation animations. Avoid animations that delay critical workflows—speed and clarity take precedence.
 
+**Xebia Brand Animations**:
+- Float animation (3s ease-in-out infinite) for gradient backgrounds on login page
+- Gradient shift animation (8s ease infinite) for animated backgrounds with 200% background size
+- Hover scale effects on cards (1.02 scale on hover) with smooth transitions (300ms duration)
+- Pattern opacity transitions on hover (0 to 0.1 opacity) for subtle background pattern reveals
+
+## Xebia Branding Elements
+
+**Visual Patterns**:
+- **Diagonal Cross-Hatch Pattern**: Repeating 45° and -45° linear gradients with primary/accent colors at low opacity (2-3%) for sophisticated backgrounds
+- **Dot Grid Pattern**: Radial gradient circles creating subtle dotted texture, 20px spacing, 8% opacity in primary brand color
+- **Grid Pattern**: Linear gradient lines creating subtle grid overlay, 30px spacing, 6% opacity for technical aesthetic
+- **Wave Pattern**: Repeating radial gradients creating organic wave texture for login and hero sections
+
+**Brand Taglines & Messaging**:
+- Primary tagline: "Empowering Digital Excellence"
+- Login hero: "Building Tomorrow, Today"
+- Dashboard welcome: "Transforming ideas into actionable solutions"
+- Client dashboard: "Accelerate your project delivery with intelligent automation"
+- Xebia dashboard: "Driving excellence through data-driven insights"
+- SCM platforms: "Powered by Xebia's intelligent automation"
+- SOW Form: "Powered by Xebia's intelligent project analysis"
+- Footer: "Empowering digital transformation through intelligent automation and cloud excellence"
+
+**Brand Values (displayed in footer)**:
+- Innovation at Scale
+- Client-Centric Excellence
+- Continuous Learning
+
+**Platform Features (displayed in footer)**:
+- Multi-Cloud Integration
+- DevOps Automation
+- Intelligent Insights
+
+**Pattern Usage**:
+- Login page background: Grid pattern with floating gradient orbs
+- Main app background: Dot pattern at 20% opacity
+- Header: Pattern-free for clean navigation
+- Dashboard welcome banners: Diagonal cross-hatch pattern at 50% opacity with gradient backgrounds
+- Form headers: Cross-hatch pattern with gradient from primary to accent
+- SOW detail headers: Cross-hatch pattern with branded gradient
+- Card hovers: Dot pattern fade-in effect
+- Chart cards: Different patterns per card (cross-hatch, dots, grid) at 5% opacity
+
 ## Component Selection
 
 **Components**:

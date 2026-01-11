@@ -66,21 +66,25 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">All SOWs</h2>
-          <p className="text-muted-foreground">Review and manage Statement of Work submissions</p>
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
+        <div className="absolute inset-0 xebia-pattern opacity-50" />
+        <div className="flex items-center justify-between relative z-10">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight mb-2">All SOWs</h2>
+            <p className="text-muted-foreground">Review and manage Statement of Work submissions</p>
+          </div>
+          {sows.length > 0 && (
+            <Button onClick={handleExportAllToCSV} variant="outline" className="gap-2">
+              <FileCsv size={20} weight="duotone" />
+              Export to CSV
+            </Button>
+          )}
         </div>
-        {sows.length > 0 && (
-          <Button onClick={handleExportAllToCSV} variant="outline" className="gap-2">
-            <FileCsv size={20} weight="duotone" />
-            Export to CSV
-          </Button>
-        )}
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="relative overflow-hidden">
+        <div className="absolute inset-0 xebia-dots-pattern opacity-5" />
+        <CardHeader className="relative z-10">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>SOW Submissions</CardTitle>
@@ -97,7 +101,7 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           {filteredSows.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <p>No SOWs found</p>

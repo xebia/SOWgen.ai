@@ -84,45 +84,49 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="relative overflow-hidden group">
+          <div className="absolute inset-0 xebia-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
             <CardTitle className="text-sm font-medium">Total SOWs</CardTitle>
             <FileText className="text-muted-foreground" size={20} />
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="text-3xl font-bold">{stats.totalSOWs}</div>
             <p className="text-xs text-muted-foreground mt-1">All time</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
             <CardTitle className="text-sm font-medium">Approved</CardTitle>
             <CheckCircle className="text-success" size={20} weight="fill" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="text-3xl font-bold">{stats.approvedSOWs}</div>
             <p className="text-xs text-muted-foreground mt-1">{stats.approvalRate}% approval rate</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-warning/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
             <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
             <Clock className="text-warning" size={20} weight="fill" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="text-3xl font-bold">{stats.pendingSOWs}</div>
             <p className="text-xs text-muted-foreground mt-1">Awaiting approval</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="relative overflow-hidden group">
+          <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
             <CardTitle className="text-sm font-medium">Avg. Approval Time</CardTitle>
             <XCircle className="text-muted-foreground" size={20} />
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="text-3xl font-bold">{stats.avgApprovalTimeDays}</div>
             <p className="text-xs text-muted-foreground mt-1">Days</p>
           </CardContent>
@@ -130,11 +134,13 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
+        <Card className="relative overflow-hidden">
+          <div className="absolute inset-0 xebia-pattern opacity-5" />
+          <CardHeader className="relative z-10">
             <CardTitle>SOW Status Distribution</CardTitle>
+            <p className="text-xs text-muted-foreground">Real-time status tracking across all projects</p>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[300px] relative z-10">
             {stats.totalSOWs > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -163,11 +169,13 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="relative overflow-hidden">
+          <div className="absolute inset-0 xebia-dots-pattern opacity-5" />
+          <CardHeader className="relative z-10">
             <CardTitle>Monthly SOW Creation</CardTitle>
+            <p className="text-xs text-muted-foreground">Project activity trends over time</p>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[300px] relative z-10">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.90 0.005 240)" />
@@ -181,11 +189,13 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="relative overflow-hidden">
+        <div className="absolute inset-0 xebia-grid-pattern opacity-5" />
+        <CardHeader className="relative z-10">
           <CardTitle>SOWs by Client</CardTitle>
+          <p className="text-xs text-muted-foreground">Client engagement distribution and partnership overview</p>
         </CardHeader>
-        <CardContent className="h-[300px]">
+        <CardContent className="h-[300px] relative z-10">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={Object.entries(
               sows.reduce((acc, sow) => {

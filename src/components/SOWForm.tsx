@@ -245,21 +245,28 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <div className="flex items-center gap-3 mb-2">
-          <h2 className="text-3xl font-bold tracking-tight">Create Statement of Work</h2>
-          {automationMode && (
-            <Badge variant="secondary" className="gap-1.5">
-              <Sparkle size={14} weight="fill" />
-              Automation Mode
-            </Badge>
-          )}
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
+        <div className="absolute inset-0 xebia-pattern opacity-50" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-2">
+            <h2 className="text-3xl font-bold tracking-tight">Create Statement of Work</h2>
+            {automationMode && (
+              <Badge variant="secondary" className="gap-1.5">
+                <Sparkle size={14} weight="fill" />
+                Automation Mode
+              </Badge>
+            )}
+          </div>
+          <p className="text-muted-foreground mb-2">
+            {automationMode 
+              ? 'Fetch project data from your SCM repository and fill in additional details'
+              : 'Fill in the details for your project requirements'}
+          </p>
+          <div className="flex items-center gap-2 text-sm font-medium text-primary mt-3">
+            <Sparkle size={14} weight="fill" />
+            <span>Powered by Xebia's intelligent project analysis</span>
+          </div>
         </div>
-        <p className="text-muted-foreground">
-          {automationMode 
-            ? 'Fetch project data from your SCM repository and fill in additional details'
-            : 'Fill in the details for your project requirements'}
-        </p>
       </div>
 
       <Tabs value={currentTab} onValueChange={setCurrentTab}>

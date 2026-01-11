@@ -9,7 +9,7 @@ import { SOWDetail } from '@/components/SOWDetail'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
 import { SOW, User, ServicePlatform } from '@/lib/types'
-import { House, FileText, Stack, SignOut } from '@phosphor-icons/react'
+import { House, FileText, Stack, SignOut, Sparkle } from '@phosphor-icons/react'
 
 type View = 'dashboard' | 'services' | 'sows' | 'sow-form' | 'sow-form-automation' | 'sow-detail'
 
@@ -65,8 +65,9 @@ function AppContent() {
   const isXebia = currentUser.role === 'xebia-admin' || currentUser.role === 'approver'
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b bg-card backdrop-blur-sm sticky top-0 z-10 shadow-sm">
+    <div className="min-h-screen bg-background relative">
+      <div className="absolute inset-0 xebia-dots-pattern opacity-20 pointer-events-none" />
+      <header className="border-b bg-card/95 backdrop-blur-sm sticky top-0 z-10 shadow-sm relative">
         <div className="container mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
@@ -123,23 +124,49 @@ function AppContent() {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 relative">
         {currentView === 'dashboard' && isClient && (
-          <ServicesDashboard 
-            user={currentUser} 
-            onCreateSOWManual={(platform) => {
-              setSelectedPlatform(platform)
-              setCurrentView('sow-form')
-            }}
-            onCreateSOWAutomation={(platform) => {
-              setSelectedPlatform(platform)
-              setCurrentView('sow-form-automation')
-            }}
-          />
+          <>
+            <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
+              <div className="absolute inset-0 xebia-pattern opacity-50" />
+              <div className="relative z-10">
+                <h2 className="text-2xl font-bold mb-1">Welcome to Xebia SOWGen</h2>
+                <p className="text-muted-foreground mb-3">Transforming ideas into actionable solutions</p>
+                <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                  <Sparkle size={16} weight="fill" />
+                  <span>Accelerate your project delivery with intelligent automation</span>
+                </div>
+              </div>
+            </div>
+            <ServicesDashboard 
+              user={currentUser} 
+              onCreateSOWManual={(platform) => {
+                setSelectedPlatform(platform)
+                setCurrentView('sow-form')
+              }}
+              onCreateSOWAutomation={(platform) => {
+                setSelectedPlatform(platform)
+                setCurrentView('sow-form-automation')
+              }}
+            />
+          </>
         )}
 
         {currentView === 'dashboard' && isXebia && (
-          <XebiaDashboard sows={sows} />
+          <>
+            <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
+              <div className="absolute inset-0 xebia-pattern opacity-50" />
+              <div className="relative z-10">
+                <h2 className="text-2xl font-bold mb-1">Xebia SOW Dashboard</h2>
+                <p className="text-muted-foreground mb-3">Monitor, analyze, and optimize your Statement of Work pipeline</p>
+                <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                  <Sparkle size={16} weight="fill" />
+                  <span>Driving excellence through data-driven insights</span>
+                </div>
+              </div>
+            </div>
+            <XebiaDashboard sows={sows} />
+          </>
         )}
 
         {currentView === 'services' && isClient && (
@@ -198,6 +225,66 @@ function AppContent() {
           />
         )}
       </main>
+
+      <footer className="border-t bg-card/50 backdrop-blur-sm mt-16 relative overflow-hidden">
+        <div className="absolute inset-0 xebia-pattern opacity-30" />
+        <div className="container mx-auto px-6 py-8 relative z-10">
+          <div className="grid md:grid-cols-3 gap-8 mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-lg xebia-gradient shadow-md">
+                  <div className="xebia-logo-x" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-bold text-primary">Xebia</span>
+                  <span className="text-xs text-muted-foreground -mt-0.5">SOWGen</span>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Empowering digital transformation through intelligent automation and cloud excellence
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3 text-sm">Our Values</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-primary" />
+                  Innovation at Scale
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-primary" />
+                  Client-Centric Excellence
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-primary" />
+                  Continuous Learning
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3 text-sm">Platform Features</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-accent" />
+                  Multi-Cloud Integration
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-accent" />
+                  DevOps Automation
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-accent" />
+                  Intelligent Insights
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="pt-6 border-t flex items-center justify-between text-sm text-muted-foreground">
+            <p>© 2024 Xebia. All rights reserved.</p>
+            <p className="font-medium text-primary">Building Tomorrow, Today</p>
+          </div>
+        </div>
+      </footer>
 
       <Toaster />
     </div>

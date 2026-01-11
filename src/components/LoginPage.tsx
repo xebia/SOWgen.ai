@@ -64,9 +64,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+      <div className="absolute inset-0 xebia-grid-pattern opacity-30" />
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/30 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1.5s' }} />
       </div>
 
       <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-8">
@@ -87,10 +88,15 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               </div>
             </div>
             
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-              Statement of Work <br />
-              <span className="text-primary">Made Simple</span>
-            </h2>
+            <div className="space-y-2">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+                Statement of Work <br />
+                <span className="text-primary">Made Simple</span>
+              </h2>
+              <p className="text-base font-medium text-accent/80 tracking-wide uppercase">
+                Empowering Digital Excellence
+              </p>
+            </div>
             
             <p className="text-lg sm:text-xl text-foreground/70 max-w-xl">
               Your unified platform for cloud services, DevOps excellence, and intelligent Statement of Work management

@@ -310,6 +310,10 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
         <div>
           <h2 className="text-3xl font-bold tracking-tight mb-2">SCM Platforms</h2>
           <p className="text-muted-foreground">Select a source code management platform to generate your Statement of Work</p>
+          <div className="flex items-center gap-2 mt-3 text-sm font-medium text-accent">
+            <Sparkle size={14} weight="fill" />
+            <span>Powered by Xebia's intelligent automation</span>
+          </div>
         </div>
       </div>
 
@@ -328,6 +332,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                 onClick={() => handleServiceClick(service.id)}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                 <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-500"
                   style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 8%, transparent)` }}
                 />
@@ -371,14 +376,18 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
         })}
       </div>
 
-      <Card className="max-w-4xl bg-gradient-to-br from-muted/50 to-muted/30 border-muted">
-        <CardHeader>
+      <Card className="max-w-4xl bg-gradient-to-br from-muted/50 to-muted/30 border-muted relative overflow-hidden">
+        <div className="absolute inset-0 xebia-pattern opacity-20" />
+        <CardHeader className="relative z-10">
           <CardTitle className="text-xl flex items-center gap-2">
             <Rocket size={24} weight="duotone" className="text-accent" />
             Why Use Automated SCM Integration?
           </CardTitle>
+          <p className="text-sm text-muted-foreground mt-2 font-medium">
+            Leveraging Xebia's expertise in DevOps and cloud transformation
+          </p>
         </CardHeader>
-        <CardContent className="grid md:grid-cols-2 gap-6">
+        <CardContent className="grid md:grid-cols-2 gap-6 relative z-10">
           <div className="space-y-3">
             <h4 className="font-semibold flex items-center gap-2">
               <CheckCircle size={18} weight="fill" className="text-success" />

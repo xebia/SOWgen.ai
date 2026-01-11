@@ -90,24 +90,27 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={onBack}>
-          <ArrowLeft size={20} />
-        </Button>
-        <div className="flex-1">
-          <h2 className="text-3xl font-bold tracking-tight">{sow.projectName}</h2>
-          <p className="text-muted-foreground">{sow.clientOrganization}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          {getStatusBadge(sow.status)}
-          <Button onClick={handleExportCSV} variant="outline" className="gap-2">
-            <FileCsv size={18} weight="duotone" />
-            Export CSV
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
+        <div className="absolute inset-0 xebia-pattern opacity-50" />
+        <div className="flex items-center gap-4 relative z-10">
+          <Button variant="ghost" size="icon" onClick={onBack}>
+            <ArrowLeft size={20} />
           </Button>
-          <Button onClick={handleExportPDF} variant="outline" className="gap-2">
-            <FilePdf size={18} weight="duotone" />
-            Export PDF
-          </Button>
+          <div className="flex-1">
+            <h2 className="text-3xl font-bold tracking-tight">{sow.projectName}</h2>
+            <p className="text-muted-foreground">{sow.clientOrganization}</p>
+          </div>
+          <div className="flex items-center gap-3">
+            {getStatusBadge(sow.status)}
+            <Button onClick={handleExportCSV} variant="outline" className="gap-2">
+              <FileCsv size={18} weight="duotone" />
+              Export CSV
+            </Button>
+            <Button onClick={handleExportPDF} variant="outline" className="gap-2">
+              <FilePdf size={18} weight="duotone" />
+              Export PDF
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -137,3 +137,64 @@ h1, h2, h3, h4, h5, h6 {
 .xebia-logo-x::after {
   transform: rotate(-45deg);
 }
+
+.xebia-pattern {
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 10px, oklch(0.42 0.20 295 / 0.03) 10px, oklch(0.42 0.20 295 / 0.03) 20px),
+    repeating-linear-gradient(-45deg, transparent, transparent 10px, oklch(0.58 0.22 295 / 0.02) 10px, oklch(0.58 0.22 295 / 0.02) 20px);
+}
+
+.xebia-dots-pattern {
+  background-image: radial-gradient(circle at 2px 2px, oklch(0.42 0.20 295 / 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.xebia-grid-pattern {
+  background-image: 
+    linear-gradient(oklch(0.42 0.20 295 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.42 0.20 295 / 0.06) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.xebia-wave-pattern {
+  background-image: 
+    repeating-radial-gradient(circle at 0 0, transparent 0, oklch(0.99 0.005 280) 10px, transparent 20px, transparent 40px);
+  background-size: 40px 40px;
+  position: relative;
+}
+
+.xebia-wave-pattern::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-radial-gradient(circle at 100% 100%, transparent 0, oklch(0.99 0.005 280) 10px, transparent 20px, transparent 40px);
+  background-size: 40px 40px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
