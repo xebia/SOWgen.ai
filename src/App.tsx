@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AppProvider, useApp } from '@/lib/app-context'
 import { LoginPage } from '@/components/LoginPage'
 import { XebiaDashboard } from '@/components/XebiaDashboard'
@@ -30,6 +30,10 @@ function AppContent() {
   const [selectedSOW, setSelectedSOW] = useState<SOW | null>(null)
   const [selectedPlatform, setSelectedPlatform] = useState<ServicePlatform | null>(null)
   const [showProfileDialog, setShowProfileDialog] = useState(false)
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [currentView])
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)

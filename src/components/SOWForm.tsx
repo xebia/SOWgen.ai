@@ -113,6 +113,10 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
     }
   }, [repoInventory, githubMigrationType])
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [currentTab])
+
   const handleAddMigrationStage = () => {
     setMigrationStages(prev => [...prev, {
       stage: 'initial-setup',
@@ -287,121 +291,28 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-base font-semibold">SCM Platform</Label>
-                    <Select value={scmType} onValueChange={(value: any) => setScmType(value)}>
-                      <SelectTrigger className="h-12">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="github">
-                          <div className="flex items-center gap-3 py-1">
-                            <GithubLogo size={20} weight="duotone" />
-                            <div>
-                              <div className="font-semibold">GitHub</div>
-                              <div className="text-xs text-muted-foreground">Connect to GitHub repositories</div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="gitlab">
-                          <div className="flex items-center gap-3 py-1">
-                            <GitlabLogo size={20} weight="duotone" />
-                            <div>
-                              <div className="font-semibold">GitLab</div>
-                              <div className="text-xs text-muted-foreground">Connect to GitLab projects</div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="bitbucket">
-                          <div className="flex items-center gap-3 py-1">
-                            <GitBranch size={20} weight="duotone" />
-                            <div>
-                              <div className="font-semibold">Bitbucket</div>
-                              <div className="text-xs text-muted-foreground">Connect to Bitbucket repositories</div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="azure-devops">
-                          <div className="flex items-center gap-3 py-1">
-                            <Cloud size={20} weight="duotone" />
-                            <div>
-                              <div className="font-semibold">Azure DevOps</div>
-                              <div className="text-xs text-muted-foreground">Connect to Azure Repos</div>
-                            </div>
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">SCM Platform</Label>
+                  <div className="flex items-center gap-3 p-4 border-2 rounded-lg bg-muted/30">
+                    <GithubLogo size={24} weight="duotone" className="text-primary" />
+                    <div>
+                      <div className="font-semibold text-lg">GitHub</div>
+                      <div className="text-sm text-muted-foreground">Connect to GitHub repositories</div>
+                    </div>
                   </div>
-
-                  <Card className="bg-muted/50 border-muted">
-                    <CardContent className="pt-4">
-                      <div className="text-xs text-muted-foreground space-y-1.5">
-                        <p className="font-semibold text-foreground flex items-center gap-1.5">
-                          <Info size={14} />
-                          Platform Details
-                        </p>
-                        {scmType === 'github' && (
-                          <>
-                            <p>• Uses GitHub REST API v3</p>
-                            <p>• Supports public & private repos</p>
-                            <p>• Detects GitHub Actions workflows</p>
-                          </>
-                        )}
-                        {scmType === 'gitlab' && (
-                          <>
-                            <p>• Uses GitLab API v4</p>
-                            <p>• Supports public & private projects</p>
-                            <p>• Detects GitLab CI/CD pipelines</p>
-                          </>
-                        )}
-                        {scmType === 'bitbucket' && (
-                          <>
-                            <p>• Uses Bitbucket API v2.0</p>
-                            <p>• Supports public & private repositories</p>
-                            <p>• Detects Bitbucket Pipelines</p>
-                          </>
-                        )}
-                        {scmType === 'azure-devops' && (
-                          <>
-                            <p>• Uses Azure DevOps REST API v7.0</p>
-                            <p>• Supports Azure Repos</p>
-                            <p>• Detects Azure Pipelines</p>
-                          </>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="repo-url" className="text-base font-semibold">Repository URL *</Label>
+                  <Label htmlFor="repo-url" className="text-base font-semibold">Organization / Project URL *</Label>
                   <Input
                     id="repo-url"
                     value={repoUrl}
                     onChange={e => setRepoUrl(e.target.value)}
-                    placeholder={
-                      scmType === 'github' 
-                        ? 'https://github.com/owner/repository' 
-                        : scmType === 'gitlab'
-                        ? 'https://gitlab.com/owner/project'
-                        : scmType === 'bitbucket'
-                        ? 'https://bitbucket.org/owner/repository'
-                        : 'https://dev.azure.com/organization/project/_git/repository'
-                    }
+                    placeholder="https://github.com/owner/repository"
                     className="h-12 text-base"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Enter the full URL of your repository (e.g., {
-                      scmType === 'github' 
-                        ? 'https://github.com/facebook/react' 
-                        : scmType === 'gitlab'
-                        ? 'https://gitlab.com/gitlab-org/gitlab'
-                        : scmType === 'bitbucket'
-                        ? 'https://bitbucket.org/atlassian/python-bitbucket'
-                        : 'https://dev.azure.com/myorg/myproject/_git/myrepo'
-                    })
+                    Enter the full URL of your organization or project (e.g., https://github.com/facebook/react)
                   </p>
                 </div>
 
@@ -421,43 +332,14 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                   <Alert className="bg-muted/50 border-muted">
                     <Info size={16} />
                     <AlertDescription className="text-xs space-y-2">
-                      <p className="font-semibold text-foreground">How to generate an access token:</p>
-                      {scmType === 'github' && (
-                        <ol className="list-decimal list-inside space-y-1 ml-2">
-                          <li>Go to GitHub Settings → Developer settings</li>
-                          <li>Select Personal access tokens → Tokens (classic)</li>
-                          <li>Click "Generate new token (classic)"</li>
-                          <li>Select the <code className="bg-muted px-1 rounded">repo</code> scope for full access</li>
-                          <li>Copy and paste the generated token above</li>
-                        </ol>
-                      )}
-                      {scmType === 'gitlab' && (
-                        <ol className="list-decimal list-inside space-y-1 ml-2">
-                          <li>Go to GitLab User Settings → Access Tokens</li>
-                          <li>Click "Add new token"</li>
-                          <li>Select the <code className="bg-muted px-1 rounded">read_api</code> scope</li>
-                          <li>Click "Create personal access token"</li>
-                          <li>Copy and paste the generated token above</li>
-                        </ol>
-                      )}
-                      {scmType === 'bitbucket' && (
-                        <ol className="list-decimal list-inside space-y-1 ml-2">
-                          <li>Go to Bitbucket Settings → Personal Access Tokens</li>
-                          <li>Click "Create app password"</li>
-                          <li>Select <code className="bg-muted px-1 rounded">Repositories: Read</code> permission</li>
-                          <li>Click "Create"</li>
-                          <li>Copy and paste the generated token above</li>
-                        </ol>
-                      )}
-                      {scmType === 'azure-devops' && (
-                        <ol className="list-decimal list-inside space-y-1 ml-2">
-                          <li>Go to Azure DevOps User Settings → Personal Access Tokens</li>
-                          <li>Click "New Token"</li>
-                          <li>Select <code className="bg-muted px-1 rounded">Code: Read</code> scope</li>
-                          <li>Click "Create"</li>
-                          <li>Copy and paste the generated token above</li>
-                        </ol>
-                      )}
+                      <p className="font-semibold text-foreground">How to generate a GitHub access token:</p>
+                      <ol className="list-decimal list-inside space-y-1 ml-2">
+                        <li>Go to GitHub Settings → Developer settings</li>
+                        <li>Select Personal access tokens → Tokens (classic)</li>
+                        <li>Click "Generate new token (classic)"</li>
+                        <li>Select the <code className="bg-muted px-1 rounded">repo</code> scope for full access</li>
+                        <li>Copy and paste the generated token above</li>
+                      </ol>
                       <p className="text-warning font-medium mt-2">🔒 Your token is never stored and only used for this request</p>
                     </AlertDescription>
                   </Alert>
@@ -473,18 +355,18 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                 <Button 
                   onClick={handleFetchFromSCM}
                   disabled={isFetching || !repoUrl.trim()}
-                  className="w-full h-12 gap-2 text-base shadow-md hover:shadow-lg transition-all"
+                  className="w-full h-12 gap-2 text-base shadow-md hover:shadow-lg transition-all bg-foreground text-background hover:bg-foreground/90"
                   size="lg"
                 >
                   {isFetching ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                      Fetching Repository Data...
+                      <div className="w-5 h-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                      Connecting & Auto Importing...
                     </>
                   ) : (
                     <>
                       <CloudArrowDown size={24} weight="duotone" />
-                      Fetch & Analyze Repository
+                      Connect & Auto Import
                     </>
                   )}
                 </Button>
