@@ -1,5 +1,6 @@
 import { SOW } from './types'
 import { getModuleById } from './training-catalog'
+import xebiaLogo from '@/assets/images/xebia-logo-png.webp'
 
 export function generatePrintableHTML(sow: SOW): string {
   const migrationStagesHTML = sow.includeMigration && sow.migrationStages.length > 0 
@@ -202,6 +203,23 @@ export function generatePrintableHTML(sow: SOW): string {
           margin-bottom: 32pt;
           padding-bottom: 16pt;
           border-bottom: 3px solid oklch(0.25 0.08 250);
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .header-content {
+          flex: 1;
+        }
+
+        .header-logo {
+          flex-shrink: 0;
+          margin-left: 24pt;
+        }
+
+        .header-logo img {
+          height: 50pt;
+          width: auto;
         }
 
         .status-badge {
@@ -403,6 +421,20 @@ export function generatePrintableHTML(sow: SOW): string {
           font-size: 9pt;
           color: #6b7280;
           text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8pt;
+        }
+
+        .footer-logo {
+          margin-bottom: 8pt;
+        }
+
+        .footer-logo img {
+          height: 30pt;
+          width: auto;
+          opacity: 0.7;
         }
 
         @media print {
@@ -419,9 +451,14 @@ export function generatePrintableHTML(sow: SOW): string {
     </head>
     <body>
       <div class="header">
-        <h1>${sow.projectName}</h1>
-        <p style="font-size: 12pt; color: #6b7280; margin-bottom: 12pt;">${sow.clientOrganization}</p>
-        <span class="status-badge status-${sow.status}">${sow.status.replace(/-/g, ' ')}</span>
+        <div class="header-content">
+          <h1>${sow.projectName}</h1>
+          <p style="font-size: 12pt; color: #6b7280; margin-bottom: 12pt;">${sow.clientOrganization}</p>
+          <span class="status-badge status-${sow.status}">${sow.status.replace(/-/g, ' ')}</span>
+        </div>
+        <div class="header-logo">
+          <img src="${xebiaLogo}" alt="Xebia Logo" />
+        </div>
       </div>
 
       <div class="summary-box">
@@ -495,6 +532,9 @@ export function generatePrintableHTML(sow: SOW): string {
       ${approvalHistoryHTML}
 
       <div class="footer">
+        <div class="footer-logo">
+          <img src="${xebiaLogo}" alt="Xebia Logo" />
+        </div>
         <p>Generated on ${new Date().toLocaleString()} | SOW ID: ${sow.id}</p>
         <p>© ${new Date().getFullYear()} Xebia. All rights reserved.</p>
       </div>

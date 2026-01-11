@@ -2,6 +2,14 @@ import { SOW } from './types'
 import { getModuleById } from './training-catalog'
 
 export function exportSOWsToCSV(sows: SOW[], filename: string = 'sows-export.csv') {
+  const headerInfo = [
+    'Xebia SOWGen Platform - Statement of Work Export',
+    `Generated on: ${new Date().toLocaleString()}`,
+    '© 2026 Xebia. All rights reserved.',
+    '',
+    ''
+  ]
+
   const headers = [
     'SOW ID',
     'Project Name',
@@ -103,6 +111,7 @@ export function exportSOWsToCSV(sows: SOW[], filename: string = 'sows-export.csv
   })
 
   const csvContent = [
+    ...headerInfo,
     headers.join(','),
     ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
   ].join('\n')
