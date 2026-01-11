@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage, GitHubMigrationType, RepositoryInventory, ServicePlatform } from '@/lib/types'
 import { TRAINING_MODULES, getModuleById } from '@/lib/training-catalog'
-import { X, Plus, GithubLogo, GitlabLogo, Sparkle, CloudArrowDown, CheckCircle, Info, Calculator, GraduationCap } from '@phosphor-icons/react'
+import { X, Plus, GithubLogo, GitlabLogo, GitBranch, Sparkle, CloudArrowDown, CheckCircle, Info, Calculator, GraduationCap } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { fetchRepositoryData, generateProjectDescription, type RepositoryData, type SCMPlatform } from '@/lib/scm-api'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -45,6 +45,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
   const getInitialSCMType = (): SCMPlatform => {
     if (selectedPlatform === 'github') return 'github'
     if (selectedPlatform === 'gitlab') return 'gitlab'
+    if (selectedPlatform === 'bitbucket') return 'bitbucket'
     return 'github'
   }
   
@@ -240,6 +241,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
       return {
         github: TRAINING_MODULES.filter(m => m.track === 'github'),
         gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
+        bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
         azure: TRAINING_MODULES.filter(m => m.track === 'azure'),
         gcp: TRAINING_MODULES.filter(m => m.track === 'gcp'),
         aws: TRAINING_MODULES.filter(m => m.track === 'aws'),
@@ -257,11 +259,16 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
       return {
         gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
       }
+    } else if (scmPlatform === 'bitbucket') {
+      return {
+        bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
+      }
     }
     
     return {
       github: TRAINING_MODULES.filter(m => m.track === 'github'),
       gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
+      bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
     }
   }
 
@@ -342,12 +349,12 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             </div>
                           </div>
                         </SelectItem>
-                        <SelectItem value="bitbucket" disabled>
-                          <div className="flex items-center gap-3 py-1 opacity-50">
-                            <GitlabLogo size={20} />
+                        <SelectItem value="bitbucket">
+                          <div className="flex items-center gap-3 py-1">
+                            <GitBranch size={20} weight="duotone" />
                             <div>
                               <div className="font-semibold">Bitbucket</div>
-                              <div className="text-xs text-muted-foreground">Coming soon</div>
+                              <div className="text-xs text-muted-foreground">Connect to Bitbucket repositories</div>
                             </div>
                           </div>
                         </SelectItem>
@@ -377,7 +384,11 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           </>
                         )}
                         {scmType === 'bitbucket' && (
-                          <p>• Integration coming soon</p>
+                          <>
+                            <p>• Uses Bitbucket API v2.0</p>
+                            <p>• Supports public & private repositories</p>
+                            <p>• Detects Bitbucket Pipelines</p>
+                          </>
                         )}
                       </div>
                     </CardContent>
@@ -390,11 +401,23 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                     id="repo-url"
                     value={repoUrl}
                     onChange={e => setRepoUrl(e.target.value)}
-                    placeholder={scmType === 'github' ? 'https://github.com/owner/repository' : 'https://gitlab.com/owner/project'}
+                    placeholder={
+                      scmType === 'github' 
+                        ? 'https://github.com/owner/repository' 
+                        : scmType === 'gitlab'
+                        ? 'https://gitlab.com/owner/project'
+                        : 'https://bitbucket.org/owner/repository'
+                    }
                     className="h-12 text-base"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Enter the full URL of your repository (e.g., {scmType === 'github' ? 'https://github.com/facebook/react' : 'https://gitlab.com/gitlab-org/gitlab'})
+                    Enter the full URL of your repository (e.g., {
+                      scmType === 'github' 
+                        ? 'https://github.com/facebook/react' 
+                        : scmType === 'gitlab'
+                        ? 'https://gitlab.com/gitlab-org/gitlab'
+                        : 'https://bitbucket.org/atlassian/python-bitbucket'
+                    })
                   </p>
                 </div>
 

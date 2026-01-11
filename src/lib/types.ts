@@ -11,7 +11,7 @@ export type MigrationStage =
 
 export type GitHubMigrationType = 'github-classic' | 'github-emu' | 'ghes'
 
-export type TrainingTrack = 'github' | 'gitlab' | 'azure' | 'gcp' | 'aws' | 'ai-sap'
+export type TrainingTrack = 'github' | 'gitlab' | 'bitbucket' | 'azure' | 'gcp' | 'aws' | 'ai-sap'
 
 export type TrainingLevel = 'beginner' | 'intermediate' | 'advanced'
 
@@ -109,7 +109,7 @@ export interface DashboardStats {
   avgApprovalTimeDays: number
 }
 
-export type ServicePlatform = 'github' | 'gitlab' | 'aws' | 'azure' | 'gcp' | 'kubernetes' | 'docker' | 'terraform'
+export type ServicePlatform = 'github' | 'gitlab' | 'bitbucket' | 'aws' | 'azure' | 'gcp' | 'kubernetes' | 'docker' | 'terraform'
 
 export type ActivityType = 'deployment' | 'commit' | 'pr' | 'issue' | 'build' | 'security' | 'infrastructure' | 'access'
 

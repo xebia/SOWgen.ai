@@ -14,6 +14,12 @@ const activityTemplates: Record<ServicePlatform, Array<{ type: ActivityType; tit
     { type: 'build', titleTemplate: 'CI Pipeline passed', descTemplate: 'All tests successful in staging' },
     { type: 'deployment', titleTemplate: 'Deployed to staging', descTemplate: 'Release v1.8.3' }
   ],
+  bitbucket: [
+    { type: 'commit', titleTemplate: 'Commits pushed', descTemplate: 'to develop branch in payment-service' },
+    { type: 'pr', titleTemplate: 'Pull request #34 merged', descTemplate: 'Update API authentication flow' },
+    { type: 'build', titleTemplate: 'Pipeline successful', descTemplate: 'Build and deploy completed' },
+    { type: 'deployment', titleTemplate: 'Deployed to production', descTemplate: 'Release v2.1.0' }
+  ],
   aws: [
     { type: 'deployment', titleTemplate: 'EC2 instance launched', descTemplate: 'i-0abc123 in us-east-1' },
     { type: 'infrastructure', titleTemplate: 'S3 bucket created', descTemplate: 'company-backups-prod' },
@@ -110,7 +116,7 @@ export function generateMockActivities(platform: ServicePlatform, count: number 
 }
 
 export function generateAllPlatformActivities(countPerPlatform: number = 10): ServiceActivity[] {
-  const platforms: ServicePlatform[] = ['github', 'gitlab', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'terraform']
+  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'terraform']
   const allActivities: ServiceActivity[] = []
   
   platforms.forEach(platform => {
@@ -138,6 +144,15 @@ export function getPlatformServices(): PlatformService[] {
       enabled: true,
       lastActivity: Date.now() - 1000 * 60 * 45,
       activityCount: 89,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'bitbucket',
+      name: 'Bitbucket',
+      description: 'Git repository management and CI/CD with Pipelines',
+      enabled: true,
+      lastActivity: Date.now() - 1000 * 60 * 30,
+      activityCount: 76,
       healthStatus: 'healthy'
     },
     {

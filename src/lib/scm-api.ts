@@ -59,6 +59,20 @@ export interface GitLabProject {
   }
 }
 
+export interface BitbucketRepository {
+  name: string
+  full_name: string
+  description: string | null
+  mainbranch?: {
+    name: string
+  }
+  is_private: boolean
+  created_on: string
+  updated_on: string
+  size: number
+  language: string
+}
+
 function parseRepoUrl(url: string, platform: SCMPlatform): { owner: string; repo: string } | null {
   try {
     const cleanUrl = url.trim().replace(/\.git$/, '')
@@ -68,6 +82,8 @@ function parseRepoUrl(url: string, platform: SCMPlatform): { owner: string; repo
       match = cleanUrl.match(/github\.com[:/]([^/]+)\/([^/]+)\/?$/)
     } else if (platform === 'gitlab') {
       match = cleanUrl.match(/gitlab\.com[:/]([^/]+)\/([^/]+)\/?$/)
+    } else if (platform === 'bitbucket') {
+      match = cleanUrl.match(/bitbucket\.org[:/]([^/]+)\/([^/]+)\/?$/)
     }
 
     if (match) {
@@ -398,6 +414,133 @@ async function checkGitLabCI(projectPath: string, token?: string): Promise<boole
   return false
 }
 
+async function fetchBitbucketData(
+  owner: string,
+  repo: string,
+  token?: string
+): Promise<RepositoryData> {
+  const headers: HeadersInit = {
+    'Accept': 'application/json',
+  }
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
+
+  const repoResponse = await fetch(
+    `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}`,
+    { headers }
+  )
+
+  if (!repoResponse.ok) {
+    if (repoResponse.status === 404) {
+      throw new Error('Repository not found. Check the URL or ensure you have access.')
+    }
+    if (repoResponse.status === 401) {
+      throw new Error('Invalid access token. Please check your token and try again.')
+    }
+    throw new Error(`Bitbucket API error: ${repoResponse.statusText}`)
+  }
+
+  const repoData: BitbucketRepository = await repoResponse.json()
+
+  const [branchesResponse, commitsResponse, prsResponse] = await Promise.allSettled([
+    fetch(`https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/refs/branches?pagelen=100`, {
+      headers,
+    }),
+    fetch(`https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/commits?pagelen=1`, {
+      headers,
+    }),
+    fetch(`https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests?state=OPEN`, {
+      headers,
+    }),
+  ])
+
+  let branches = 0
+  if (branchesResponse.status === 'fulfilled' && branchesResponse.value.ok) {
+    const branchesData = await branchesResponse.value.json()
+    branches = branchesData.size || branchesData.values?.length || 0
+  }
+
+  let commits = 0
+  let lastCommitDate: string | undefined
+  if (commitsResponse.status === 'fulfilled' && commitsResponse.value.ok) {
+    const commitsData = await commitsResponse.value.json()
+    commits = commitsData.size || 0
+    if (commitsData.values && commitsData.values.length > 0) {
+      lastCommitDate = commitsData.values[0].date
+    }
+  }
+
+  let openPRs = 0
+  if (prsResponse.status === 'fulfilled' && prsResponse.value.ok) {
+    const prsData = await prsResponse.value.json()
+    openPRs = prsData.size || 0
+  }
+
+  const hasCI = await checkBitbucketCI(owner, repo, token)
+
+  const languages = repoData.language ? [repoData.language] : []
+
+  const estimatedComplexity = estimateComplexity({
+    branches,
+    commits,
+    contributors: 0,
+    size: repoData.size || 0,
+    languages: languages.length,
+  })
+
+  return {
+    repoName: repoData.name,
+    fullName: repoData.full_name,
+    description: repoData.description || 'No description provided',
+    defaultBranch: repoData.mainbranch?.name || 'main',
+    branches,
+    commits,
+    contributors: 0,
+    languages,
+    hasCI,
+    topics: [],
+    visibility: repoData.is_private ? 'private' : 'public',
+    createdAt: repoData.created_on,
+    updatedAt: repoData.updated_on,
+    size: repoData.size || 0,
+    openIssues: 0,
+    openPRs,
+    stars: 0,
+    forks: 0,
+    estimatedComplexity,
+    lastCommitDate,
+    license: undefined,
+  }
+}
+
+async function checkBitbucketCI(owner: string, repo: string, token?: string): Promise<boolean> {
+  const headers: HeadersInit = {
+    'Accept': 'application/json',
+  }
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
+
+  try {
+    const pipelinesResponse = await fetch(
+      `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pipelines/?pagelen=1`,
+      { headers }
+    )
+
+    if (pipelinesResponse.ok) {
+      const pipelinesData = await pipelinesResponse.json()
+      return (pipelinesData.size || 0) > 0
+    }
+  } catch {
+    return false
+  }
+
+  return false
+}
+
 export async function fetchRepositoryData(
   url: string,
   platform: SCMPlatform,
@@ -417,7 +560,7 @@ export async function fetchRepositoryData(
     case 'gitlab':
       return await fetchGitLabData(owner, repo, token)
     case 'bitbucket':
-      throw new Error('Bitbucket integration is not yet supported. Please use manual entry.')
+      return await fetchBitbucketData(owner, repo, token)
     default:
       throw new Error(`Unsupported platform: ${platform}`)
   }

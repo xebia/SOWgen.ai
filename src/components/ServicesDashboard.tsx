@@ -38,6 +38,7 @@ interface ServicesDashboardProps {
 const platformIcons: Record<ServicePlatform, any> = {
   github: GithubLogo,
   gitlab: GitlabLogo,
+  bitbucket: GitBranch,
   aws: CloudArrowUp,
   azure: CloudArrowUp,
   gcp: CloudArrowUp,
@@ -49,6 +50,7 @@ const platformIcons: Record<ServicePlatform, any> = {
 const platformColors: Record<ServicePlatform, string> = {
   github: 'oklch(0.32 0.08 270)',
   gitlab: 'oklch(0.52 0.18 30)',
+  bitbucket: 'oklch(0.42 0.16 250)',
   aws: 'oklch(0.42 0.12 50)',
   azure: 'oklch(0.48 0.18 240)',
   gcp: 'oklch(0.58 0.14 28)',
@@ -67,6 +69,7 @@ const statusConfig: Record<ActivityStatus, { icon: any; color: string; label: st
 const quickActions: Record<ServicePlatform, string[]> = {
   github: ['View Repositories', 'Create PR', 'Run Workflow'],
   gitlab: ['View Projects', 'Create MR', 'Run Pipeline'],
+  bitbucket: ['View Repositories', 'Create PR', 'Run Pipeline'],
   aws: ['Launch Instance', 'View Costs', 'Check Logs'],
   azure: ['Deploy App', 'View Resources', 'Monitor'],
   gcp: ['Deploy Service', 'View Billing', 'Logs Explorer'],
@@ -85,7 +88,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
   const [showSOWOptions, setShowSOWOptions] = useState(false)
 
   const scmServices = useMemo(() => {
-    return services.filter(s => s.id === 'github' || s.id === 'gitlab')
+    return services.filter(s => s.id === 'github' || s.id === 'gitlab' || s.id === 'bitbucket')
   }, [services])
 
   const filteredActivities = useMemo(() => {
@@ -317,7 +320,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 max-w-4xl">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl">
         {scmServices.map((service, idx) => {
           const Icon = platformIcons[service.id]
           return (

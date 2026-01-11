@@ -182,6 +182,96 @@ export const TRAINING_MODULES: TrainingModule[] = [
     ]
   },
   {
+    id: 'bitbucket-beginner-1',
+    track: 'bitbucket',
+    level: 'beginner',
+    title: 'Bitbucket Fundamentals',
+    description: 'Introduction to version control, Bitbucket interface, and basic workflows',
+    durationHours: 4,
+    agenda: [
+      'Introduction to Git and Bitbucket',
+      'Creating repositories and commits',
+      'Basic branching strategies',
+      'Pull requests and code review basics',
+      'Bitbucket interface overview'
+    ]
+  },
+  {
+    id: 'bitbucket-intermediate-1',
+    track: 'bitbucket',
+    level: 'intermediate',
+    title: 'Advanced Bitbucket Workflows',
+    description: 'Branching strategies, code review processes, and team collaboration',
+    durationHours: 6,
+    agenda: [
+      'Advanced branching strategies',
+      'Code review best practices',
+      'Conflict resolution techniques',
+      'Bitbucket Projects and issue tracking',
+      'Team collaboration workflows'
+    ]
+  },
+  {
+    id: 'bitbucket-pipelines-beginner',
+    track: 'bitbucket',
+    level: 'beginner',
+    title: 'Bitbucket Pipelines Basics',
+    description: 'Introduction to CI/CD with Bitbucket Pipelines',
+    durationHours: 4,
+    agenda: [
+      'Understanding CI/CD concepts',
+      'Creating your first pipeline',
+      'Working with bitbucket-pipelines.yml',
+      'Basic testing and deployment',
+      'Pipeline triggers and branches'
+    ]
+  },
+  {
+    id: 'bitbucket-pipelines-advanced',
+    track: 'bitbucket',
+    level: 'advanced',
+    title: 'Advanced Bitbucket Pipelines',
+    description: 'Complex pipelines, deployment strategies, and multi-environment workflows',
+    durationHours: 8,
+    agenda: [
+      'Advanced pipeline configurations',
+      'Custom Docker images for pipelines',
+      'Multi-environment deployment strategies',
+      'Parallel steps and caching optimization',
+      'Pipeline monitoring and best practices'
+    ]
+  },
+  {
+    id: 'bitbucket-security-intermediate',
+    track: 'bitbucket',
+    level: 'intermediate',
+    title: 'Bitbucket Security & Compliance',
+    description: 'Security scanning, branch permissions, and compliance features',
+    durationHours: 6,
+    agenda: [
+      'Branch permissions and merge checks',
+      'Security scanning integration',
+      'Access control and IP allowlisting',
+      'Audit logs and compliance',
+      'Vulnerability management workflows'
+    ]
+  },
+  {
+    id: 'bitbucket-advanced-1',
+    track: 'bitbucket',
+    level: 'advanced',
+    title: 'Bitbucket Enterprise Administration',
+    description: 'Enterprise features, Data Center administration, and advanced automation',
+    durationHours: 8,
+    agenda: [
+      'Bitbucket Data Center administration',
+      'User and group management',
+      'Advanced webhooks and integrations',
+      'Disaster recovery and high availability',
+      'Enterprise-scale repository management'
+    ]
+  },
+  {
     id: 'azure-beginner-1',
     track: 'azure',
     level: 'beginner',
