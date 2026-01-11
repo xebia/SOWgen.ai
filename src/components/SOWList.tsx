@@ -133,6 +133,7 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
                   <TableHead>Organization</TableHead>
                   <TableHead>Services</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Version</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
@@ -170,6 +171,11 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
                         </div>
                       </TableCell>
                       <TableCell>{getStatusBadge(sow.status)}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="font-mono text-xs">
+                          v{sow.currentVersion || 1}
+                        </Badge>
+                      </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {new Date(sow.createdAt).toLocaleDateString()}
                       </TableCell>

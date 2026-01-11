@@ -7,6 +7,7 @@ import { exportSOWsToCSV } from '@/lib/csv-export'
 import { FileText, CheckCircle, Clock, XCircle, FileCsv } from '@phosphor-icons/react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts'
 import { toast } from 'sonner'
+import { RecentChangesWidget } from '@/components/RecentChangesWidget'
 
 interface XebiaDashboardProps {
   sows: SOW[]
@@ -282,6 +283,14 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.7 }}
+      >
+        <RecentChangesWidget sows={sows} maxItems={8} />
       </motion.div>
     </div>
   )

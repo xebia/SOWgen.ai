@@ -75,6 +75,21 @@ export interface ApprovalComment {
   action: 'comment' | 'approved' | 'rejected' | 'changes-requested'
 }
 
+export interface SOWRevision {
+  id: string
+  version: number
+  timestamp: number
+  changedBy: string
+  changedByName: string
+  changeDescription: string
+  changes: {
+    field: string
+    oldValue: any
+    newValue: any
+  }[]
+  snapshot: Omit<SOW, 'revisionHistory' | 'currentVersion'>
+}
+
 export interface SOW {
   id: string
   clientId: string
@@ -99,6 +114,9 @@ export interface SOW {
   
   estimatedValue?: number
   estimatedDuration?: number
+  
+  currentVersion: number
+  revisionHistory: SOWRevision[]
 }
 
 export interface DashboardStats {

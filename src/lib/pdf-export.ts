@@ -610,7 +610,10 @@ export function generatePrintableHTML(sow: SOW): string {
         <div class="header-content">
           <h1>${sow.projectName}</h1>
           <p style="font-size: 12pt; color: #6b7280; margin-bottom: 12pt;">${sow.clientOrganization}</p>
-          <span class="status-badge status-${sow.status}">${sow.status.replace(/-/g, ' ')}</span>
+          <div style="display: flex; gap: 8pt; align-items: center;">
+            <span class="status-badge status-${sow.status}">${sow.status.replace(/-/g, ' ')}</span>
+            <span class="badge" style="font-family: 'JetBrains Mono', monospace; background: oklch(0.35 0.18 295 / 0.1); border-color: oklch(0.35 0.18 295 / 0.3); color: oklch(0.35 0.18 295);">Version ${sow.currentVersion || 1}</span>
+          </div>
         </div>
         <div class="header-logo">
           <img src="${xebiaLogo}" alt="Xebia Logo" />
@@ -667,6 +670,10 @@ export function generatePrintableHTML(sow: SOW): string {
           <div class="metadata-item">
             <label>Created</label>
             <p>${new Date(sow.createdAt).toLocaleDateString()}</p>
+          </div>
+          <div class="metadata-item">
+            <label>Last Updated</label>
+            <p>${new Date(sow.updatedAt).toLocaleDateString()}</p>
           </div>
           ${sow.submittedAt ? `
             <div class="metadata-item">

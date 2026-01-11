@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
 import { GitHubLogo } from '@/components/GitHubLogo'
 import { PlatformLogo } from '@/components/PlatformLogo'
+import { addRevisionToSOW } from '@/lib/version-tracker'
 
 interface SOWFormProps {
   user: User
@@ -256,10 +257,19 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
       migrationStages: finalMigrationStages,
       includeTraining,
       selectedTrainings,
-      approvalHistory: []
+      approvalHistory: [],
+      currentVersion: 1,
+      revisionHistory: []
     }
 
-    onSave(sow)
+    const sowWithRevision = addRevisionToSOW(
+      sow,
+      user.id,
+      user.name,
+      isDraft ? 'Initial SOW creation (Draft)' : 'Initial SOW creation and submission'
+    )
+
+    onSave(sowWithRevision)
     toast.success(isDraft ? 'SOW saved as draft' : 'SOW submitted for approval')
   }
 

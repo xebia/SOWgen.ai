@@ -15,6 +15,8 @@ import { toast } from 'sonner'
 import { useApp } from '@/lib/app-context'
 import { GitHubLogo } from '@/components/GitHubLogo'
 import { PlatformLogo } from '@/components/PlatformLogo'
+import { SOWVersionHistory } from '@/components/SOWVersionHistory'
+import { addRevisionToSOW } from '@/lib/version-tracker'
 
 interface SOWDetailProps {
   sow: SOW
@@ -70,7 +72,15 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
       ]
     }
 
-    onUpdateSOW(updatedSOW)
+    const sowWithRevision = addRevisionToSOW(
+      updatedSOW,
+      user.id,
+      user.name,
+      `${actionLabel}: ${comment || 'No comment provided'}`,
+      sow
+    )
+
+    onUpdateSOW(sowWithRevision)
     setComment('')
     setIsSubmitting(false)
     toast.success(`SOW ${actionLabel.toLowerCase()}`)
@@ -115,11 +125,17 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
             <ArrowLeft size={20} />
           </Button>
           <div className="flex-1">
-            <h2 className="text-3xl font-bold tracking-tight">{sow.projectName}</h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-3xl font-bold tracking-tight">{sow.projectName}</h2>
+              <Badge variant="outline" className="font-mono text-xs">
+                v{sow.currentVersion}
+              </Badge>
+            </div>
             <p className="text-muted-foreground">{sow.clientOrganization}</p>
           </div>
           <div className="flex items-center gap-3">
             {getStatusBadge(sow.status)}
+            <SOWVersionHistory sow={sow} />
             <Button onClick={handleExportCSV} variant="outline" className="gap-2">
               <FileCsv size={18} weight="duotone" />
               Export CSV

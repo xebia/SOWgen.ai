@@ -1,6 +1,7 @@
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, ReactNode, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { User, SOW } from '@/lib/types'
+import { addRevisionToSOW } from './version-tracker'
 
 interface AppContextType {
   currentUser: User | null
@@ -17,6 +18,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useKV<User | null>('current-user', null)
   const [sows, setSows] = useKV<SOW[]>('sows', [])
   const [users, setUsers] = useKV<User[]>('users', [])
+
+  useEffect(() => {
+    if (sows && sows.length > 0) {
+      let needsUpdate = false
+      const updatedSows = sows.map(sow => {
+        if (sow.currentVersion === undefined || sow.revisionHistory === undefined) {
+          needsUpdate = true
+          return {
+            ...sow,
+            currentVersion: 1,
+            revisionHistory: []
+          }
+        }
+        return sow
+      })
+
+      if (needsUpdate) {
+        setSows(updatedSows)
+      }
+    }
+  }, [])
 
   return (
     <AppContext.Provider
