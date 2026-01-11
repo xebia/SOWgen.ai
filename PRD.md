@@ -1,0 +1,173 @@
+# SOWGen - Statement of Work Generation Platform
+
+A comprehensive platform for Xebia to streamline Statement of Work creation, approval workflows, and client engagement for migration and training services.
+
+**Experience Qualities**:
+1. **Professional** - The interface should convey enterprise credibility and trustworthiness, suitable for B2B engagements
+2. **Efficient** - Streamline complex workflows into intuitive, fast interactions that minimize time-to-completion
+3. **Intelligent** - Provide smart automation, contextual guidance, and data-driven insights throughout the SOW lifecycle
+
+**Complexity Level**: Complex Application (advanced functionality, likely with multiple views)
+- This application requires role-based authentication, multi-stage workflows, approval systems, data visualization dashboards, form management, and integration capabilities. It represents a full-featured enterprise application with distinct user journeys for clients and internal staff.
+
+## Essential Features
+
+### 1. Authentication & Role-Based Access
+- **Functionality**: Dual authentication system supporting external clients and internal Xebia staff with role-based permissions (Client, Xebia Admin, Approver)
+- **Purpose**: Secure access control ensuring clients only see their data while internal staff access admin features
+- **Trigger**: Landing page with role selection (Client Login / Xebia Staff Login)
+- **Progression**: Select role → Enter credentials → Verify → Route to appropriate dashboard
+- **Success criteria**: Users land on role-appropriate views; unauthorized access attempts are blocked; role permissions correctly limit feature access
+
+### 2. Dashboard (Xebia Internal)
+- **Functionality**: Analytics dashboard displaying SOW statistics with filterable charts (total SOWs, approved, pending, approval rates, timeline trends)
+- **Purpose**: Provide internal staff with real-time insights into SOW pipeline health and organizational performance
+- **Trigger**: Successful internal staff login
+- **Progression**: Login → Dashboard overview with key metrics → Filter by date/client/project → Drill down into specific SOWs
+- **Success criteria**: Charts accurately reflect data; filters work correctly; performance remains smooth with large datasets
+
+### 3. Dashboard (Client)
+- **Functionality**: Client portal showing their SOW submissions, status tracking, and access to Xebia service catalog
+- **Purpose**: Transparency for clients to monitor their SOW progress and explore available services
+- **Trigger**: Successful client login
+- **Progression**: Login → View my SOWs → Check status → Access service catalog → View training options
+- **Success criteria**: Clients only see their own data; status updates are accurate; service catalog is comprehensive and searchable
+
+### 4. SOW Generation (Manual Entry)
+- **Functionality**: Multi-step form for creating SOWs with project details, organization info, migration scenarios, and training requirements
+- **Purpose**: Enable comprehensive SOW creation with all necessary details for approval
+- **Trigger**: Client clicks "Create New SOW" or Admin creates on behalf of client
+- **Progression**: Start SOW → Select scenario (Migration/Training/Both) → Fill project details → Add migration stages → Select training modules → Review → Save draft or Submit
+- **Success criteria**: Form validates all required fields; can save drafts; successful submission triggers approval workflow; data persists correctly
+
+### 5. Migration Scenario Builder
+- **Functionality**: Structured input for migration stages (Initial Setup, Repository Migration, CI/CD Migration, CI/CD Implementation, Training Sessions)
+- **Purpose**: Capture detailed migration requirements in a standardized format
+- **Trigger**: Within SOW creation, select "Migration Services"
+- **Progression**: Select migration type → Configure stages → Specify technical details per stage → Add timeline estimates → Include in SOW
+- **Success criteria**: All migration stages can be configured; technical details are captured; estimates are calculated
+
+### 6. Training Module Selector
+- **Functionality**: Interactive catalog of training modules across tracks (GitHub, Azure, GCP, AWS, AI/SAP) and levels (Beginner, Intermediate, Advanced)
+- **Purpose**: Allow clients to select appropriate training for their team's needs
+- **Trigger**: Within SOW creation, select "Training Services" or access from service catalog
+- **Progression**: View training catalog → Filter by track/level → View module details → Select modules → Add to SOW with participant count
+- **Success criteria**: All training options are visible; descriptions are clear; selections are saved correctly; pricing is calculated
+
+### 7. Approval Workflow System
+- **Functionality**: Multi-level approval process with email notifications, commenting, and status tracking
+- **Purpose**: Ensure SOWs are reviewed and approved by appropriate stakeholders before client commitment
+- **Trigger**: Client submits SOW or Admin submits on behalf of client
+- **Progression**: Submit SOW → Assigned to approver(s) → Approver reviews → Provide feedback or approve → Notify next approver or client → Final approval
+- **Success criteria**: Approval chain executes correctly; notifications are sent; comments are captured; status updates in real-time; can handle parallel and sequential approvals
+
+### 8. Admin Panel
+- **Functionality**: Management interface for users, approvers, SOW templates, approval rules, and service catalog
+- **Purpose**: Give administrators control over system configuration and workflow management
+- **Trigger**: Admin user navigates to admin section
+- **Progression**: Access admin → Manage users/roles → Configure approval workflows → Update service catalog → Modify templates
+- **Success criteria**: All admin functions work correctly; changes reflect immediately; permissions are enforced
+
+## Edge Case Handling
+
+- **Incomplete Forms**: Auto-save drafts every 30 seconds; show validation errors inline; prevent submission until required fields complete
+- **Network Interruptions**: Persist form data locally; show offline indicator; sync when connection restored
+- **Simultaneous Edits**: Warn users when SOW is being edited by another user; implement optimistic locking
+- **Invalid Approver Assignment**: Validate approver availability; suggest alternatives if primary unavailable
+- **Large File Attachments**: Implement chunked uploads; show progress; validate file types and sizes
+- **Session Timeout**: Warn before timeout; preserve unsaved work; graceful re-authentication
+- **Missing Training Data**: Show placeholder content; allow admin to quickly add missing modules
+- **Approval Deadlines**: Send escalation notifications; highlight overdue approvals in dashboard
+
+## Design Direction
+
+The design should evoke **enterprise-grade professionalism with modern sophistication**. Think sleek SaaS platforms that balance data density with breathing room. The interface should feel powerful yet approachable—capable of handling complex workflows while remaining intuitive. Visual elements should communicate clarity, structure, and forward momentum through the approval pipeline.
+
+## Color Selection
+
+A professional yet distinctive palette combining deep navy authority with energetic accent colors for a modern enterprise feel.
+
+- **Primary Color**: Deep Navy `oklch(0.25 0.08 250)` - Conveys trustworthiness, professionalism, and stability essential for B2B enterprise software
+- **Secondary Colors**: 
+  - Cool Slate `oklch(0.45 0.02 240)` - Supporting backgrounds and secondary UI elements
+  - Light Cloud `oklch(0.96 0.005 240)` - Card backgrounds and subtle surfaces
+- **Accent Color**: Vibrant Cyan `oklch(0.65 0.15 210)` - Energetic highlight for CTAs, progress indicators, and active states; suggests innovation and forward progress
+- **Success/Status Colors**:
+  - Success Green `oklch(0.65 0.15 145)` - Approved items
+  - Warning Amber `oklch(0.75 0.13 75)` - Pending reviews
+  - Alert Red `oklch(0.60 0.20 25)` - Rejections or required actions
+
+**Foreground/Background Pairings**:
+- Background (White `oklch(1 0 0)`): Deep Navy text `oklch(0.25 0.08 250)` - Ratio 8.5:1 ✓
+- Primary (Deep Navy `oklch(0.25 0.08 250)`): White text `oklch(1 0 0)` - Ratio 8.5:1 ✓
+- Accent (Vibrant Cyan `oklch(0.65 0.15 210)`): Deep Navy text `oklch(0.25 0.08 250)` - Ratio 4.8:1 ✓
+- Secondary (Cool Slate `oklch(0.45 0.02 240)`): White text `oklch(1 0 0)` - Ratio 5.2:1 ✓
+
+## Font Selection
+
+**Combine technical precision with modern readability** using a contemporary sans-serif system that balances professionalism with approachability.
+
+- **Primary**: Space Grotesk (700) - Headlines and section titles for strong, modern presence with technical undertones
+- **Secondary**: Inter (400, 500, 600) - Body text, forms, and UI elements for excellent readability and versatile weights
+- **Accent**: JetBrains Mono (500) - Code snippets, technical identifiers, and data display for technical authenticity
+
+**Typographic Hierarchy**:
+- H1 (Page Title): Space Grotesk Bold/32px/tight letter-spacing/-0.02em
+- H2 (Section Header): Space Grotesk Bold/24px/tight letter-spacing/-0.01em  
+- H3 (Card Header): Inter Semibold/18px/normal
+- Body (Primary): Inter Regular/16px/line-height 1.6
+- Body (Secondary): Inter Regular/14px/line-height 1.5/muted color
+- Label: Inter Medium/14px/uppercase tracking-wide
+- Caption: Inter Regular/12px/muted color
+- Code/Data: JetBrains Mono Medium/14px/monospace
+
+## Animations
+
+**Animations should reinforce workflow progression and provide confident feedback**. Use subtle transitions for state changes (200ms ease), smooth page transitions with gentle slides (300ms), progress indicators with purposeful motion, and micro-interactions on buttons/cards with quick snaps (150ms). Approval state changes should feel decisive with satisfying confirmation animations. Avoid animations that delay critical workflows—speed and clarity take precedence.
+
+## Component Selection
+
+**Components**:
+- **Navigation**: Sidebar component for main navigation with collapsible sections
+- **Dashboard**: Card components for metric displays; Recharts for visualizations (bar, line, pie charts)
+- **Forms**: Multi-step wizard using Tabs component; Input, Textarea, Select, Checkbox components; Form with react-hook-form integration
+- **Tables**: Table component with sorting for SOW lists; Badge components for status indicators
+- **Dialogs**: Dialog for confirmations; Sheet for slide-out details panels
+- **Approvals**: Timeline-style layout using custom components; Textarea for comments; Button variants for approve/reject actions
+- **User Management**: Table with inline editing; Dialog for user creation; Select for role assignment
+- **Status Indicators**: Badge with color variants (success/warning/destructive); Progress component for workflow stages
+- **Notifications**: Sonner toasts for success/error feedback
+
+**Customizations**:
+- **SOW Timeline Component**: Custom vertical timeline showing approval stages with connecting lines and status icons
+- **Training Module Card**: Custom card with track badges, level indicators, and quick-add functionality
+- **Migration Stage Builder**: Custom accordion-style component with stage configuration forms
+- **Dashboard Metric Card**: Enhanced Card with animated number counters and trend indicators
+- **Role Switcher**: Custom dropdown component in header for demo role switching
+
+**States**:
+- Buttons: Clear hover with background shift, active with slight scale-down (0.98), disabled with 50% opacity
+- Inputs: Border color change on focus with accent color, error state with destructive color, success with checkmark icon
+- Cards: Subtle hover lift (2px translateY) with shadow increase, clickable cards with cursor pointer
+- Status badges: Distinct colors per state with subtle pulse animation for pending items
+
+**Icon Selection**:
+- Navigation: House (dashboard), FileText (SOWs), GraduationCap (trainings), GitBranch (migrations), Users (admin)
+- Actions: Plus (create), Check (approve), X (reject), Eye (view), PencilSimple (edit), Trash (delete)
+- Status: Clock (pending), CheckCircle (approved), XCircle (rejected), Warning (needs attention)
+- Filters: FunnelSimple (filter), MagnifyingGlass (search), CalendarBlank (date), SortAscending (sort)
+
+**Spacing**:
+- Page padding: p-6 (24px) on desktop, p-4 (16px) on mobile
+- Section gaps: gap-8 (32px) for major sections, gap-4 (16px) for related content
+- Card padding: p-6 for standard cards, p-4 for compact cards
+- Form spacing: gap-6 between form sections, gap-4 between fields
+- Button padding: px-6 py-2.5 for primary actions, px-4 py-2 for secondary
+
+**Mobile**:
+- Sidebar: Collapses to bottom navigation bar on mobile (<768px)
+- Tables: Convert to stacked card layout on mobile
+- Multi-column dashboards: Stack to single column
+- Form fields: Full width on mobile with increased touch targets (min 44px)
+- Charts: Adjust aspect ratio and simplify for readability on small screens
+- Sheet component: Full-screen on mobile instead of slide-out
