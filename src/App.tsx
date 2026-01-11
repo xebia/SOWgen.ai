@@ -104,91 +104,81 @@ function AppContent() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-8">
+        <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-4">
             <motion.div 
-              className="flex items-center gap-3"
+              className="flex items-center"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="flex items-center gap-2">
-                <XebiaLogo size={140} />
-              </div>
+              <XebiaLogo size={100} />
             </motion.div>
-            <nav className="flex gap-1">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  variant={currentView === 'dashboard' ? 'default' : 'ghost'}
-                  onClick={() => setCurrentView('dashboard')}
-                  className={`gap-2 transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}bg-amber-900 bg-orange-900 bg-gray-50 text-slate-50 text-gray-900`}
-                >
-                  <House size={18} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
-                  Dashboard
-                </Button>
-              </motion.div>
+            <nav className="flex gap-0.5">
+              <Button
+                variant={currentView === 'dashboard' ? 'default' : 'ghost'}
+                onClick={() => setCurrentView('dashboard')}
+                size="sm"
+                className={`gap-1.5 h-8 px-3 text-xs transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+              >
+                <House size={16} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
+                Dashboard
+              </Button>
               {isClient && (
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button
-                    variant={currentView === 'services' ? 'default' : 'ghost'}
-                    onClick={() => setCurrentView('services')}
-                    className={`gap-2 transition-all duration-200 ${currentView === 'services' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
-                  >
-                    <Stack size={18} weight={currentView === 'services' ? 'fill' : 'regular'} />
-                    Services
-                  </Button>
-                </motion.div>
+                <Button
+                  variant={currentView === 'services' ? 'default' : 'ghost'}
+                  onClick={() => setCurrentView('services')}
+                  size="sm"
+                  className={`gap-1.5 h-8 px-3 text-xs transition-all duration-200 ${currentView === 'services' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+                >
+                  <Stack size={16} weight={currentView === 'services' ? 'fill' : 'regular'} />
+                  Services
+                </Button>
               )}
               {isXebia && (
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button
-                    variant={currentView === 'sows' ? 'default' : 'ghost'}
-                    onClick={() => setCurrentView('sows')}
-                    className={`gap-2 transition-all duration-200 ${currentView === 'sows' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
-                  >
-                    <FileText size={18} weight={currentView === 'sows' ? 'fill' : 'regular'} />
-                    All SOWs
-                  </Button>
-                </motion.div>
+                <Button
+                  variant={currentView === 'sows' ? 'default' : 'ghost'}
+                  onClick={() => setCurrentView('sows')}
+                  size="sm"
+                  className={`gap-1.5 h-8 px-3 text-xs transition-all duration-200 ${currentView === 'sows' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+                >
+                  <FileText size={16} weight={currentView === 'sows' ? 'fill' : 'regular'} />
+                  All SOWs
+                </Button>
               )}
             </nav>
           </div>
-          <div className="flex items-center gap-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 h-auto py-1.5 px-2 hover:bg-muted/50 transition-all duration-200">
-                  <Avatar className="h-9 w-9 border-2 border-primary/20 ring-2 ring-primary/10">
-                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
-                    <AvatarFallback className="text-xs font-bold bg-gradient-to-br from-primary/15 to-accent/10 text-primary">
-                      {getInitials(currentUser.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-left hidden sm:block">
-                    <p className="font-medium text-sm">{currentUser.name}</p>
-                    <p className="text-xs text-muted-foreground capitalize">{currentUser.role.replace('-', ' ')}</p>
-                  </div>
-                  <CaretDown size={16} className="text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{currentUser.name}</p>
-                    <p className="text-xs text-muted-foreground">{currentUser.email}</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setShowProfileDialog(true)} className="cursor-pointer gap-2">
-                  <UserIcon size={16} />
-                  <span>Profile Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer gap-2 text-destructive focus:text-destructive">
-                  <SignOut size={16} />
-                  <span>Sign Out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="flex items-center gap-1.5 h-8 px-2 hover:bg-muted/50 transition-all duration-200">
+                <Avatar className="h-6 w-6 border border-primary/20">
+                  <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
+                  <AvatarFallback className="text-xs font-semibold bg-gradient-to-br from-primary/15 to-accent/10 text-primary">
+                    {getInitials(currentUser.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-xs font-medium hidden md:inline">{currentUser.name}</span>
+                <CaretDown size={14} className="text-muted-foreground hidden md:inline" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium">{currentUser.name}</p>
+                  <p className="text-xs text-muted-foreground">{currentUser.email}</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setShowProfileDialog(true)} className="cursor-pointer gap-2">
+                <UserIcon size={16} />
+                <span>Profile Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer gap-2 text-destructive focus:text-destructive">
+                <SignOut size={16} />
+                <span>Sign Out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </motion.header>
       <UserProfile open={showProfileDialog} onOpenChange={setShowProfileDialog} />
