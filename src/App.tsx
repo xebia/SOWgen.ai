@@ -99,7 +99,7 @@ function AppContent() {
         transition={{ duration: 1 }}
       />
       <motion.header 
-        className="border-b bg-card/95 backdrop-blur-md sticky top-0 z-10 shadow-sm relative"
+        className="border-b bg-card/98 backdrop-blur-lg sticky top-0 z-50 shadow-sm relative"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}

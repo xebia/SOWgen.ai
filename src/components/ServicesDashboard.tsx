@@ -175,7 +175,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
     
     return (
       <div className="space-y-8">
-        <div className="sticky top-[73px] z-[5] bg-background/95 backdrop-blur-md border-b pb-4 -mx-6 px-6 -mt-8 pt-4 mb-6 shadow-sm">
+        <div className="sticky top-[73px] z-40 bg-background/98 backdrop-blur-lg border-b pb-4 -mx-6 px-6 -mt-8 pt-4 mb-6 shadow-sm">
           <Button 
             variant="ghost" 
             onClick={handleBackToServices}
@@ -428,7 +428,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
 
   return (
     <div className="space-y-8">
-      <div className="sticky top-[73px] z-[5] bg-background/95 backdrop-blur-md border-b pb-4 -mx-6 px-6 -mt-8 pt-6 mb-6 shadow-sm">
+      <div className="sticky top-[73px] z-40 bg-background/98 backdrop-blur-lg border-b pb-4 -mx-6 px-6 -mt-8 pt-6 mb-6 shadow-sm">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold tracking-tight mb-1">Platform Services</h2>
