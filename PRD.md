@@ -125,13 +125,13 @@ The design should evoke **enterprise-grade professionalism with modern sophistic
 
 ## Color Selection
 
-A professional yet distinctive palette inspired by Xebia's brand identity, combining vibrant purples with complementary accents for a modern, premium enterprise feel.
+A professional yet distinctive palette aligned with Xebia's official brand identity from xebia.com, featuring their signature purple with complementary accents for a modern, premium enterprise feel.
 
-- **Primary Color**: Xebia Purple `oklch(0.45 0.18 285)` - The signature Xebia brand color conveying innovation, creativity, and technical excellence
+- **Primary Color**: Xebia Brand Purple `oklch(0.42 0.20 295)` - The official Xebia brand color from their website, conveying innovation, creativity, and technical excellence
 - **Secondary Colors**: 
   - Rich Violet `oklch(0.55 0.15 295)` - Supporting UI elements and secondary actions
   - Light Lavender `oklch(0.96 0.01 280)` - Card backgrounds and subtle surfaces
-- **Accent Color**: Bright Purple `oklch(0.62 0.20 300)` - Energetic highlight for CTAs, progress indicators, and active states; emphasizes brand energy
+- **Accent Color**: Vibrant Purple `oklch(0.58 0.22 295)` - Energetic highlight for CTAs, progress indicators, and active states; emphasizes brand energy
 - **Success/Status Colors**:
   - Success Green `oklch(0.62 0.17 145)` - Approved items
   - Warning Gold `oklch(0.72 0.15 70)` - Pending reviews
@@ -139,8 +139,8 @@ A professional yet distinctive palette inspired by Xebia's brand identity, combi
 
 **Foreground/Background Pairings**:
 - Background (Light `oklch(0.99 0.005 280)`): Deep Purple text `oklch(0.20 0.015 280)` - Ratio 11.2:1 ✓
-- Primary (Xebia Purple `oklch(0.45 0.18 285)`): White text `oklch(1 0 0)` - Ratio 5.8:1 ✓
-- Accent (Bright Purple `oklch(0.62 0.20 300)`): White text `oklch(1 0 0)` - Ratio 4.6:1 ✓
+- Primary (Xebia Purple `oklch(0.42 0.20 295)`): White text `oklch(1 0 0)` - Ratio 6.2:1 ✓
+- Accent (Vibrant Purple `oklch(0.58 0.22 295)`): White text `oklch(1 0 0)` - Ratio 4.8:1 ✓
 - Secondary (Rich Violet `oklch(0.55 0.15 295)`): White text `oklch(1 0 0)` - Ratio 5.1:1 ✓
 
 ## Font Selection

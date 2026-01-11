@@ -78,18 +78,18 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             className="text-center lg:text-left space-y-6"
           >
             <div className="flex items-center gap-3 justify-center lg:justify-start mb-6">
-              <div className="w-14 h-14 rounded-xl xebia-gradient flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-2xl">X</span>
+              <div className="w-14 h-14 rounded-xl xebia-gradient shadow-lg">
+                <div className="xebia-logo-x" />
               </div>
               <div className="flex flex-col">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Xebia</h1>
+                <h1 className="text-3xl font-bold text-primary">Xebia</h1>
                 <p className="text-sm text-muted-foreground -mt-0.5">SOW Generator</p>
               </div>
             </div>
             
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
               Statement of Work <br />
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Made Simple</span>
+              <span className="text-primary">Made Simple</span>
             </h2>
             
             <p className="text-lg sm:text-xl text-foreground/70 max-w-xl">

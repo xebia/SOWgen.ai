@@ -71,11 +71,11 @@ function AppContent() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-lg xebia-gradient flex items-center justify-center shadow-md">
-                  <span className="text-white font-bold text-xl">X</span>
+                <div className="w-10 h-10 rounded-lg xebia-gradient shadow-md">
+                  <div className="xebia-logo-x" />
                 </div>
                 <div className="flex flex-col">
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Xebia</h1>
+                  <h1 className="text-xl font-bold text-primary">Xebia</h1>
                   <p className="text-xs text-muted-foreground -mt-0.5">SOW Generator</p>
                 </div>
               </div>
