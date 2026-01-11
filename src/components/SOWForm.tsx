@@ -657,7 +657,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           className="h-12"
                         />
                         <p className="text-xs text-muted-foreground">
-                          Number of users that will be migrated to GitHub. This will be used as default for training participant counts.
+                          Number of users that will be migrated to GitHub. <span className="font-semibold text-accent">This will be used as the default participant count for all training modules.</span>
                         </p>
                       </div>
                       
@@ -909,19 +909,21 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2">
-                              <Label className="text-sm">Participants:</Label>
+                              <Label className="text-sm whitespace-nowrap">Participants:</Label>
                               <Input
                                 type="number"
                                 min="1"
                                 value={st.participantCount}
                                 onChange={e => handleUpdateParticipants(st.moduleId, parseInt(e.target.value))}
-                                className="w-20"
+                                className="w-24"
+                                placeholder={repoInventory.usersToMigrate ? `${repoInventory.usersToMigrate}` : '1'}
                               />
                             </div>
                             <Button
                               variant="ghost"
                               size="icon"
                               onClick={() => handleRemoveTraining(st.moduleId)}
+                              className="text-muted-foreground hover:text-destructive"
                             >
                               <X size={20} />
                             </Button>
@@ -933,8 +935,15 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                 )}
 
                 <div className="space-y-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <Label className="text-base font-semibold">Available Training Modules</Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <Label className="text-base font-semibold">Available Training Modules</Label>
+                      {repoInventory.usersToMigrate && repoInventory.usersToMigrate > 0 && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Adding a module will use <span className="font-semibold text-primary">{repoInventory.usersToMigrate} participants</span> by default
+                        </p>
+                      )}
+                    </div>
                     <Badge variant="outline" className="gap-1.5 text-xs">
                       <Info size={12} />
                       GitHub Training
@@ -944,6 +953,11 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                     <Info size={16} className="text-accent" />
                     <AlertDescription className="text-sm">
                       All training modules focus on GitHub platform and best practices, regardless of migration source platform.
+                      {repoInventory.usersToMigrate && repoInventory.usersToMigrate > 0 && (
+                        <span className="block mt-2 font-semibold text-primary">
+                          Default participant count: {repoInventory.usersToMigrate} users (from migration users)
+                        </span>
+                      )}
                     </AlertDescription>
                   </Alert>
                   {Object.entries(trackGroups).map(([track, modules]) => (
