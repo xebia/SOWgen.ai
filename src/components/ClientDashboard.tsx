@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { exportSOWAsPDF } from '@/lib/pdf-export'
-import { Plus, FileText, Clock, CheckCircle, FilePdf } from '@phosphor-icons/react'
+import { exportSOWsToCSV } from '@/lib/csv-export'
+import { Plus, FileText, Clock, CheckCircle, FilePdf, FileCsv, DownloadSimple } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface ClientDashboardProps {
@@ -28,6 +29,19 @@ export function ClientDashboard({ sows, user, onCreateSOW, onViewSOW }: ClientDa
     }
   }
 
+  const handleExportAllToCSV = () => {
+    if (mySows.length === 0) {
+      toast.error('No SOWs to export')
+      return
+    }
+    try {
+      exportSOWsToCSV(mySows, `sows-${user.name.replace(/\s+/g, '-')}-${Date.now()}.csv`)
+      toast.success('SOWs exported to CSV successfully')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to export CSV')
+    }
+  }
+
   const getStatusBadge = (status: SOW['status']) => {
     const variants: Record<SOW['status'], { variant: 'default' | 'secondary' | 'success' | 'warning' | 'destructive'; label: string }> = {
       'draft': { variant: 'secondary', label: 'Draft' },
@@ -47,10 +61,18 @@ export function ClientDashboard({ sows, user, onCreateSOW, onViewSOW }: ClientDa
           <h2 className="text-3xl font-bold tracking-tight mb-2">My Dashboard</h2>
           <p className="text-muted-foreground">Manage your Statement of Work requests</p>
         </div>
-        <Button onClick={onCreateSOW} size="lg">
-          <Plus className="mr-2" size={20} />
-          Create New SOW
-        </Button>
+        <div className="flex gap-3">
+          {mySows.length > 0 && (
+            <Button onClick={handleExportAllToCSV} variant="outline" className="gap-2">
+              <FileCsv size={20} weight="duotone" />
+              Export All to CSV
+            </Button>
+          )}
+          <Button onClick={onCreateSOW} size="lg" className="gap-2">
+            <Plus size={20} />
+            Create New SOW
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">

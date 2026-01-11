@@ -9,6 +9,8 @@ export type MigrationStage =
   | 'cicd-implementation'
   | 'training-sessions'
 
+export type GitHubMigrationType = 'github-classic' | 'github-emu' | 'ghes'
+
 export type TrainingTrack = 'github' | 'azure' | 'gcp' | 'aws' | 'ai-sap'
 
 export type TrainingLevel = 'beginner' | 'intermediate' | 'advanced'
@@ -22,12 +24,30 @@ export interface User {
   avatarUrl?: string
 }
 
+export interface RepositoryInventory {
+  totalRepositories: number
+  publicRepos: number
+  privateRepos: number
+  archivedRepos: number
+  totalSizeGB: number
+  languages: string[]
+  hasLFS: boolean
+  hasSubmodules: boolean
+  averageRepoSizeMB: number
+}
+
 export interface MigrationStageDetail {
   stage: MigrationStage
   description: string
   technicalDetails: string
   timelineWeeks: number
   automated: boolean
+  githubMigrationType?: GitHubMigrationType
+  repositoryInventory?: RepositoryInventory
+  estimatedManHours?: number
+  includeCICDMigration?: boolean
+  cicdPlatform?: string
+  cicdDetails?: string
 }
 
 export interface TrainingModule {

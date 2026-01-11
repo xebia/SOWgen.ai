@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { exportSOWAsPDF } from '@/lib/pdf-export'
-import { MagnifyingGlass, FilePdf, Eye } from '@phosphor-icons/react'
+import { exportSOWsToCSV } from '@/lib/csv-export'
+import { MagnifyingGlass, FilePdf, Eye, FileCsv } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { useState } from 'react'
 
@@ -25,6 +26,20 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
       toast.success('PDF export initiated')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to export PDF')
+    }
+  }
+
+  const handleExportAllToCSV = () => {
+    const sowsToExport = filteredSows.length > 0 ? filteredSows : sows
+    if (sowsToExport.length === 0) {
+      toast.error('No SOWs to export')
+      return
+    }
+    try {
+      exportSOWsToCSV(sowsToExport, `all-sows-${Date.now()}.csv`)
+      toast.success(`${sowsToExport.length} SOWs exported to CSV successfully`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to export CSV')
     }
   }
 
@@ -51,9 +66,17 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight mb-2">All SOWs</h2>
-        <p className="text-muted-foreground">Review and manage Statement of Work submissions</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight mb-2">All SOWs</h2>
+          <p className="text-muted-foreground">Review and manage Statement of Work submissions</p>
+        </div>
+        {sows.length > 0 && (
+          <Button onClick={handleExportAllToCSV} variant="outline" className="gap-2">
+            <FileCsv size={20} weight="duotone" />
+            Export to CSV
+          </Button>
+        )}
       </div>
 
       <Card>

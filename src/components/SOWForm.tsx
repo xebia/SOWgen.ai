@@ -9,9 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage } from '@/lib/types'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage, GitHubMigrationType, RepositoryInventory } from '@/lib/types'
 import { TRAINING_MODULES, getModuleById } from '@/lib/training-catalog'
-import { X, Plus, GithubLogo, GitlabLogo, Sparkle, CloudArrowDown, CheckCircle, Info } from '@phosphor-icons/react'
+import { X, Plus, GithubLogo, GitlabLogo, Sparkle, CloudArrowDown, CheckCircle, Info, Calculator, GraduationCap } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { fetchRepositoryData, generateProjectDescription, type RepositoryData, type SCMPlatform } from '@/lib/scm-api'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -46,6 +47,69 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
   const [isFetching, setIsFetching] = useState(false)
   const [fetchedData, setFetchedData] = useState<RepositoryData | null>(null)
   const [fetchError, setFetchError] = useState<string | null>(null)
+
+  const [githubMigrationType, setGithubMigrationType] = useState<GitHubMigrationType>('github-classic')
+  const [repoInventory, setRepoInventory] = useState<RepositoryInventory>({
+    totalRepositories: 0,
+    publicRepos: 0,
+    privateRepos: 0,
+    archivedRepos: 0,
+    totalSizeGB: 0,
+    languages: [],
+    hasLFS: false,
+    hasSubmodules: false,
+    averageRepoSizeMB: 0
+  })
+  const [includeCICD, setIncludeCICD] = useState(false)
+  const [cicdPlatform, setCicdPlatform] = useState('')
+  const [cicdDetails, setCicdDetails] = useState('')
+
+  const calculateManHours = (inventory: RepositoryInventory, migrationType: GitHubMigrationType) => {
+    let baseHoursPerRepo = 2
+    
+    if (migrationType === 'github-emu') {
+      baseHoursPerRepo = 3
+    } else if (migrationType === 'ghes') {
+      baseHoursPerRepo = 4
+    }
+    
+    let totalHours = inventory.totalRepositories * baseHoursPerRepo
+    
+    if (inventory.hasLFS) totalHours += inventory.totalRepositories * 0.5
+    if (inventory.hasSubmodules) totalHours += inventory.totalRepositories * 0.3
+    if (inventory.totalSizeGB > 100) totalHours += 20
+    
+    totalHours += inventory.languages.length * 2
+    
+    return Math.ceil(totalHours)
+  }
+
+  useEffect(() => {
+    if (repoInventory.totalRepositories > 0) {
+      const manHours = calculateManHours(repoInventory, githubMigrationType)
+      setMigrationStages(prev => {
+        const repoMigrationStage = prev.find(s => s.stage === 'repository-migration')
+        if (repoMigrationStage) {
+          return prev.map(s => 
+            s.stage === 'repository-migration' 
+              ? { ...s, estimatedManHours: manHours, githubMigrationType, repositoryInventory: repoInventory }
+              : s
+          )
+        } else {
+          return [...prev, {
+            stage: 'repository-migration',
+            description: `Migrate ${repoInventory.totalRepositories} repositories to ${githubMigrationType.replace(/-/g, ' ').toUpperCase()}`,
+            technicalDetails: `Type: ${githubMigrationType}, Size: ${repoInventory.totalSizeGB}GB, Languages: ${repoInventory.languages.join(', ')}`,
+            timelineWeeks: Math.ceil(manHours / 40),
+            automated: true,
+            githubMigrationType,
+            repositoryInventory: repoInventory,
+            estimatedManHours: manHours
+          }]
+        }
+      })
+    }
+  }, [repoInventory, githubMigrationType])
 
   const handleAddMigrationStage = () => {
     setMigrationStages(prev => [...prev, {
@@ -119,6 +183,29 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
       return
     }
 
+    if (includeMigration && includeCICD && !cicdPlatform) {
+      toast.error('Please select CI/CD platform')
+      return
+    }
+
+    const finalMigrationStages = [...migrationStages]
+    
+    if (includeCICD && cicdPlatform) {
+      const cicdStageExists = finalMigrationStages.some(s => s.stage === 'cicd-migration')
+      if (!cicdStageExists) {
+        finalMigrationStages.push({
+          stage: 'cicd-migration',
+          description: `Migrate CI/CD pipelines from ${cicdPlatform} to GitHub Actions`,
+          technicalDetails: cicdDetails,
+          timelineWeeks: 3,
+          automated: false,
+          includeCICDMigration: true,
+          cicdPlatform: cicdPlatform,
+          cicdDetails: cicdDetails
+        })
+      }
+    }
+
     const sow: SOW = {
       id: `sow-${Date.now()}`,
       clientId: user.id,
@@ -131,7 +218,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
       updatedAt: Date.now(),
       submittedAt: isDraft ? undefined : Date.now(),
       includeMigration,
-      migrationStages,
+      migrationStages: finalMigrationStages,
       includeTraining,
       selectedTrainings,
       approvalHistory: []
@@ -169,11 +256,10 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
       </div>
 
       <Tabs value={currentTab} onValueChange={setCurrentTab}>
-        <TabsList className={automationMode ? 'grid w-full grid-cols-4' : 'grid w-full grid-cols-3'}>
+        <TabsList className={automationMode ? 'grid w-full grid-cols-3' : 'grid w-full grid-cols-2'}>
           {automationMode && <TabsTrigger value="scm-integration">SCM Integration</TabsTrigger>}
           <TabsTrigger value="details">Project Details</TabsTrigger>
-          <TabsTrigger value="migration">Migration Services</TabsTrigger>
-          <TabsTrigger value="training">Training Modules</TabsTrigger>
+          <TabsTrigger value="migration">Migration & Training</TabsTrigger>
         </TabsList>
 
         {automationMode && (
@@ -526,137 +612,296 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
           </Card>
         </TabsContent>
 
-        <TabsContent value="migration" className="space-y-4">
+        <TabsContent value="migration" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Migration Stages</CardTitle>
-              <CardDescription>Configure the migration process for your organization</CardDescription>
+              <CardTitle>Migration Services</CardTitle>
+              <CardDescription>Configure repository migration, CI/CD setup, and team training</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               {!includeMigration ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  <p>Enable migration services in the Project Details tab to configure stages</p>
+                  <p>Enable migration services in the Project Details tab to configure options</p>
                 </div>
               ) : (
                 <>
-                  {migrationStages.map((stage, index) => (
-                    <Card key={index}>
-                      <CardContent className="pt-6 space-y-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 space-y-4">
-                            <div className="space-y-2">
-                              <Label>Stage Type</Label>
-                              <Select
-                                value={stage.stage}
-                                onValueChange={(value) => handleUpdateMigrationStage(index, 'stage', value)}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {MIGRATION_STAGES.map(s => (
-                                    <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label>Description</Label>
-                              <Textarea
-                                value={stage.description}
-                                onChange={e => handleUpdateMigrationStage(index, 'description', e.target.value)}
-                                placeholder="Describe what will be done in this stage..."
-                                rows={2}
-                              />
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label>Technical Details</Label>
-                              <Textarea
-                                value={stage.technicalDetails}
-                                onChange={e => handleUpdateMigrationStage(index, 'technicalDetails', e.target.value)}
-                                placeholder="Technical specifications, tools, or requirements..."
-                                rows={2}
-                              />
-                            </div>
-
-                            <div className="flex gap-4">
-                              <div className="space-y-2 flex-1">
-                                <Label>Timeline (weeks)</Label>
-                                <Input
-                                  type="number"
-                                  min="1"
-                                  value={stage.timelineWeeks}
-                                  onChange={e => handleUpdateMigrationStage(index, 'timelineWeeks', parseInt(e.target.value))}
-                                />
-                              </div>
-                              <div className="flex items-end">
-                                <div className="flex items-center space-x-2">
-                                  <Checkbox
-                                    id={`automated-${index}`}
-                                    checked={stage.automated}
-                                    onCheckedChange={(checked) => handleUpdateMigrationStage(index, 'automated', checked)}
-                                  />
-                                  <label htmlFor={`automated-${index}`} className="text-sm">
-                                    Automated
-                                  </label>
-                                </div>
-                              </div>
+                  <div className="space-y-6">
+                    <div className="border rounded-lg p-6 bg-muted/30">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <GithubLogo size={24} weight="duotone" className="text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-lg">GitHub Migration Type</h3>
+                          <p className="text-sm text-muted-foreground">Select the target GitHub platform for migration</p>
+                        </div>
+                      </div>
+                      
+                      <RadioGroup value={githubMigrationType} onValueChange={(value: any) => setGithubMigrationType(value)}>
+                        <div className="space-y-3">
+                          <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
+                            <RadioGroupItem value="github-classic" id="github-classic" className="mt-1" />
+                            <div className="flex-1">
+                              <Label htmlFor="github-classic" className="font-semibold text-base cursor-pointer">
+                                GitHub Classic (Cloud)
+                              </Label>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                Standard GitHub cloud platform with individual user accounts
+                              </p>
                             </div>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleRemoveMigrationStage(index)}
-                            className="ml-2"
-                          >
-                            <X size={20} />
-                          </Button>
+                          
+                          <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
+                            <RadioGroupItem value="github-emu" id="github-emu" className="mt-1" />
+                            <div className="flex-1">
+                              <Label htmlFor="github-emu" className="font-semibold text-base cursor-pointer">
+                                GitHub EMU (Enterprise Managed Users)
+                              </Label>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                Enterprise platform with centrally managed user identities and enhanced security
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
+                            <RadioGroupItem value="ghes" id="ghes" className="mt-1" />
+                            <div className="flex-1">
+                              <Label htmlFor="ghes" className="font-semibold text-base cursor-pointer">
+                                GitHub Enterprise Server (GHES)
+                              </Label>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                Self-hosted GitHub instance on your own infrastructure
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      </RadioGroup>
+                    </div>
 
-                  <Button onClick={handleAddMigrationStage} variant="outline" className="w-full">
-                    <Plus className="mr-2" size={20} />
-                    Add Migration Stage
-                  </Button>
+                    <div className="border rounded-lg p-6 bg-muted/30">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                          <Calculator size={24} weight="duotone" className="text-accent" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-lg">Repository Inventory</h3>
+                          <p className="text-sm text-muted-foreground">Provide details about repositories to be migrated</p>
+                        </div>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="total-repos">Total Repositories *</Label>
+                          <Input
+                            id="total-repos"
+                            type="number"
+                            min="0"
+                            value={repoInventory.totalRepositories}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, totalRepositories: parseInt(e.target.value) || 0 }))}
+                            placeholder="100"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="public-repos">Public Repositories</Label>
+                          <Input
+                            id="public-repos"
+                            type="number"
+                            min="0"
+                            value={repoInventory.publicRepos}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, publicRepos: parseInt(e.target.value) || 0 }))}
+                            placeholder="20"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="private-repos">Private Repositories</Label>
+                          <Input
+                            id="private-repos"
+                            type="number"
+                            min="0"
+                            value={repoInventory.privateRepos}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, privateRepos: parseInt(e.target.value) || 0 }))}
+                            placeholder="80"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="archived-repos">Archived Repositories</Label>
+                          <Input
+                            id="archived-repos"
+                            type="number"
+                            min="0"
+                            value={repoInventory.archivedRepos}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, archivedRepos: parseInt(e.target.value) || 0 }))}
+                            placeholder="10"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="total-size">Total Size (GB)</Label>
+                          <Input
+                            id="total-size"
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            value={repoInventory.totalSizeGB}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, totalSizeGB: parseFloat(e.target.value) || 0 }))}
+                            placeholder="50.5"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="avg-repo-size">Avg Repository Size (MB)</Label>
+                          <Input
+                            id="avg-repo-size"
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            value={repoInventory.averageRepoSizeMB}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, averageRepoSizeMB: parseFloat(e.target.value) || 0 }))}
+                            placeholder="500"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2 mt-4">
+                        <Label htmlFor="languages">Programming Languages (comma-separated)</Label>
+                        <Input
+                          id="languages"
+                          value={repoInventory.languages.join(', ')}
+                          onChange={e => setRepoInventory(prev => ({ 
+                            ...prev, 
+                            languages: e.target.value.split(',').map(l => l.trim()).filter(Boolean) 
+                          }))}
+                          placeholder="JavaScript, Python, Java, Go"
+                        />
+                      </div>
+                      
+                      <div className="flex gap-6 mt-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="has-lfs"
+                            checked={repoInventory.hasLFS}
+                            onCheckedChange={(checked) => setRepoInventory(prev => ({ ...prev, hasLFS: checked as boolean }))}
+                          />
+                          <Label htmlFor="has-lfs" className="cursor-pointer">
+                            Includes Git LFS
+                          </Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="has-submodules"
+                            checked={repoInventory.hasSubmodules}
+                            onCheckedChange={(checked) => setRepoInventory(prev => ({ ...prev, hasSubmodules: checked as boolean }))}
+                          />
+                          <Label htmlFor="has-submodules" className="cursor-pointer">
+                            Includes Git Submodules
+                          </Label>
+                        </div>
+                      </div>
+                      
+                      {repoInventory.totalRepositories > 0 && (
+                        <Alert className="mt-4 bg-accent/5 border-accent/20">
+                          <Calculator size={18} className="text-accent" />
+                          <AlertDescription className="text-sm">
+                            <strong className="text-foreground">Estimated Man Hours:</strong> {calculateManHours(repoInventory, githubMigrationType)} hours
+                            <span className="text-muted-foreground ml-2">
+                              ({Math.ceil(calculateManHours(repoInventory, githubMigrationType) / 40)} weeks @ 40 hrs/week)
+                            </span>
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
+
+                    <div className="border rounded-lg p-6 bg-muted/30">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+                            <CheckCircle size={24} weight="duotone" className="text-success" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-lg">CI/CD Migration</h3>
+                            <p className="text-sm text-muted-foreground">Migrate existing CI/CD pipelines</p>
+                          </div>
+                        </div>
+                        <Checkbox
+                          id="include-cicd"
+                          checked={includeCICD}
+                          onCheckedChange={(checked) => setIncludeCICD(checked as boolean)}
+                        />
+                      </div>
+                      
+                      {includeCICD && (
+                        <div className="space-y-4 pl-13">
+                          <div className="space-y-2">
+                            <Label htmlFor="cicd-platform">Current CI/CD Platform</Label>
+                            <Select value={cicdPlatform} onValueChange={setCicdPlatform}>
+                              <SelectTrigger id="cicd-platform">
+                                <SelectValue placeholder="Select platform" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="jenkins">Jenkins</SelectItem>
+                                <SelectItem value="gitlab-ci">GitLab CI</SelectItem>
+                                <SelectItem value="circleci">CircleCI</SelectItem>
+                                <SelectItem value="travis">Travis CI</SelectItem>
+                                <SelectItem value="azure-devops">Azure DevOps</SelectItem>
+                                <SelectItem value="teamcity">TeamCity</SelectItem>
+                                <SelectItem value="bamboo">Bamboo</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="cicd-details">CI/CD Details</Label>
+                            <Textarea
+                              id="cicd-details"
+                              value={cicdDetails}
+                              onChange={e => setCicdDetails(e.target.value)}
+                              placeholder="Number of pipelines, complexity, deployment targets, etc."
+                              rows={3}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </>
               )}
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="training" className="space-y-4">
-          {!includeTraining ? (
+          {includeTraining && (
             <Card>
-              <CardContent className="pt-6">
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>Enable training services in the Project Details tab to select modules</p>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center">
+                    <GraduationCap size={24} weight="duotone" className="text-warning" />
+                  </div>
+                  <div>
+                    <CardTitle>Training Modules</CardTitle>
+                    <CardDescription>Select training programs for your team</CardDescription>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              {selectedTrainings.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Selected Training Modules</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {selectedTrainings.length > 0 && (
+                  <div className="space-y-3 mb-6">
+                    <Label className="text-base font-semibold">Selected Modules</Label>
                     {selectedTrainings.map(st => {
                       const module = getModuleById(st.moduleId)
                       if (!module) return null
                       return (
-                        <div key={st.moduleId} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div key={st.moduleId} className="flex items-center justify-between p-3 border rounded-lg bg-background">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <h4 className="font-semibold">{module.title}</h4>
                               <Badge variant="secondary" className="text-xs">
                                 {module.track.toUpperCase()}
                               </Badge>
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="outline" className="text-xs capitalize">
                                 {module.level}
                               </Badge>
                             </div>
@@ -684,52 +929,49 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
                         </div>
                       )
                     })}
-                  </CardContent>
-                </Card>
-              )}
+                  </div>
+                )}
 
-              {Object.entries(trackGroups).map(([track, modules]) => (
-                <Card key={track}>
-                  <CardHeader>
-                    <CardTitle className="capitalize">{track.replace('-', ' / ')} Training</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {modules.map(module => {
-                      const isSelected = selectedTrainings.some(t => t.moduleId === module.id)
-                      return (
-                        <div key={module.id} className="flex items-start justify-between p-4 border rounded-lg">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h4 className="font-semibold">{module.title}</h4>
-                              <Badge variant="outline" className="text-xs capitalize">
-                                {module.level}
-                              </Badge>
-                              <span className="text-sm text-muted-foreground">{module.durationHours}h</span>
+                <div className="space-y-4">
+                  <Label className="text-base font-semibold">Available Training Modules</Label>
+                  {Object.entries({
+                    github: TRAINING_MODULES.filter(m => m.track === 'github'),
+                    azure: TRAINING_MODULES.filter(m => m.track === 'azure'),
+                    gcp: TRAINING_MODULES.filter(m => m.track === 'gcp'),
+                    aws: TRAINING_MODULES.filter(m => m.track === 'aws'),
+                    'ai-sap': TRAINING_MODULES.filter(m => m.track === 'ai-sap'),
+                  }).map(([track, modules]) => (
+                    <div key={track} className="border rounded-lg p-4">
+                      <h4 className="font-semibold capitalize mb-3">{track.replace('-', ' / ')} Training</h4>
+                      <div className="space-y-2">
+                        {modules.map(module => {
+                          const isSelected = selectedTrainings.some(t => t.moduleId === module.id)
+                          return (
+                            <div key={module.id} className="flex items-center justify-between p-3 border rounded bg-muted/30 hover:bg-muted/50 transition-colors">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium">{module.title}</span>
+                                  <Badge variant="outline" className="text-xs capitalize">{module.level}</Badge>
+                                  <span className="text-sm text-muted-foreground">{module.durationHours}h</span>
+                                </div>
+                              </div>
+                              <Button
+                                onClick={() => handleAddTraining(module.id)}
+                                disabled={isSelected}
+                                size="sm"
+                                variant={isSelected ? "outline" : "default"}
+                              >
+                                {isSelected ? 'Added' : 'Add'}
+                              </Button>
                             </div>
-                            <p className="text-sm text-muted-foreground mb-2">{module.description}</p>
-                            <details className="text-sm">
-                              <summary className="cursor-pointer text-accent hover:underline">View agenda</summary>
-                              <ul className="list-disc list-inside mt-2 space-y-1 text-muted-foreground">
-                                {module.agenda.map((item, idx) => (
-                                  <li key={idx}>{item}</li>
-                                ))}
-                              </ul>
-                            </details>
-                          </div>
-                          <Button
-                            onClick={() => handleAddTraining(module.id)}
-                            disabled={isSelected}
-                            size="sm"
-                          >
-                            {isSelected ? 'Added' : 'Add'}
-                          </Button>
-                        </div>
-                      )
-                    })}
-                  </CardContent>
-                </Card>
-              ))}
-            </>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
       </Tabs>

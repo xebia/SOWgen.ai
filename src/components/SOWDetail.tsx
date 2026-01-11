@@ -146,12 +146,69 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
               {sow.migrationStages.map((stage, index) => (
                 <div key={index} className="border rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold capitalize">{stage.stage.replace('-', ' ')}</h4>
+                    <h4 className="font-semibold capitalize">{stage.stage.replace(/-/g, ' ')}</h4>
                     <div className="flex gap-2">
                       <Badge variant="outline">{stage.timelineWeeks} weeks</Badge>
                       {stage.automated && <Badge variant="secondary">Automated</Badge>}
+                      {stage.estimatedManHours && <Badge variant="default">{stage.estimatedManHours}h</Badge>}
                     </div>
                   </div>
+                  
+                  {stage.githubMigrationType && (
+                    <div>
+                      <Label className="text-xs text-muted-foreground">GitHub Migration Type</Label>
+                      <Badge variant="outline" className="mt-1 capitalize">{stage.githubMigrationType.replace(/-/g, ' ')}</Badge>
+                    </div>
+                  )}
+                  
+                  {stage.repositoryInventory && (
+                    <div className="border rounded p-3 bg-muted/30 space-y-2">
+                      <Label className="text-xs text-muted-foreground font-semibold">Repository Inventory</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                        <div>
+                          <span className="text-muted-foreground text-xs">Total Repos</span>
+                          <p className="font-semibold">{stage.repositoryInventory.totalRepositories}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">Public</span>
+                          <p className="font-semibold">{stage.repositoryInventory.publicRepos}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">Private</span>
+                          <p className="font-semibold">{stage.repositoryInventory.privateRepos}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground text-xs">Size</span>
+                          <p className="font-semibold">{stage.repositoryInventory.totalSizeGB} GB</p>
+                        </div>
+                      </div>
+                      {stage.repositoryInventory.languages.length > 0 && (
+                        <div>
+                          <span className="text-muted-foreground text-xs">Languages:</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {stage.repositoryInventory.languages.map(lang => (
+                              <Badge key={lang} variant="secondary" className="text-xs">{lang}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {(stage.repositoryInventory.hasLFS || stage.repositoryInventory.hasSubmodules) && (
+                        <div className="flex gap-2 text-xs">
+                          {stage.repositoryInventory.hasLFS && <Badge variant="outline">Git LFS</Badge>}
+                          {stage.repositoryInventory.hasSubmodules && <Badge variant="outline">Submodules</Badge>}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {stage.includeCICDMigration && (
+                    <div>
+                      <Label className="text-xs text-muted-foreground">CI/CD Migration</Label>
+                      <p className="text-sm mt-1">From: <Badge variant="outline">{stage.cicdPlatform}</Badge> → GitHub Actions</p>
+                      {stage.cicdDetails && <p className="text-sm text-muted-foreground mt-1">{stage.cicdDetails}</p>}
+                    </div>
+                  )}
+                  
                   {stage.description && (
                     <div>
                       <Label className="text-xs text-muted-foreground">Description</Label>
