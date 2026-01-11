@@ -15,17 +15,18 @@ interface LoginPageProps {
 
 export function LoginPage({ onLogin }: LoginPageProps) {
   const [clientEmail, setClientEmail] = useState('')
+  const [clientOrganization, setClientOrganization] = useState('')
   const [xebiaEmail, setXebiaEmail] = useState('')
 
   const handleClientLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    if (clientEmail.trim()) {
+    if (clientEmail.trim() && clientOrganization.trim()) {
       const user: User = {
         id: `client-${Date.now()}`,
         name: clientEmail.split('@')[0] || 'Client User',
         email: clientEmail,
         role: 'client' as UserRole,
-        organization: clientEmail.split('@')[1] || 'External Organization'
+        organization: clientOrganization
       }
       onLogin(user)
     }
@@ -170,6 +171,20 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                             placeholder="you@company.com"
                             value={clientEmail}
                             onChange={(e) => setClientEmail(e.target.value)}
+                            className="h-12 text-base"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="client-organization" className="text-sm font-semibold">
+                            Organization Name
+                          </Label>
+                          <Input
+                            id="client-organization"
+                            type="text"
+                            placeholder="Acme Corporation"
+                            value={clientOrganization}
+                            onChange={(e) => setClientOrganization(e.target.value)}
                             className="h-12 text-base"
                             required
                           />

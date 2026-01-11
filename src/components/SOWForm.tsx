@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage, GitHubMigrationType, RepositoryInventory, ServicePlatform } from '@/lib/types'
 import { TRAINING_MODULES, getModuleById } from '@/lib/training-catalog'
 import { X, Plus, GithubLogo, GitlabLogo, GitBranch, Sparkle, CloudArrowDown, CheckCircle, Info, Calculator, GraduationCap, Cloud } from '@phosphor-icons/react'
@@ -52,17 +51,17 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
   const [fetchedData, setFetchedData] = useState<RepositoryData | null>(null)
   const [fetchError, setFetchError] = useState<string | null>(null)
 
-  const [githubMigrationType, setGithubMigrationType] = useState<GitHubMigrationType>('github-classic')
+  const [githubMigrationType, setGithubMigrationType] = useState<GitHubMigrationType | ''>('')
   const [repoInventory, setRepoInventory] = useState<RepositoryInventory>({
-    totalRepositories: 0,
-    publicRepos: 0,
-    privateRepos: 0,
-    archivedRepos: 0,
-    totalSizeGB: 0,
+    totalRepositories: undefined as any,
+    publicRepos: undefined as any,
+    privateRepos: undefined as any,
+    archivedRepos: undefined as any,
+    totalSizeGB: undefined as any,
     languages: [],
     hasLFS: false,
     hasSubmodules: false,
-    averageRepoSizeMB: 0
+    averageRepoSizeMB: undefined as any
   })
   const [includeCICD, setIncludeCICD] = useState(false)
   const [cicdPlatform, setCicdPlatform] = useState('')
@@ -89,14 +88,14 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
   }
 
   useEffect(() => {
-    if (repoInventory.totalRepositories > 0) {
-      const manHours = calculateManHours(repoInventory, githubMigrationType)
+    if (repoInventory.totalRepositories > 0 && githubMigrationType) {
+      const manHours = calculateManHours(repoInventory, githubMigrationType as GitHubMigrationType)
       setMigrationStages(prev => {
         const repoMigrationStage = prev.find(s => s.stage === 'repository-migration')
         if (repoMigrationStage) {
           return prev.map(s => 
             s.stage === 'repository-migration' 
-              ? { ...s, estimatedManHours: manHours, githubMigrationType, repositoryInventory: repoInventory }
+              ? { ...s, estimatedManHours: manHours, githubMigrationType: githubMigrationType as GitHubMigrationType, repositoryInventory: repoInventory }
               : s
           )
         } else {
@@ -106,7 +105,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
             technicalDetails: `Type: ${githubMigrationType}, Size: ${repoInventory.totalSizeGB}GB, Languages: ${repoInventory.languages.join(', ')}`,
             timelineWeeks: Math.ceil(manHours / 40),
             automated: true,
-            githubMigrationType,
+            githubMigrationType: githubMigrationType as GitHubMigrationType,
             repositoryInventory: repoInventory,
             estimatedManHours: manHours
           }]
@@ -188,6 +187,21 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
   const handleSubmit = (isDraft: boolean) => {
     if (!projectName.trim()) {
       toast.error('Project name is required')
+      return
+    }
+
+    if (includeMigration && !githubMigrationType) {
+      toast.error('GitHub migration type is required')
+      return
+    }
+
+    if (includeMigration && repoInventory.totalRepositories === undefined) {
+      toast.error('Total repositories is required')
+      return
+    }
+
+    if (includeMigration && repoInventory.totalSizeGB === undefined) {
+      toast.error('Total size is required')
       return
     }
 
@@ -580,59 +594,54 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           <GitHubLogo size={24} className="object-contain" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-lg">GitHub Migration Type</h3>
+                          <h3 className="font-semibold text-lg">GitHub Migration Type *</h3>
                           <p className="text-sm text-muted-foreground">Select the target GitHub platform for migration</p>
                         </div>
                       </div>
                       
-                      <RadioGroup value={githubMigrationType} onValueChange={(value: any) => setGithubMigrationType(value)}>
-                        <div className="space-y-3">
-                          <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
-                            <RadioGroupItem value="github-classic" id="github-classic" className="mt-1" />
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <Label htmlFor="github-classic" className="font-semibold text-base cursor-pointer">
-                                  GitHub Classic (Cloud)
-                                </Label>
+                      <div className="space-y-2">
+                        <Select value={githubMigrationType} onValueChange={(value: any) => setGithubMigrationType(value)}>
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="Select GitHub migration type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="github-classic">
+                              <div className="flex items-center gap-2">
                                 <GitHubLogo size={16} />
+                                <span className="font-medium">GitHub Classic (Cloud)</span>
                               </div>
-                              <p className="text-sm text-muted-foreground">
-                                Standard GitHub cloud platform with individual user accounts
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
-                            <RadioGroupItem value="github-emu" id="github-emu" className="mt-1" />
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <Label htmlFor="github-emu" className="font-semibold text-base cursor-pointer">
-                                  GitHub EMU (Enterprise Managed Users)
-                                </Label>
+                            </SelectItem>
+                            <SelectItem value="github-emu">
+                              <div className="flex items-center gap-2">
                                 <PlatformLogo platform="github" size={16} className="object-contain" />
+                                <span className="font-medium">GitHub EMU (Enterprise Managed Users)</span>
                               </div>
-                              <p className="text-sm text-muted-foreground">
-                                Enterprise platform with centrally managed user identities and enhanced security
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
-                            <RadioGroupItem value="ghes" id="ghes" className="mt-1" />
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <Label htmlFor="ghes" className="font-semibold text-base cursor-pointer">
-                                  GitHub Enterprise Server (GHES)
-                                </Label>
+                            </SelectItem>
+                            <SelectItem value="ghes">
+                              <div className="flex items-center gap-2">
                                 <PlatformLogo platform="github" size={16} className="object-contain" />
+                                <span className="font-medium">GitHub Enterprise Server (GHES)</span>
                               </div>
-                              <p className="text-sm text-muted-foreground">
-                                Self-hosted GitHub instance on your own infrastructure
-                              </p>
-                            </div>
-                          </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {!githubMigrationType && (
+                          <p className="text-xs text-muted-foreground">
+                            * This field is required
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="mt-4 p-4 bg-muted/50 rounded-lg space-y-2">
+                        <div className="space-y-1">
+                          <p className="text-sm font-semibold">Migration Type Descriptions:</p>
+                          <ul className="text-xs text-muted-foreground space-y-1 ml-4 list-disc">
+                            <li><strong>GitHub Classic:</strong> Standard GitHub cloud platform with individual user accounts</li>
+                            <li><strong>GitHub EMU:</strong> Enterprise platform with centrally managed user identities and enhanced security</li>
+                            <li><strong>GHES:</strong> Self-hosted GitHub instance on your own infrastructure</li>
+                          </ul>
                         </div>
-                      </RadioGroup>
+                      </div>
                     </div>
 
                     <MigrationPathDiagram 
@@ -658,9 +667,9 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             id="total-repos"
                             type="number"
                             min="0"
-                            value={repoInventory.totalRepositories}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, totalRepositories: parseInt(e.target.value) || 0 }))}
-                            placeholder="100"
+                            value={repoInventory.totalRepositories ?? ''}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, totalRepositories: parseInt(e.target.value) || undefined as any }))}
+                            placeholder="e.g., 100"
                           />
                         </div>
                         
@@ -670,9 +679,9 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             id="public-repos"
                             type="number"
                             min="0"
-                            value={repoInventory.publicRepos}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, publicRepos: parseInt(e.target.value) || 0 }))}
-                            placeholder="20"
+                            value={repoInventory.publicRepos ?? ''}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, publicRepos: parseInt(e.target.value) || undefined as any }))}
+                            placeholder="e.g., 20"
                           />
                         </div>
                         
@@ -682,9 +691,9 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             id="private-repos"
                             type="number"
                             min="0"
-                            value={repoInventory.privateRepos}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, privateRepos: parseInt(e.target.value) || 0 }))}
-                            placeholder="80"
+                            value={repoInventory.privateRepos ?? ''}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, privateRepos: parseInt(e.target.value) || undefined as any }))}
+                            placeholder="e.g., 80"
                           />
                         </div>
                         
@@ -694,22 +703,22 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             id="archived-repos"
                             type="number"
                             min="0"
-                            value={repoInventory.archivedRepos}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, archivedRepos: parseInt(e.target.value) || 0 }))}
-                            placeholder="10"
+                            value={repoInventory.archivedRepos ?? ''}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, archivedRepos: parseInt(e.target.value) || undefined as any }))}
+                            placeholder="e.g., 10"
                           />
                         </div>
                         
                         <div className="space-y-2">
-                          <Label htmlFor="total-size">Total Size (GB)</Label>
+                          <Label htmlFor="total-size">Total Size (GB) *</Label>
                           <Input
                             id="total-size"
                             type="number"
                             min="0"
                             step="0.1"
-                            value={repoInventory.totalSizeGB}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, totalSizeGB: parseFloat(e.target.value) || 0 }))}
-                            placeholder="50.5"
+                            value={repoInventory.totalSizeGB ?? ''}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, totalSizeGB: parseFloat(e.target.value) || undefined as any }))}
+                            placeholder="e.g., 50.5"
                           />
                         </div>
                         
@@ -720,9 +729,9 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             type="number"
                             min="0"
                             step="0.1"
-                            value={repoInventory.averageRepoSizeMB}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, averageRepoSizeMB: parseFloat(e.target.value) || 0 }))}
-                            placeholder="500"
+                            value={repoInventory.averageRepoSizeMB ?? ''}
+                            onChange={e => setRepoInventory(prev => ({ ...prev, averageRepoSizeMB: parseFloat(e.target.value) || undefined as any }))}
+                            placeholder="e.g., 500"
                           />
                         </div>
                       </div>
@@ -764,13 +773,13 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                         </div>
                       </div>
                       
-                      {repoInventory.totalRepositories > 0 && (
+                      {repoInventory.totalRepositories > 0 && githubMigrationType && (
                         <Alert className="mt-4 bg-accent/5 border-accent/20">
                           <Calculator size={18} className="text-accent" />
                           <AlertDescription className="text-sm">
-                            <strong className="text-foreground">Estimated Man Hours:</strong> {calculateManHours(repoInventory, githubMigrationType)} hours
+                            <strong className="text-foreground">Estimated Man Hours:</strong> {calculateManHours(repoInventory, githubMigrationType as GitHubMigrationType)} hours
                             <span className="text-muted-foreground ml-2">
-                              ({Math.ceil(calculateManHours(repoInventory, githubMigrationType) / 40)} weeks @ 40 hrs/week)
+                              ({Math.ceil(calculateManHours(repoInventory, githubMigrationType as GitHubMigrationType) / 40)} weeks @ 40 hrs/week)
                             </span>
                           </AlertDescription>
                         </Alert>
