@@ -26,6 +26,13 @@ const activityTemplates: Record<ServicePlatform, Array<{ type: ActivityType; tit
     { type: 'build', titleTemplate: 'Pipeline succeeded', descTemplate: 'Build and test completed successfully' },
     { type: 'deployment', titleTemplate: 'Release deployed', descTemplate: 'Release v3.2.1 to production' }
   ],
+  tfs: [
+    { type: 'commit', titleTemplate: 'Changeset checked in', descTemplate: 'to $/ProjectName/Main/Source' },
+    { type: 'commit', titleTemplate: 'Branch created', descTemplate: 'Created dev branch from main' },
+    { type: 'build', titleTemplate: 'TFS Build completed', descTemplate: 'Build definition succeeded' },
+    { type: 'commit', titleTemplate: 'Shelved changes', descTemplate: 'Pending code review - Changeset #1245' },
+    { type: 'build', titleTemplate: 'Gated check-in completed', descTemplate: 'Build validation passed' }
+  ],
   svn: [
     { type: 'commit', titleTemplate: 'Commits checked in', descTemplate: 'to trunk in project-core' },
     { type: 'commit', titleTemplate: 'Branch created', descTemplate: 'Created release branch for v2.0' },
@@ -127,7 +134,7 @@ export function generateMockActivities(platform: ServicePlatform, count: number 
 }
 
 export function generateAllPlatformActivities(countPerPlatform: number = 10): ServiceActivity[] {
-  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops', 'svn', 'perforce', 'mercurial', 'aws', 'gcp', 'azure', 'terraform']
+  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops', 'tfs', 'svn', 'perforce', 'mercurial', 'aws', 'gcp', 'azure', 'terraform']
   const allActivities: ServiceActivity[] = []
   
   platforms.forEach(platform => {
@@ -167,6 +174,14 @@ export function getPlatformServices(): PlatformService[] {
       id: 'azure-devops',
       name: 'Azure DevOps',
       description: 'DevOps services for version control and CI/CD',
+      enabled: true,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'tfs',
+      name: 'Team Foundation Server',
+      description: 'Microsoft enterprise source control and collaboration',
       enabled: true,
       activityCount: 0,
       healthStatus: 'healthy'

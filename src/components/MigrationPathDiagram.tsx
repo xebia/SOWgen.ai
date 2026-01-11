@@ -34,6 +34,12 @@ const platformConfig: Record<ServicePlatform, { name: string; icon: any; color: 
     color: 'oklch(0.48 0.18 295)',
     bgColor: 'oklch(0.48 0.18 295 / 0.1)'
   },
+  tfs: {
+    name: 'Team Foundation Server',
+    icon: Cloud,
+    color: 'oklch(0.43 0.17 295)',
+    bgColor: 'oklch(0.43 0.17 295 / 0.1)'
+  },
   svn: {
     name: 'Subversion (SVN)',
     icon: GitBranch,

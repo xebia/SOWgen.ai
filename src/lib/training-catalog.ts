@@ -362,6 +362,96 @@ export const TRAINING_MODULES: TrainingModule[] = [
     ]
   },
   {
+    id: 'tfs-beginner-1',
+    track: 'tfs',
+    level: 'beginner',
+    title: 'Team Foundation Server Fundamentals',
+    description: 'Introduction to TFS version control, work items, and basic workflows',
+    durationHours: 4,
+    agenda: [
+      'Introduction to Git and GitHub',
+      'Creating repositories and commits',
+      'Basic branching strategies',
+      'Pull requests and code review basics',
+      'GitHub interface overview'
+    ]
+  },
+  {
+    id: 'tfs-intermediate-1',
+    track: 'tfs',
+    level: 'intermediate',
+    title: 'Advanced TFS Workflows',
+    description: 'Branching strategies, code review processes, and team collaboration',
+    durationHours: 6,
+    agenda: [
+      'Advanced branching strategies (GitFlow, trunk-based)',
+      'Code review best practices',
+      'Conflict resolution techniques',
+      'GitHub Projects and issue tracking',
+      'Team collaboration workflows'
+    ]
+  },
+  {
+    id: 'tfs-build-beginner',
+    track: 'tfs',
+    level: 'beginner',
+    title: 'TFS Build Basics',
+    description: 'Introduction to CI/CD with TFS Build Definitions',
+    durationHours: 4,
+    agenda: [
+      'Understanding CI/CD concepts',
+      'Creating your first workflow',
+      'Working with actions marketplace',
+      'Basic testing and deployment',
+      'Workflow triggers and events'
+    ]
+  },
+  {
+    id: 'tfs-build-advanced',
+    track: 'tfs',
+    level: 'advanced',
+    title: 'Advanced TFS Build & Release',
+    description: 'Complex builds, deployment strategies, and automated release management',
+    durationHours: 8,
+    agenda: [
+      'Creating custom actions',
+      'Matrix strategies and reusable workflows',
+      'Multi-cloud deployment strategies',
+      'Secrets management and security',
+      'Monitoring and optimization'
+    ]
+  },
+  {
+    id: 'tfs-security-intermediate',
+    track: 'tfs',
+    level: 'intermediate',
+    title: 'TFS Security & Compliance',
+    description: 'Access control, branch policies, and compliance features',
+    durationHours: 6,
+    agenda: [
+      'Code scanning setup',
+      'Secret scanning configuration',
+      'Dependabot alerts and updates',
+      'Security policies and compliance',
+      'Vulnerability remediation workflows'
+    ]
+  },
+  {
+    id: 'tfs-advanced-1',
+    track: 'tfs',
+    level: 'advanced',
+    title: 'TFS Enterprise Administration',
+    description: 'Enterprise features, server administration, and migration to Azure DevOps',
+    durationHours: 8,
+    agenda: [
+      'GitHub Enterprise administration',
+      'GitHub Copilot deep-dive',
+      'Advanced Actions workflows',
+      'Security scanning and compliance',
+      'Enterprise-scale repository management'
+    ]
+  },
+  {
     id: 'azure-beginner-1',
     track: 'azure',
     level: 'beginner',
