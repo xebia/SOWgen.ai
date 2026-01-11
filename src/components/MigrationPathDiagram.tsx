@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { GithubLogo, GitlabLogo, GitBranch, Cloud, ArrowRight, CheckCircle, Database, GitCommit, Robot, GraduationCap } from '@phosphor-icons/react'
+import { GitHubLogo } from '@/components/GitHubLogo'
 import type { ServicePlatform } from '@/lib/types'
 
 interface MigrationPathDiagramProps {
@@ -115,7 +116,6 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
   const source = platformConfig[sourcePlatform]
   const target = platformConfig.github
   const SourceIcon = source.icon
-  const TargetIcon = target.icon
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -213,7 +213,7 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
                   className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-3 shadow-md"
                   style={{ backgroundColor: target.bgColor }}
                 >
-                  <TargetIcon size={40} weight="duotone" style={{ color: target.color }} />
+                  <GitHubLogo size={40} className="object-contain" />
                 </div>
                 <div className="space-y-1">
                   <h4 className="font-bold text-lg">{target.name}</h4>
@@ -227,10 +227,19 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
 
       <Card className="bg-gradient-to-br from-muted/40 to-muted/20 border-muted">
         <CardContent className="p-6">
-          <h4 className="font-semibold mb-4 flex items-center gap-2">
-            <CheckCircle size={20} weight="fill" className="text-success" />
-            Migration Stages
-          </h4>
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="font-semibold flex items-center gap-2">
+              <CheckCircle size={20} weight="fill" className="text-success" />
+              Migration Stages
+            </h4>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>Migrating to</span>
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/5 border border-primary/10">
+                <GitHubLogo size={16} />
+                <span className="font-medium text-foreground">GitHub</span>
+              </div>
+            </div>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {migrationSteps.map((step, index) => {
               const StepIcon = step.icon
@@ -268,10 +277,16 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
             <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
               <CheckCircle size={18} weight="fill" className="text-accent" />
             </div>
-            <div className="space-y-1">
-              <h5 className="font-semibold text-sm">Seamless Migration Process</h5>
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-2">
+                <h5 className="font-semibold text-sm">Seamless Migration Process to</h5>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-background border border-primary/20">
+                  <GitHubLogo size={14} />
+                  <span className="text-xs font-semibold">GitHub</span>
+                </div>
+              </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Xebia's proven methodology ensures zero data loss, minimal downtime, and complete team alignment throughout the migration journey.
+                Xebia's proven methodology ensures zero data loss, minimal downtime, and complete team alignment throughout the migration journey to GitHub's enterprise platform.
               </p>
             </div>
           </div>

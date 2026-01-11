@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 import { fetchRepositoryData, generateProjectDescription, type RepositoryData, type SCMPlatform } from '@/lib/scm-api'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
+import { GitHubLogo } from '@/components/GitHubLogo'
 
 interface SOWFormProps {
   user: User
@@ -575,7 +576,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                     <div className="border rounded-lg p-6 bg-muted/30">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <GithubLogo size={24} weight="duotone" className="text-primary" />
+                          <GitHubLogo size={24} className="object-contain" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-lg">GitHub Migration Type</h3>
@@ -588,10 +589,13 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
                             <RadioGroupItem value="github-classic" id="github-classic" className="mt-1" />
                             <div className="flex-1">
-                              <Label htmlFor="github-classic" className="font-semibold text-base cursor-pointer">
-                                GitHub Classic (Cloud)
-                              </Label>
-                              <p className="text-sm text-muted-foreground mt-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Label htmlFor="github-classic" className="font-semibold text-base cursor-pointer">
+                                  GitHub Classic (Cloud)
+                                </Label>
+                                <GitHubLogo size={16} />
+                              </div>
+                              <p className="text-sm text-muted-foreground">
                                 Standard GitHub cloud platform with individual user accounts
                               </p>
                             </div>
@@ -600,10 +604,13 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
                             <RadioGroupItem value="github-emu" id="github-emu" className="mt-1" />
                             <div className="flex-1">
-                              <Label htmlFor="github-emu" className="font-semibold text-base cursor-pointer">
-                                GitHub EMU (Enterprise Managed Users)
-                              </Label>
-                              <p className="text-sm text-muted-foreground mt-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Label htmlFor="github-emu" className="font-semibold text-base cursor-pointer">
+                                  GitHub EMU (Enterprise Managed Users)
+                                </Label>
+                                <GitHubLogo size={16} />
+                              </div>
+                              <p className="text-sm text-muted-foreground">
                                 Enterprise platform with centrally managed user identities and enhanced security
                               </p>
                             </div>
@@ -612,10 +619,13 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent/5 transition-colors">
                             <RadioGroupItem value="ghes" id="ghes" className="mt-1" />
                             <div className="flex-1">
-                              <Label htmlFor="ghes" className="font-semibold text-base cursor-pointer">
-                                GitHub Enterprise Server (GHES)
-                              </Label>
-                              <p className="text-sm text-muted-foreground mt-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Label htmlFor="ghes" className="font-semibold text-base cursor-pointer">
+                                  GitHub Enterprise Server (GHES)
+                                </Label>
+                                <GitHubLogo size={16} />
+                              </div>
+                              <p className="text-sm text-muted-foreground">
                                 Self-hosted GitHub instance on your own infrastructure
                               </p>
                             </div>

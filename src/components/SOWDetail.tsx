@@ -13,6 +13,7 @@ import { exportSOWsToCSV } from '@/lib/csv-export'
 import { ArrowLeft, CheckCircle, XCircle, ChatCircle, Clock, FilePdf, FileCsv } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { useApp } from '@/lib/app-context'
+import { GitHubLogo } from '@/components/GitHubLogo'
 
 interface SOWDetailProps {
   sow: SOW
@@ -172,8 +173,19 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
         {sow.includeMigration && sow.migrationStages.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Migration Stages</CardTitle>
-              <CardDescription>{sow.migrationStages.length} stages configured</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Migration Stages</CardTitle>
+                  <CardDescription>{sow.migrationStages.length} stages configured</CardDescription>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span>Target Platform:</span>
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/5 border border-primary/10">
+                    <GitHubLogo size={14} />
+                    <span className="font-medium text-foreground">GitHub</span>
+                  </div>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {sow.migrationStages.map((stage, index) => (
@@ -190,7 +202,10 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
                   {stage.githubMigrationType && (
                     <div>
                       <Label className="text-xs text-muted-foreground">GitHub Migration Type</Label>
-                      <Badge variant="outline" className="mt-1 capitalize">{stage.githubMigrationType.replace(/-/g, ' ')}</Badge>
+                      <div className="flex items-center gap-2 mt-1">
+                        <GitHubLogo size={16} />
+                        <Badge variant="outline" className="capitalize">{stage.githubMigrationType.replace(/-/g, ' ')}</Badge>
+                      </div>
                     </div>
                   )}
                   
@@ -237,7 +252,14 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
                   {stage.includeCICDMigration && (
                     <div>
                       <Label className="text-xs text-muted-foreground">CI/CD Migration</Label>
-                      <p className="text-sm mt-1">From: <Badge variant="outline">{stage.cicdPlatform}</Badge> → GitHub Actions</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-sm">From: <Badge variant="outline">{stage.cicdPlatform}</Badge></p>
+                        <span className="text-muted-foreground">→</span>
+                        <div className="flex items-center gap-1.5">
+                          <GitHubLogo size={14} />
+                          <span className="text-sm font-medium">GitHub Actions</span>
+                        </div>
+                      </div>
                       {stage.cicdDetails && <p className="text-sm text-muted-foreground mt-1">{stage.cicdDetails}</p>}
                     </div>
                   )}
