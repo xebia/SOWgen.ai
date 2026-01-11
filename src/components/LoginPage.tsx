@@ -68,7 +68,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               transition={{ duration: 0.5 }}
               className="flex items-center gap-3"
             >
-              <XebiaLogo size={48} />
+              <XebiaLogo size={140} />
             </motion.div>
           </div>
         </header>

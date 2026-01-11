@@ -104,13 +104,17 @@ function AppContent() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
-        <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <div className="flex items-center gap-3">
+            <motion.div 
+              className="flex items-center gap-3"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="flex items-center gap-2">
-                <XebiaLogo size={120} />
+                <XebiaLogo size={140} />
               </div>
-            </div>
+            </motion.div>
             <nav className="flex gap-1">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Button
@@ -351,7 +355,7 @@ function AppContent() {
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <div className="flex items-center gap-2 mb-3">
-                <XebiaLogo size={100} />
+                <XebiaLogo size={120} />
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Empowering digital transformation through intelligent automation and cloud excellence
