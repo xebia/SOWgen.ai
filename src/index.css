@@ -111,33 +111,6 @@ h1, h2, h3, h4, h5, h6 {
   background: oklch(0.42 0.20 295);
 }
 
-.xebia-logo-x {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.xebia-logo-x::before,
-.xebia-logo-x::after {
-  content: '';
-  position: absolute;
-  width: 70%;
-  height: 3px;
-  background: white;
-  border-radius: 2px;
-}
-
-.xebia-logo-x::before {
-  transform: rotate(45deg);
-}
-
-.xebia-logo-x::after {
-  transform: rotate(-45deg);
-}
-
 .xebia-pattern {
   background-image: 
     repeating-linear-gradient(45deg, transparent, transparent 10px, oklch(0.42 0.20 295 / 0.03) 10px, oklch(0.42 0.20 295 / 0.03) 20px),

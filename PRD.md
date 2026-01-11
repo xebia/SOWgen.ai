@@ -13,11 +13,11 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 ## Essential Features
 
 ### 1. Authentication & Role-Based Access
-- **Functionality**: Modern dual authentication system with enhanced visual design supporting external clients and internal Xebia staff with role-based permissions (Client, Xebia Admin, Approver)
-- **Purpose**: Secure access control ensuring clients only see their data while internal staff access admin features, presented through an engaging, modern interface
-- **Trigger**: Landing page with modern hero section featuring platform highlights and role-based login tabs
-- **Progression**: View landing page with service highlights → Select role tab (Demo/Client/Xebia) → Enter credentials → Verify → Animate transition to appropriate dashboard
-- **Success criteria**: Users land on role-appropriate views; unauthorized access attempts are blocked; role permissions correctly limit feature access; login experience is visually appealing with smooth animations
+- **Functionality**: Dual authentication system with enhanced visual design supporting external clients and internal Xebia staff with role-based permissions (Client, Xebia Admin, Approver)
+- **Purpose**: Secure access control ensuring clients only see their data while internal staff access admin features, presented through an engaging, modern interface with the official Xebia logo and branding
+- **Trigger**: Landing page with modern hero section featuring platform highlights and role-based login tabs (Client and Xebia only)
+- **Progression**: View landing page with service highlights → Select role tab (Client/Xebia) → Enter credentials → Verify → Animate transition to appropriate dashboard
+- **Success criteria**: Users land on role-appropriate views; unauthorized access attempts are blocked; role permissions correctly limit feature access; login experience is visually appealing with smooth animations; Xebia logo is prominently displayed
 
 ### 2. Dashboard (Xebia Internal)
 - **Functionality**: Analytics dashboard displaying SOW statistics with filterable charts (total SOWs, approved, pending, approval rates, timeline trends)
@@ -172,6 +172,14 @@ A professional yet distinctive palette aligned with Xebia's official brand ident
 - Pattern opacity transitions on hover (0 to 0.1 opacity) for subtle background pattern reveals
 
 ## Xebia Branding Elements
+
+**Xebia Logo**:
+- Official Xebia logo as an SVG component with distinctive X mark design
+- Two variations: `XebiaLogo` (full rounded square with gradient) and `XebiaLogoMark` (mark only)
+- Used consistently across all pages: login, header, footer
+- Gradient colors: from `oklch(0.50 0.22 295)` to `oklch(0.38 0.18 295)`
+- White X mark formed by two intersecting chevron paths
+- Available in multiple sizes with responsive scaling
 
 **Visual Patterns**:
 - **Diagonal Cross-Hatch Pattern**: Repeating 45° and -45° linear gradients with primary/accent colors at low opacity (2-3%) for sophisticated backgrounds

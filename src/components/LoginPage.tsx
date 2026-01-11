@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { User, UserRole } from '@/lib/types'
-import { ArrowRight, Sparkle, CloudArrowUp, Code, ShieldCheck } from '@phosphor-icons/react'
+import { XebiaLogo } from '@/components/XebiaLogo'
+import { ArrowRight, CloudArrowUp, Code, ShieldCheck } from '@phosphor-icons/react'
 
 interface LoginPageProps {
   onLogin: (user: User) => void
@@ -44,16 +45,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     }
   }
 
-  const handleDemoLogin = (role: UserRole, name: string, org: string) => {
-    const user: User = {
-      id: `demo-${role}-${Date.now()}`,
-      name,
-      email: `${name.toLowerCase().replace(' ', '.')}@${org.toLowerCase()}.com`,
-      role,
-      organization: org
-    }
-    onLogin(user)
-  }
+
 
   const features = [
     { icon: CloudArrowUp, title: 'Multi-Cloud', text: 'AWS, Azure, GCP' },
@@ -79,9 +71,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             className="text-center lg:text-left space-y-6"
           >
             <div className="flex items-center gap-3 justify-center lg:justify-start mb-6">
-              <div className="w-14 h-14 rounded-xl xebia-gradient shadow-lg">
-                <div className="xebia-logo-x" />
-              </div>
+              <XebiaLogo size={56} />
               <div className="flex flex-col">
                 <h1 className="text-3xl font-bold text-primary">Xebia</h1>
                 <p className="text-sm text-muted-foreground -mt-0.5">SOW Generator</p>
@@ -133,49 +123,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <p className="text-muted-foreground">Sign in to access your services dashboard</p>
                 </div>
 
-                <Tabs defaultValue="demo" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 mb-6">
-                    <TabsTrigger value="demo">Demo</TabsTrigger>
+                <Tabs defaultValue="client" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
                     <TabsTrigger value="client">Client</TabsTrigger>
                     <TabsTrigger value="xebia">Xebia</TabsTrigger>
                   </TabsList>
-
-                  <TabsContent value="demo" className="space-y-3">
-                    <p className="text-sm text-muted-foreground mb-4">Quick access for demonstration</p>
-                    <Button
-                      onClick={() => handleDemoLogin('client', 'Sarah Johnson', 'TechCorp')}
-                      variant="outline"
-                      className="w-full justify-between h-auto p-4 hover:bg-accent/5 transition-colors"
-                    >
-                      <div className="text-left">
-                        <div className="font-semibold">Sarah Johnson</div>
-                        <div className="text-xs text-muted-foreground">Client • TechCorp</div>
-                      </div>
-                      <ArrowRight size={20} />
-                    </Button>
-                    <Button
-                      onClick={() => handleDemoLogin('xebia-admin', 'Alex Chen', 'Xebia')}
-                      variant="outline"
-                      className="w-full justify-between h-auto p-4 hover:bg-accent/5 transition-colors"
-                    >
-                      <div className="text-left">
-                        <div className="font-semibold">Alex Chen</div>
-                        <div className="text-xs text-muted-foreground">Admin • Xebia</div>
-                      </div>
-                      <ArrowRight size={20} />
-                    </Button>
-                    <Button
-                      onClick={() => handleDemoLogin('approver', 'Morgan Taylor', 'Xebia')}
-                      variant="outline"
-                      className="w-full justify-between h-auto p-4 hover:bg-accent/5 transition-colors"
-                    >
-                      <div className="text-left">
-                        <div className="font-semibold">Morgan Taylor</div>
-                        <div className="text-xs text-muted-foreground">Approver • Xebia</div>
-                      </div>
-                      <ArrowRight size={20} />
-                    </Button>
-                  </TabsContent>
 
                   <TabsContent value="client">
                     <form onSubmit={handleClientLogin} className="space-y-5">

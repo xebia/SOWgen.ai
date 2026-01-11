@@ -6,6 +6,7 @@ import { ServicesDashboard } from '@/components/ServicesDashboard'
 import { SOWForm } from '@/components/SOWForm'
 import { SOWList } from '@/components/SOWList'
 import { SOWDetail } from '@/components/SOWDetail'
+import { XebiaLogo } from '@/components/XebiaLogo'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
 import { SOW, User, ServicePlatform } from '@/lib/types'
@@ -72,9 +73,7 @@ function AppContent() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-lg xebia-gradient shadow-md">
-                  <div className="xebia-logo-x" />
-                </div>
+                <XebiaLogo size={40} />
                 <div className="flex flex-col">
                   <h1 className="text-xl font-bold text-primary">Xebia</h1>
                   <p className="text-xs text-muted-foreground -mt-0.5">SOW Generator</p>
@@ -232,9 +231,7 @@ function AppContent() {
           <div className="grid md:grid-cols-3 gap-8 mb-6">
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg xebia-gradient shadow-md">
-                  <div className="xebia-logo-x" />
-                </div>
+                <XebiaLogo size={32} />
                 <div className="flex flex-col">
                   <span className="font-bold text-primary">Xebia</span>
                   <span className="text-xs text-muted-foreground -mt-0.5">SOWGen</span>
