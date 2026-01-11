@@ -25,6 +25,7 @@ import {
   Info
 } from '@phosphor-icons/react'
 import { formatDistanceToNow } from 'date-fns'
+import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
 
 interface ServicesDashboardProps {
   user: User
@@ -257,6 +258,11 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             </Card>
           </motion.div>
         </div>
+
+        <MigrationPathDiagram 
+          sourcePlatform={selectedService} 
+          className="max-w-5xl"
+        />
 
         <Card className="max-w-5xl bg-muted/30 border-muted">
           <CardHeader>

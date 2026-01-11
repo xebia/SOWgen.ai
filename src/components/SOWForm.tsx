@@ -16,6 +16,7 @@ import { X, Plus, GithubLogo, GitlabLogo, GitBranch, Sparkle, CloudArrowDown, Ch
 import { toast } from 'sonner'
 import { fetchRepositoryData, generateProjectDescription, type RepositoryData, type SCMPlatform } from '@/lib/scm-api'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
 
 interface SOWFormProps {
   user: User
@@ -740,6 +741,11 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                         </div>
                       </RadioGroup>
                     </div>
+
+                    <MigrationPathDiagram 
+                      sourcePlatform={selectedPlatform || scmType as ServicePlatform} 
+                      className="my-6"
+                    />
 
                     <div className="border rounded-lg p-6 bg-muted/30">
                       <div className="flex items-center gap-3 mb-4">
