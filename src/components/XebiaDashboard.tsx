@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { SOW, DashboardStats } from '@/lib/types'
@@ -84,58 +85,115 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="relative overflow-hidden group">
-          <div className="absolute inset-0 xebia-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-            <CardTitle className="text-sm font-medium">Total SOWs</CardTitle>
-            <FileText className="text-muted-foreground" size={20} />
-          </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold">{stats.totalSOWs}</div>
-            <p className="text-xs text-muted-foreground mt-1">All time</p>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0 }}
+        >
+          <Card className="relative overflow-hidden group">
+            <div className="absolute inset-0 xebia-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium">Total SOWs</CardTitle>
+              <FileText className="text-muted-foreground" size={20} />
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <motion.div 
+                className="text-3xl font-bold"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+              >
+                {stats.totalSOWs}
+              </motion.div>
+              <p className="text-xs text-muted-foreground mt-1">All time</p>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <Card className="relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-            <CardTitle className="text-sm font-medium">Approved</CardTitle>
-            <CheckCircle className="text-success" size={20} weight="fill" />
-          </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold">{stats.approvedSOWs}</div>
-            <p className="text-xs text-muted-foreground mt-1">{stats.approvalRate}% approval rate</p>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          <Card className="relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium">Approved</CardTitle>
+              <CheckCircle className="text-success" size={20} weight="fill" />
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <motion.div 
+                className="text-3xl font-bold"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
+              >
+                {stats.approvedSOWs}
+              </motion.div>
+              <p className="text-xs text-muted-foreground mt-1">{stats.approvalRate}% approval rate</p>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <Card className="relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-warning/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-            <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
-            <Clock className="text-warning" size={20} weight="fill" />
-          </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold">{stats.pendingSOWs}</div>
-            <p className="text-xs text-muted-foreground mt-1">Awaiting approval</p>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <Card className="relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-warning/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+              <Clock className="text-warning" size={20} weight="fill" />
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <motion.div 
+                className="text-3xl font-bold"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
+              >
+                {stats.pendingSOWs}
+              </motion.div>
+              <p className="text-xs text-muted-foreground mt-1">Awaiting approval</p>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <Card className="relative overflow-hidden group">
-          <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-            <CardTitle className="text-sm font-medium">Avg. Approval Time</CardTitle>
-            <XCircle className="text-muted-foreground" size={20} />
-          </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold">{stats.avgApprovalTimeDays}</div>
-            <p className="text-xs text-muted-foreground mt-1">Days</p>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+        >
+          <Card className="relative overflow-hidden group">
+            <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium">Avg. Approval Time</CardTitle>
+              <XCircle className="text-muted-foreground" size={20} />
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <motion.div 
+                className="text-3xl font-bold"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.5 }}
+              >
+                {stats.avgApprovalTimeDays}
+              </motion.div>
+              <p className="text-xs text-muted-foreground mt-1">Days</p>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="relative overflow-hidden">
-          <div className="absolute inset-0 xebia-pattern opacity-5" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Card className="relative overflow-hidden">
+            <div className="absolute inset-0 xebia-pattern opacity-5" />
           <CardHeader className="relative z-10">
             <CardTitle>SOW Status Distribution</CardTitle>
             <p className="text-xs text-muted-foreground">Real-time status tracking across all projects</p>
@@ -168,9 +226,15 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
             )}
           </CardContent>
         </Card>
+        </motion.div>
 
-        <Card className="relative overflow-hidden">
-          <div className="absolute inset-0 xebia-dots-pattern opacity-5" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <Card className="relative overflow-hidden">
+            <div className="absolute inset-0 xebia-dots-pattern opacity-5" />
           <CardHeader className="relative z-10">
             <CardTitle>Monthly SOW Creation</CardTitle>
             <p className="text-xs text-muted-foreground">Project activity trends over time</p>
@@ -187,9 +251,15 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+        </motion.div>
       </div>
 
-      <Card className="relative overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <Card className="relative overflow-hidden">
         <div className="absolute inset-0 xebia-grid-pattern opacity-5" />
         <CardHeader className="relative z-10">
           <CardTitle>SOWs by Client</CardTitle>
@@ -212,6 +282,7 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+      </motion.div>
     </div>
   )
 }

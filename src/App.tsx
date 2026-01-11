@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { AppProvider, useApp } from '@/lib/app-context'
 import { LoginPage } from '@/components/LoginPage'
 import { XebiaDashboard } from '@/components/XebiaDashboard'
@@ -91,8 +92,18 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-background relative">
-      <div className="absolute inset-0 xebia-dots-pattern opacity-15 pointer-events-none" />
-      <header className="border-b bg-card/95 backdrop-blur-md sticky top-0 z-10 shadow-sm relative">
+      <motion.div 
+        className="absolute inset-0 xebia-dots-pattern opacity-15 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.15 }}
+        transition={{ duration: 1 }}
+      />
+      <motion.header 
+        className="border-b bg-card/95 backdrop-blur-md sticky top-0 z-10 shadow-sm relative"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      >
         <div className="container mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
@@ -101,33 +112,39 @@ function AppContent() {
               </div>
             </div>
             <nav className="flex gap-1">
-              <Button
-                variant={currentView === 'dashboard' ? 'default' : 'ghost'}
-                onClick={() => setCurrentView('dashboard')}
-                className={`gap-2 transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
-              >
-                <House size={18} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
-                Dashboard
-              </Button>
-              {isClient && (
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Button
-                  variant={currentView === 'services' ? 'default' : 'ghost'}
-                  onClick={() => setCurrentView('services')}
-                  className={`gap-2 transition-all duration-200 ${currentView === 'services' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+                  variant={currentView === 'dashboard' ? 'default' : 'ghost'}
+                  onClick={() => setCurrentView('dashboard')}
+                  className={`gap-2 transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
                 >
-                  <Stack size={18} weight={currentView === 'services' ? 'fill' : 'regular'} />
-                  Services
+                  <House size={18} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
+                  Dashboard
                 </Button>
+              </motion.div>
+              {isClient && (
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    variant={currentView === 'services' ? 'default' : 'ghost'}
+                    onClick={() => setCurrentView('services')}
+                    className={`gap-2 transition-all duration-200 ${currentView === 'services' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+                  >
+                    <Stack size={18} weight={currentView === 'services' ? 'fill' : 'regular'} />
+                    Services
+                  </Button>
+                </motion.div>
               )}
               {isXebia && (
-                <Button
-                  variant={currentView === 'sows' ? 'default' : 'ghost'}
-                  onClick={() => setCurrentView('sows')}
-                  className={`gap-2 transition-all duration-200 ${currentView === 'sows' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
-                >
-                  <FileText size={18} weight={currentView === 'sows' ? 'fill' : 'regular'} />
-                  All SOWs
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    variant={currentView === 'sows' ? 'default' : 'ghost'}
+                    onClick={() => setCurrentView('sows')}
+                    className={`gap-2 transition-all duration-200 ${currentView === 'sows' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+                  >
+                    <FileText size={18} weight={currentView === 'sows' ? 'fill' : 'regular'} />
+                    All SOWs
+                  </Button>
+                </motion.div>
               )}
             </nav>
           </div>
@@ -169,136 +186,225 @@ function AppContent() {
             </DropdownMenu>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       <UserProfile open={showProfileDialog} onOpenChange={setShowProfileDialog} />
 
       <main className="container mx-auto px-6 py-8 relative">
-        {currentView === 'dashboard' && isClient && (
-          <ServicesDashboard 
-            user={currentUser} 
-            onCreateSOWManual={(platform) => {
-              setSelectedPlatform(platform)
-              setCurrentView('sow-form')
-            }}
-            onCreateSOWAutomation={(platform) => {
-              setSelectedPlatform(platform)
-              setCurrentView('sow-form-automation')
-            }}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          {currentView === 'dashboard' && isClient && (
+            <motion.div
+              key="client-dashboard"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ServicesDashboard 
+                user={currentUser} 
+                onCreateSOWManual={(platform) => {
+                  setSelectedPlatform(platform)
+                  setCurrentView('sow-form')
+                }}
+                onCreateSOWAutomation={(platform) => {
+                  setSelectedPlatform(platform)
+                  setCurrentView('sow-form-automation')
+                }}
+              />
+            </motion.div>
+          )}
 
-        {currentView === 'dashboard' && isXebia && (
-          <>
-            <div className="mb-8 p-8 rounded-2xl bg-gradient-to-r from-primary/8 via-accent/8 to-primary/8 border-2 border-primary/15 relative overflow-hidden shadow-lg">
-              <div className="absolute inset-0 xebia-pattern opacity-40" />
-              <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-              <div className="relative z-10">
-                <h2 className="text-3xl font-bold mb-2 tracking-tight">Xebia Dashboard</h2>
-                <p className="text-muted-foreground mb-4 text-base">Monitor, analyze, and optimize your Statement of Work pipeline</p>
-                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                  <Sparkle size={18} weight="fill" />
-                  <span>Driving excellence through data-driven insights</span>
+          {currentView === 'dashboard' && isXebia && (
+            <motion.div
+              key="xebia-dashboard"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="mb-8 p-8 rounded-2xl bg-gradient-to-r from-primary/8 via-accent/8 to-primary/8 border-2 border-primary/15 relative overflow-hidden shadow-lg">
+                <div className="absolute inset-0 xebia-pattern opacity-40" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+                <div className="relative z-10">
+                  <h2 className="text-3xl font-bold mb-2 tracking-tight">Xebia Dashboard</h2>
+                  <p className="text-muted-foreground mb-4 text-base">Monitor, analyze, and optimize your Statement of Work pipeline</p>
+                  <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                    <Sparkle size={18} weight="fill" />
+                    <span>Driving excellence through data-driven insights</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <XebiaDashboard sows={sows} />
-          </>
-        )}
+              <XebiaDashboard sows={sows} />
+            </motion.div>
+          )}
 
-        {currentView === 'services' && isClient && (
-          <ServicesDashboard 
-            user={currentUser}
-            onCreateSOWManual={(platform) => {
-              setSelectedPlatform(platform)
-              setCurrentView('sow-form')
-            }}
-            onCreateSOWAutomation={(platform) => {
-              setSelectedPlatform(platform)
-              setCurrentView('sow-form-automation')
-            }}
-          />
-        )}
+          {currentView === 'services' && isClient && (
+            <motion.div
+              key="services"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ServicesDashboard 
+                user={currentUser}
+                onCreateSOWManual={(platform) => {
+                  setSelectedPlatform(platform)
+                  setCurrentView('sow-form')
+                }}
+                onCreateSOWAutomation={(platform) => {
+                  setSelectedPlatform(platform)
+                  setCurrentView('sow-form-automation')
+                }}
+              />
+            </motion.div>
+          )}
 
-        {currentView === 'sow-form' && (
-          <SOWForm
-            user={currentUser}
-            onSave={handleSaveSOW}
-            onCancel={() => {
-              setCurrentView('dashboard')
-              setSelectedPlatform(null)
-            }}
-            selectedPlatform={selectedPlatform}
-          />
-        )}
+          {currentView === 'sow-form' && (
+            <motion.div
+              key="sow-form"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SOWForm
+                user={currentUser}
+                onSave={handleSaveSOW}
+                onCancel={() => {
+                  setCurrentView('dashboard')
+                  setSelectedPlatform(null)
+                }}
+                selectedPlatform={selectedPlatform}
+              />
+            </motion.div>
+          )}
 
-        {currentView === 'sow-form-automation' && (
-          <SOWForm
-            user={currentUser}
-            onSave={handleSaveSOW}
-            onCancel={() => {
-              setCurrentView('dashboard')
-              setSelectedPlatform(null)
-            }}
-            automationMode={true}
-            selectedPlatform={selectedPlatform}
-          />
-        )}
+          {currentView === 'sow-form-automation' && (
+            <motion.div
+              key="sow-form-automation"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SOWForm
+                user={currentUser}
+                onSave={handleSaveSOW}
+                onCancel={() => {
+                  setCurrentView('dashboard')
+                  setSelectedPlatform(null)
+                }}
+                automationMode={true}
+                selectedPlatform={selectedPlatform}
+              />
+            </motion.div>
+          )}
 
-        {currentView === 'sows' && isXebia && (
-          <SOWList
-            sows={sows}
-            user={currentUser}
-            onViewSOW={handleViewSOW}
-          />
-        )}
+          {currentView === 'sows' && isXebia && (
+            <motion.div
+              key="sows-list"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SOWList
+                sows={sows}
+                user={currentUser}
+                onViewSOW={handleViewSOW}
+              />
+            </motion.div>
+          )}
 
-        {currentView === 'sow-detail' && selectedSOW && (
-          <SOWDetail
-            sow={selectedSOW}
-            user={currentUser}
-            onBack={() => setCurrentView(isXebia ? 'sows' : 'dashboard')}
-            onUpdateSOW={handleUpdateSOW}
-          />
-        )}
+          {currentView === 'sow-detail' && selectedSOW && (
+            <motion.div
+              key="sow-detail"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SOWDetail
+                sow={selectedSOW}
+                user={currentUser}
+                onBack={() => setCurrentView(isXebia ? 'sows' : 'dashboard')}
+                onUpdateSOW={handleUpdateSOW}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
-      <footer className="border-t bg-card/50 backdrop-blur-sm mt-16 relative overflow-hidden">
+      <motion.footer 
+        className="border-t bg-card/50 backdrop-blur-sm mt-16 relative overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <div className="absolute inset-0 xebia-pattern opacity-30" />
         <div className="container mx-auto px-6 py-8 relative z-10">
           <div className="grid md:grid-cols-2 gap-8 mb-6">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
               <div className="flex items-center gap-2 mb-3">
                 <XebiaLogo size={100} />
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Empowering digital transformation through intelligent automation and cloud excellence
               </p>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
               <h4 className="font-semibold mb-3 text-sm">Our Values</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
+                <motion.li 
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
+                >
                   <div className="w-1 h-1 rounded-full bg-primary" />
                   Innovation at Scale
-                </li>
-                <li className="flex items-center gap-2">
+                </motion.li>
+                <motion.li 
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.6 }}
+                >
                   <div className="w-1 h-1 rounded-full bg-primary" />
                   Client-Centric Excellence
-                </li>
-                <li className="flex items-center gap-2">
+                </motion.li>
+                <motion.li 
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.7 }}
+                >
                   <div className="w-1 h-1 rounded-full bg-primary" />
                   Continuous Learning
-                </li>
+                </motion.li>
               </ul>
-            </div>
+            </motion.div>
           </div>
-          <div className="pt-6 border-t flex items-center justify-between text-sm text-muted-foreground">
+          <motion.div 
+            className="pt-6 border-t flex items-center justify-between text-sm text-muted-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
             <p>© 2026 Xebia. All rights reserved.</p>
             <p className="font-medium text-primary">Building Tomorrow, Today</p>
-          </div>
+          </motion.div>
         </div>
-      </footer>
+      </motion.footer>
 
       <Toaster />
     </div>

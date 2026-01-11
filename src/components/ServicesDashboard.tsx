@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -28,6 +28,7 @@ import {
   WindowsLogo,
   Cube
 } from '@phosphor-icons/react'
+import { GitHubLogo } from '@/components/GitHubLogo'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
 
 interface ServicesDashboardProps {
@@ -149,10 +150,14 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             </Button>
             <div className="flex items-center gap-4 mb-3">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border"
+                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden"
                 style={{ backgroundColor: `color-mix(in oklch, ${platformColors[selectedService]} 10%, transparent)` }}
               >
-                <Icon size={28} weight="duotone" style={{ color: platformColors[selectedService] }} />
+                {selectedService === 'github' ? (
+                  <GitHubLogo size={28} className="object-contain" />
+                ) : (
+                  <Icon size={28} weight="duotone" style={{ color: platformColors[selectedService] }} />
+                )}
               </div>
               <div>
                 <h2 className="text-3xl font-bold tracking-tight">{serviceName}</h2>
@@ -355,13 +360,17 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                 <CardHeader className="pb-4 relative">
                   <div className="flex items-start justify-between mb-4">
                     <div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm border"
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm border relative overflow-hidden"
                       style={{ 
                         backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
                         borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
                       }}
                     >
-                      <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} />
+                      {service.id === 'github' ? (
+                        <GitHubLogo size={32} className="object-contain" />
+                      ) : (
+                        <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} />
+                      )}
                     </div>
                   </div>
                   <CardTitle className="text-2xl mb-2 tracking-tight">{service.name}</CardTitle>

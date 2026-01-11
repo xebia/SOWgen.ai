@@ -1,4 +1,5 @@
 import { SOW, User } from '@/lib/types'
+import { motion } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { exportSOWAsPDF } from '@/lib/pdf-export'
 import { exportSOWsToCSV } from '@/lib/csv-export'
 import { MagnifyingGlass, FilePdf, Eye, FileCsv } from '@phosphor-icons/react'
+import { GitHubLogo } from '@/components/GitHubLogo'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import { useApp } from '@/lib/app-context'
@@ -136,10 +138,18 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredSows.map(sow => {
+                {filteredSows.map((sow, index) => {
                   const client = getUserById(sow.clientId)
                   return (
-                    <TableRow key={sow.id} className="cursor-pointer hover:bg-muted/50" onClick={() => onViewSOW(sow)}>
+                    <motion.tr 
+                      key={sow.id} 
+                      className="cursor-pointer hover:bg-muted/50 border-b transition-colors"
+                      onClick={() => onViewSOW(sow)}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      whileHover={{ backgroundColor: 'oklch(0.97 0.008 295 / 0.8)' }}
+                    >
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Avatar className="h-8 w-8 border border-primary/20">
@@ -165,15 +175,19 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onViewSOW(sow) }}>
-                            <Eye size={18} />
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={(e) => handleExportPDF(e, sow)}>
-                            <FilePdf size={18} weight="duotone" />
-                          </Button>
+                          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                            <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onViewSOW(sow) }}>
+                              <Eye size={18} />
+                            </Button>
+                          </motion.div>
+                          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                            <Button variant="ghost" size="sm" onClick={(e) => handleExportPDF(e, sow)}>
+                              <FilePdf size={18} weight="duotone" />
+                            </Button>
+                          </motion.div>
                         </div>
                       </TableCell>
-                    </TableRow>
+                    </motion.tr>
                   )
                 })}
               </TableBody>
