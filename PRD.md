@@ -55,25 +55,25 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Form validates all required fields; can save drafts; successful submission triggers approval workflow; data persists correctly
 
 ### 4b. SOW Generation (Automation Mode)
-- **Functionality**: SCM-integrated SOW creation with real REST API data fetching from GitHub and GitLab, followed by review and additional details form
-- **Purpose**: Accelerate SOW creation by automatically fetching comprehensive repository metadata including branches, commits, contributors, languages, CI/CD detection, topics, issues, PRs, stars, forks, and complexity analysis from existing SCM platforms
-- **Trigger**: Client clicks "Use Automation" card on dashboard
-- **Progression**: Select SCM platform (GitHub/GitLab) → Enter repository URL and optional access token → Fetch data via real API → Review comprehensive auto-populated project details (repository name, full path, description, visibility, default branch, branches count, commits count, contributors, languages, CI/CD status, topics, open issues/PRs, stars, forks, license, complexity estimate) → Modify/enhance details → Add migration stages → Select training modules → Submit
-- **Success criteria**: Successfully fetches real data from GitHub REST API v3 and GitLab API v4; handles public and private repositories with token authentication; pre-fills project name with rich generated description; displays comprehensive repository metrics with proper badges and formatting; allows user to review and modify fetched data; gracefully handles API failures (404, 401, network errors) with clear, actionable error messages; detects GitHub Actions workflows and GitLab CI pipelines; calculates complexity score based on multiple factors; proceeding to other tabs shows pre-filled data; provides token generation guidance for each platform
+- **Functionality**: SCM-integrated SOW creation with real REST API data fetching from GitHub and GitLab. When users select an SCM platform (GitHub/GitLab), they see two SOW generation options (Manual Entry or Automated Import). Upon selection, the form opens with comprehensive migration configuration including GitHub migration type selection (Classic/EMU/GHES), repository inventory details, man-hour calculation, CI/CD migration options, and integrated training module selection all within a unified workflow.
+- **Purpose**: Accelerate SOW creation by automatically fetching comprehensive repository metadata and providing all migration services (repository migration, CI/CD migration, and training) in a single streamlined form interface rather than separate modules
+- **Trigger**: Client clicks SCM platform card (GitHub/GitLab) on dashboard → Selects "Use Automation" option
+- **Progression**: Select SCM platform → Choose Automation mode → Enter repository URL and optional access token → Fetch comprehensive data via real API → Review auto-populated project details with full metrics → Configure GitHub Migration Type (Classic/EMU/GHES) → Enter repository inventory (total repos, public/private/archived counts, size, languages, LFS/submodule flags) → System auto-calculates estimated man hours based on migration type and inventory → Optional: Enable CI/CD migration and select platform → Optional: Enable training services and select modules with participant counts → Review complete SOW → Submit
+- **Success criteria**: Successfully fetches real data from GitHub REST API v3 and GitLab API v4; calculates accurate man-hour estimates based on migration type (Classic: 2hrs/repo base, EMU: 3hrs/repo, GHES: 4hrs/repo) with adjustments for LFS, submodules, size, and language count; all services (migration types, CI/CD, training) accessible in single form with clear tab navigation; handles API failures gracefully; pre-fills all project details; migration type selection updates man-hour calculations in real-time; CI/CD section appears when enabled with platform selection; training modules organized by track (GitHub/Azure/GCP/AWS/AI-SAP) and level (Beginner/Intermediate/Advanced)
 
-### 5. Migration Scenario Builder
-- **Functionality**: Structured input for migration stages (Initial Setup, Repository Migration, CI/CD Migration, CI/CD Implementation, Training Sessions)
-- **Purpose**: Capture detailed migration requirements in a standardized format
-- **Trigger**: Within SOW creation, select "Migration Services"
-- **Progression**: Select migration type → Configure stages → Specify technical details per stage → Add timeline estimates → Include in SOW
-- **Success criteria**: All migration stages can be configured; technical details are captured; estimates are calculated
+### 5. Migration & Training Services Configuration
+- **Functionality**: Comprehensive service configuration within the SOW form including GitHub migration type selection, repository inventory management, CI/CD migration options, and training module selection—all integrated into a single "Migration & Training" tab rather than separate modules
+- **Purpose**: Provide a unified interface for configuring all migration-related services (repository migration, CI/CD migration) and training requirements, with intelligent man-hour estimation based on migration complexity
+- **Trigger**: Within SOW creation (Manual or Automation mode), navigate to "Migration & Training" tab after enabling these services in Project Details
+- **Progression**: Enable "Migration Services" checkbox in Project Details → Navigate to Migration & Training tab → Select GitHub Migration Type (Classic/EMU/GHES) → Enter repository inventory details (total repos, public/private/archived, size, languages, LFS, submodules) → View auto-calculated man-hour estimates → Optional: Enable CI/CD Migration and specify platform → Optional: Enable "Training Services" checkbox → Select training modules from available tracks and levels → Set participant counts → Review complete configuration → Proceed to submit
+- **Success criteria**: Migration type selection updates man-hour calculations; repository inventory inputs validated; calculations accurate for all migration types; CI/CD platform options displayed when enabled; training modules organized by track and level; participant counts adjustable; all configurations saved correctly in SOW; clear visual separation between migration and training sections while maintaining unified workflow
 
-### 6. Training Module Selector
-- **Functionality**: Interactive catalog of training modules across tracks (GitHub, Azure, GCP, AWS, AI/SAP) and levels (Beginner, Intermediate, Advanced)
-- **Purpose**: Allow clients to select appropriate training for their team's needs
-- **Trigger**: Within SOW creation, select "Training Services" or access from service catalog
-- **Progression**: View training catalog → Filter by track/level → View module details → Select modules → Add to SOW with participant count
-- **Success criteria**: All training options are visible; descriptions are clear; selections are saved correctly; pricing is calculated
+### 6. Training Module Catalog
+- **Functionality**: Within the Migration & Training tab, training modules are displayed organized by technology track (GitHub, Azure, GCP, AWS, AI/SAP) and expertise level (Beginner, Intermediate, Advanced), allowing selection directly within the SOW creation flow
+- **Purpose**: Enable clients to select appropriate training for their team's needs as part of the comprehensive SOW, with clear module descriptions, durations, and participant count configuration
+- **Trigger**: Enable "Training Services" checkbox in Project Details tab, then navigate to Migration & Training tab
+- **Progression**: View training modules organized by track → Expand track sections to see available levels → Review module details (title, level, duration) → Click "Add" to include in SOW → Set participant count for each module → Remove modules if needed
+- **Success criteria**: All training options visible and organized by track/level; module details display correctly; "Add" button adds to selected list; participant counts adjustable; selected modules show in summary; pricing calculated based on modules and participants; selections persist correctly in SOW
 
 ### 7. Approval Workflow System
 - **Functionality**: Multi-level approval process with email notifications, commenting, and status tracking
@@ -114,27 +114,27 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 
 ## Design Direction
 
-The design should evoke **enterprise-grade professionalism with modern sophistication**. Think sleek SaaS platforms that balance data density with breathing room. The interface should feel powerful yet approachable—capable of handling complex workflows while remaining intuitive. Visual elements should communicate clarity, structure, and forward momentum through the approval pipeline.
+The design should evoke **enterprise-grade professionalism with modern sophistication aligned with Xebia's brand identity**. Think sleek SaaS platforms that balance data density with breathing room. The interface should feel powerful yet approachable—capable of handling complex workflows while remaining intuitive. Visual elements should communicate clarity, structure, and forward momentum through the approval pipeline, with Xebia's signature purple/violet branding throughout.
 
 ## Color Selection
 
-A professional yet distinctive palette combining deep navy authority with energetic accent colors for a modern enterprise feel.
+A professional yet distinctive palette inspired by Xebia's brand identity, combining vibrant purples with complementary accents for a modern, premium enterprise feel.
 
-- **Primary Color**: Deep Navy `oklch(0.25 0.08 250)` - Conveys trustworthiness, professionalism, and stability essential for B2B enterprise software
+- **Primary Color**: Xebia Purple `oklch(0.45 0.18 285)` - The signature Xebia brand color conveying innovation, creativity, and technical excellence
 - **Secondary Colors**: 
-  - Cool Slate `oklch(0.45 0.02 240)` - Supporting backgrounds and secondary UI elements
-  - Light Cloud `oklch(0.96 0.005 240)` - Card backgrounds and subtle surfaces
-- **Accent Color**: Vibrant Cyan `oklch(0.65 0.15 210)` - Energetic highlight for CTAs, progress indicators, and active states; suggests innovation and forward progress
+  - Rich Violet `oklch(0.55 0.15 295)` - Supporting UI elements and secondary actions
+  - Light Lavender `oklch(0.96 0.01 280)` - Card backgrounds and subtle surfaces
+- **Accent Color**: Bright Purple `oklch(0.62 0.20 300)` - Energetic highlight for CTAs, progress indicators, and active states; emphasizes brand energy
 - **Success/Status Colors**:
-  - Success Green `oklch(0.65 0.15 145)` - Approved items
-  - Warning Amber `oklch(0.75 0.13 75)` - Pending reviews
-  - Alert Red `oklch(0.60 0.20 25)` - Rejections or required actions
+  - Success Green `oklch(0.62 0.17 145)` - Approved items
+  - Warning Gold `oklch(0.72 0.15 70)` - Pending reviews
+  - Alert Red `oklch(0.58 0.22 25)` - Rejections or required actions
 
 **Foreground/Background Pairings**:
-- Background (White `oklch(1 0 0)`): Deep Navy text `oklch(0.25 0.08 250)` - Ratio 8.5:1 ✓
-- Primary (Deep Navy `oklch(0.25 0.08 250)`): White text `oklch(1 0 0)` - Ratio 8.5:1 ✓
-- Accent (Vibrant Cyan `oklch(0.65 0.15 210)`): Deep Navy text `oklch(0.25 0.08 250)` - Ratio 4.8:1 ✓
-- Secondary (Cool Slate `oklch(0.45 0.02 240)`): White text `oklch(1 0 0)` - Ratio 5.2:1 ✓
+- Background (Light `oklch(0.99 0.005 280)`): Deep Purple text `oklch(0.20 0.015 280)` - Ratio 11.2:1 ✓
+- Primary (Xebia Purple `oklch(0.45 0.18 285)`): White text `oklch(1 0 0)` - Ratio 5.8:1 ✓
+- Accent (Bright Purple `oklch(0.62 0.20 300)`): White text `oklch(1 0 0)` - Ratio 4.6:1 ✓
+- Secondary (Rich Violet `oklch(0.55 0.15 295)`): White text `oklch(1 0 0)` - Ratio 5.1:1 ✓
 
 ## Font Selection
 

@@ -8,7 +8,7 @@ import { SOWList } from '@/components/SOWList'
 import { SOWDetail } from '@/components/SOWDetail'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
-import { SOW, User } from '@/lib/types'
+import { SOW, User, ServicePlatform } from '@/lib/types'
 import { House, FileText, Stack, SignOut } from '@phosphor-icons/react'
 
 type View = 'dashboard' | 'services' | 'sows' | 'sow-form' | 'sow-form-automation' | 'sow-detail'
@@ -17,6 +17,7 @@ function AppContent() {
   const { currentUser, setCurrentUser, sows, setSows } = useApp()
   const [currentView, setCurrentView] = useState<View>('dashboard')
   const [selectedSOW, setSelectedSOW] = useState<SOW | null>(null)
+  const [selectedPlatform, setSelectedPlatform] = useState<ServicePlatform | null>(null)
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)
@@ -26,6 +27,7 @@ function AppContent() {
     setCurrentUser(null)
     setCurrentView('dashboard')
     setSelectedSOW(null)
+    setSelectedPlatform(null)
   }
 
   const handleSaveSOW = (sow: SOW) => {
@@ -37,6 +39,7 @@ function AppContent() {
       return [...prev, sow]
     })
     setCurrentView('dashboard')
+    setSelectedPlatform(null)
   }
 
   const handleViewSOW = (sow: SOW) => {
@@ -63,10 +66,20 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="border-b bg-card backdrop-blur-sm sticky top-0 z-10 shadow-sm">
+        <div className="container mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <h1 className="text-2xl font-bold">SOWGen</h1>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-lg xebia-gradient flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold text-xl">X</span>
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Xebia</h1>
+                  <p className="text-xs text-muted-foreground -mt-0.5">SOW Generator</p>
+                </div>
+              </div>
+            </div>
             <nav className="flex gap-1">
               <Button
                 variant={currentView === 'dashboard' ? 'default' : 'ghost'}
@@ -114,8 +127,14 @@ function AppContent() {
         {currentView === 'dashboard' && isClient && (
           <ServicesDashboard 
             user={currentUser} 
-            onCreateSOWManual={() => setCurrentView('sow-form')}
-            onCreateSOWAutomation={() => setCurrentView('sow-form-automation')}
+            onCreateSOWManual={(platform) => {
+              setSelectedPlatform(platform)
+              setCurrentView('sow-form')
+            }}
+            onCreateSOWAutomation={(platform) => {
+              setSelectedPlatform(platform)
+              setCurrentView('sow-form-automation')
+            }}
           />
         )}
 
@@ -126,8 +145,14 @@ function AppContent() {
         {currentView === 'services' && isClient && (
           <ServicesDashboard 
             user={currentUser}
-            onCreateSOWManual={() => setCurrentView('sow-form')}
-            onCreateSOWAutomation={() => setCurrentView('sow-form-automation')}
+            onCreateSOWManual={(platform) => {
+              setSelectedPlatform(platform)
+              setCurrentView('sow-form')
+            }}
+            onCreateSOWAutomation={(platform) => {
+              setSelectedPlatform(platform)
+              setCurrentView('sow-form-automation')
+            }}
           />
         )}
 
@@ -135,7 +160,11 @@ function AppContent() {
           <SOWForm
             user={currentUser}
             onSave={handleSaveSOW}
-            onCancel={() => setCurrentView('dashboard')}
+            onCancel={() => {
+              setCurrentView('dashboard')
+              setSelectedPlatform(null)
+            }}
+            selectedPlatform={selectedPlatform}
           />
         )}
 
@@ -143,8 +172,12 @@ function AppContent() {
           <SOWForm
             user={currentUser}
             onSave={handleSaveSOW}
-            onCancel={() => setCurrentView('dashboard')}
+            onCancel={() => {
+              setCurrentView('dashboard')
+              setSelectedPlatform(null)
+            }}
             automationMode={true}
+            selectedPlatform={selectedPlatform}
           />
         )}
 

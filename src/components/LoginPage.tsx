@@ -63,10 +63,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.75_0.12_260)_0%,oklch(0.95_0.02_240)_25%,oklch(1_0_0)_50%)]" />
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
       </div>
 
       <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-8">
@@ -77,17 +77,23 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             transition={{ duration: 0.6 }}
             className="text-center lg:text-left space-y-6"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent-foreground text-sm font-medium">
-              <Sparkle size={16} weight="fill" />
-              Powered by Xebia
+            <div className="flex items-center gap-3 justify-center lg:justify-start mb-6">
+              <div className="w-14 h-14 rounded-xl xebia-gradient flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-2xl">X</span>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Xebia</h1>
+                <p className="text-sm text-muted-foreground -mt-0.5">SOW Generator</p>
+              </div>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
-              SOWGen
-            </h1>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+              Statement of Work <br />
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Made Simple</span>
+            </h2>
             
-            <p className="text-xl sm:text-2xl text-foreground/70 max-w-xl">
-              Your unified platform for cloud services, DevOps, and Statement of Work management
+            <p className="text-lg sm:text-xl text-foreground/70 max-w-xl">
+              Your unified platform for cloud services, DevOps excellence, and intelligent Statement of Work management
             </p>
 
             <div className="grid grid-cols-3 gap-4 pt-4">
@@ -99,8 +105,8 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   transition={{ duration: 0.4, delay: 0.3 + idx * 0.1 }}
                   className="space-y-2"
                 >
-                  <div className="w-12 h-12 mx-auto lg:mx-0 rounded-xl bg-accent/10 flex items-center justify-center">
-                    <feature.icon size={24} weight="duotone" className="text-accent-foreground" />
+                  <div className="w-12 h-12 mx-auto lg:mx-0 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center border border-primary/20">
+                    <feature.icon size={24} weight="duotone" className="text-primary" />
                   </div>
                   <h3 className="font-semibold text-sm">{feature.title}</h3>
                   <p className="text-xs text-muted-foreground">{feature.text}</p>

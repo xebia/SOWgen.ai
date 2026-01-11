@@ -31,8 +31,8 @@ import { formatDistanceToNow } from 'date-fns'
 
 interface ServicesDashboardProps {
   user: User
-  onCreateSOWManual?: () => void
-  onCreateSOWAutomation?: () => void
+  onCreateSOWManual?: (platform: ServicePlatform) => void
+  onCreateSOWAutomation?: (platform: ServicePlatform) => void
 }
 
 const platformIcons: Record<ServicePlatform, any> = {
@@ -204,7 +204,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                 <Button 
                   size="lg" 
                   className="w-full gap-2 mt-6 shadow-sm hover:shadow-md transition-shadow"
-                  onClick={onCreateSOWManual}
+                  onClick={() => onCreateSOWManual?.(selectedService)}
                 >
                   <PencilSimple size={20} weight="duotone" />
                   Start Manual Entry
@@ -267,7 +267,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                   size="lg" 
                   variant="secondary"
                   className="w-full gap-2 mt-6 shadow-sm hover:shadow-md transition-shadow bg-accent/10 hover:bg-accent/20 text-accent-foreground border-accent/20"
-                  onClick={onCreateSOWAutomation}
+                  onClick={() => onCreateSOWAutomation?.(selectedService)}
                 >
                   <GitBranch size={20} weight="duotone" />
                   Connect & Auto-Import

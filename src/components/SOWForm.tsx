@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage, GitHubMigrationType, RepositoryInventory } from '@/lib/types'
+import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage, GitHubMigrationType, RepositoryInventory, ServicePlatform } from '@/lib/types'
 import { TRAINING_MODULES, getModuleById } from '@/lib/training-catalog'
 import { X, Plus, GithubLogo, GitlabLogo, Sparkle, CloudArrowDown, CheckCircle, Info, Calculator, GraduationCap } from '@phosphor-icons/react'
 import { toast } from 'sonner'
@@ -22,6 +22,7 @@ interface SOWFormProps {
   onSave: (sow: SOW) => void
   onCancel: () => void
   automationMode?: boolean
+  selectedPlatform?: ServicePlatform | null
 }
 
 const MIGRATION_STAGES: { value: MigrationStage; label: string; defaultWeeks: number }[] = [
@@ -32,7 +33,7 @@ const MIGRATION_STAGES: { value: MigrationStage; label: string; defaultWeeks: nu
   { value: 'training-sessions', label: 'Training Sessions', defaultWeeks: 2 },
 ]
 
-export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWFormProps) {
+export function SOWForm({ user, onSave, onCancel, automationMode = false, selectedPlatform = null }: SOWFormProps) {
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [includeMigration, setIncludeMigration] = useState(false)
@@ -41,7 +42,13 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
   const [selectedTrainings, setSelectedTrainings] = useState<SelectedTraining[]>([])
   const [currentTab, setCurrentTab] = useState(automationMode ? 'scm-integration' : 'details')
   
-  const [scmType, setScmType] = useState<SCMPlatform>('github')
+  const getInitialSCMType = (): SCMPlatform => {
+    if (selectedPlatform === 'github') return 'github'
+    if (selectedPlatform === 'gitlab') return 'gitlab'
+    return 'github'
+  }
+  
+  const [scmType, setScmType] = useState<SCMPlatform>(getInitialSCMType())
   const [repoUrl, setRepoUrl] = useState('')
   const [accessToken, setAccessToken] = useState('')
   const [isFetching, setIsFetching] = useState(false)
