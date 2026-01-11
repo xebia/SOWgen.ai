@@ -2,7 +2,9 @@ import { SOW, User } from '@/lib/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Plus, FileText, Clock, CheckCircle } from '@phosphor-icons/react'
+import { exportSOWAsPDF } from '@/lib/pdf-export'
+import { Plus, FileText, Clock, CheckCircle, FilePdf } from '@phosphor-icons/react'
+import { toast } from 'sonner'
 
 interface ClientDashboardProps {
   sows: SOW[]
@@ -15,6 +17,16 @@ export function ClientDashboard({ sows, user, onCreateSOW, onViewSOW }: ClientDa
   const mySows = sows.filter(s => s.clientId === user.id)
   const pendingCount = mySows.filter(s => s.status === 'pending').length
   const approvedCount = mySows.filter(s => s.status === 'approved').length
+
+  const handleExportPDF = (e: React.MouseEvent, sow: SOW) => {
+    e.stopPropagation()
+    try {
+      exportSOWAsPDF(sow)
+      toast.success('PDF export initiated')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to export PDF')
+    }
+  }
 
   const getStatusBadge = (status: SOW['status']) => {
     const variants: Record<SOW['status'], { variant: 'default' | 'secondary' | 'success' | 'warning' | 'destructive'; label: string }> = {
@@ -108,6 +120,14 @@ export function ClientDashboard({ sows, user, onCreateSOW, onViewSOW }: ClientDa
                       {sow.includeTraining && <span>• Training</span>}
                     </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => handleExportPDF(e, sow)}
+                    className="ml-4"
+                  >
+                    <FilePdf size={18} weight="duotone" />
+                  </Button>
                 </div>
               ))}
             </div>

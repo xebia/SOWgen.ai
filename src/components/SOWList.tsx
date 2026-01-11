@@ -4,7 +4,9 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { MagnifyingGlass } from '@phosphor-icons/react'
+import { exportSOWAsPDF } from '@/lib/pdf-export'
+import { MagnifyingGlass, FilePdf, Eye } from '@phosphor-icons/react'
+import { toast } from 'sonner'
 import { useState } from 'react'
 
 interface SOWListProps {
@@ -15,6 +17,16 @@ interface SOWListProps {
 
 export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
   const [searchQuery, setSearchQuery] = useState('')
+
+  const handleExportPDF = (e: React.MouseEvent, sow: SOW) => {
+    e.stopPropagation()
+    try {
+      exportSOWAsPDF(sow)
+      toast.success('PDF export initiated')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to export PDF')
+    }
+  }
 
   const filteredSows = sows.filter(sow => {
     const query = searchQuery.toLowerCase()
@@ -82,7 +94,7 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
               </TableHeader>
               <TableBody>
                 {filteredSows.map(sow => (
-                  <TableRow key={sow.id} className="cursor-pointer hover:bg-muted/50">
+                  <TableRow key={sow.id} className="cursor-pointer hover:bg-muted/50" onClick={() => onViewSOW(sow)}>
                     <TableCell className="font-medium">{sow.projectName}</TableCell>
                     <TableCell>{sow.clientName}</TableCell>
                     <TableCell>{sow.clientOrganization}</TableCell>
@@ -97,9 +109,14 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
                       {new Date(sow.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="sm" onClick={() => onViewSOW(sow)}>
-                        View
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onViewSOW(sow) }}>
+                          <Eye size={18} />
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={(e) => handleExportPDF(e, sow)}>
+                          <FilePdf size={18} weight="duotone" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

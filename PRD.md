@@ -68,6 +68,13 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Progression**: Access admin → Manage users/roles → Configure approval workflows → Update service catalog → Modify templates
 - **Success criteria**: All admin functions work correctly; changes reflect immediately; permissions are enforced
 
+### 9. PDF Export for Client Distribution
+- **Functionality**: Export SOW details as professionally formatted PDF documents suitable for client distribution
+- **Purpose**: Enable clients and staff to generate printable/shareable documents for offline review, archival, and formal distribution
+- **Trigger**: Click "Export PDF" button on SOW detail page, dashboard SOW list, or Xebia SOW table
+- **Progression**: Click export → System generates formatted PDF in new window → Browser print dialog opens → Save as PDF or print
+- **Success criteria**: PDF includes all SOW details (project info, migration stages, training modules, approval history); formatting is professional and print-ready; all data renders correctly; export works for all SOW statuses
+
 ## Edge Case Handling
 
 - **Incomplete Forms**: Auto-save drafts every 30 seconds; show validation errors inline; prevent submission until required fields complete
@@ -78,6 +85,8 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Session Timeout**: Warn before timeout; preserve unsaved work; graceful re-authentication
 - **Missing Training Data**: Show placeholder content; allow admin to quickly add missing modules
 - **Approval Deadlines**: Send escalation notifications; highlight overdue approvals in dashboard
+- **PDF Export Failures**: Catch popup blocker issues with user-friendly error message; provide fallback instructions for enabling popups
+- **Empty SOW Sections**: Handle SOWs with no migration or training modules gracefully in PDF; show appropriate "not included" messaging
 
 ## Design Direction
 
@@ -153,7 +162,7 @@ A professional yet distinctive palette combining deep navy authority with energe
 
 **Icon Selection**:
 - Navigation: House (dashboard), FileText (SOWs), GraduationCap (trainings), GitBranch (migrations), Users (admin)
-- Actions: Plus (create), Check (approve), X (reject), Eye (view), PencilSimple (edit), Trash (delete)
+- Actions: Plus (create), Check (approve), X (reject), Eye (view), PencilSimple (edit), Trash (delete), FilePdf (export PDF)
 - Status: Clock (pending), CheckCircle (approved), XCircle (rejected), Warning (needs attention)
 - Filters: FunnelSimple (filter), MagnifyingGlass (search), CalendarBlank (date), SortAscending (sort)
 

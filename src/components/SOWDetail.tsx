@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { getModuleById } from '@/lib/training-catalog'
-import { ArrowLeft, CheckCircle, XCircle, ChatCircle, Clock } from '@phosphor-icons/react'
+import { exportSOWAsPDF } from '@/lib/pdf-export'
+import { ArrowLeft, CheckCircle, XCircle, ChatCircle, Clock, FilePdf } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface SOWDetailProps {
@@ -56,6 +57,15 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
     toast.success(`SOW ${actionLabel.toLowerCase()}`)
   }
 
+  const handleExportPDF = () => {
+    try {
+      exportSOWAsPDF(sow)
+      toast.success('PDF export initiated')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to export PDF')
+    }
+  }
+
   const getStatusBadge = (status: SOW['status']) => {
     const variants: Record<SOW['status'], { variant: any; label: string }> = {
       'draft': { variant: 'secondary', label: 'Draft' },
@@ -78,7 +88,13 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
           <h2 className="text-3xl font-bold tracking-tight">{sow.projectName}</h2>
           <p className="text-muted-foreground">{sow.clientOrganization}</p>
         </div>
-        {getStatusBadge(sow.status)}
+        <div className="flex items-center gap-3">
+          {getStatusBadge(sow.status)}
+          <Button onClick={handleExportPDF} variant="outline" className="gap-2">
+            <FilePdf size={18} weight="duotone" />
+            Export PDF
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-6">
