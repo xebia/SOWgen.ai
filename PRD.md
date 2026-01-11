@@ -13,11 +13,11 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 ## Essential Features
 
 ### 1. Authentication & Role-Based Access
-- **Functionality**: Dual authentication system supporting external clients and internal Xebia staff with role-based permissions (Client, Xebia Admin, Approver)
-- **Purpose**: Secure access control ensuring clients only see their data while internal staff access admin features
-- **Trigger**: Landing page with role selection (Client Login / Xebia Staff Login)
-- **Progression**: Select role → Enter credentials → Verify → Route to appropriate dashboard
-- **Success criteria**: Users land on role-appropriate views; unauthorized access attempts are blocked; role permissions correctly limit feature access
+- **Functionality**: Modern dual authentication system with enhanced visual design supporting external clients and internal Xebia staff with role-based permissions (Client, Xebia Admin, Approver)
+- **Purpose**: Secure access control ensuring clients only see their data while internal staff access admin features, presented through an engaging, modern interface
+- **Trigger**: Landing page with modern hero section featuring platform highlights and role-based login tabs
+- **Progression**: View landing page with service highlights → Select role tab (Demo/Client/Xebia) → Enter credentials → Verify → Animate transition to appropriate dashboard
+- **Success criteria**: Users land on role-appropriate views; unauthorized access attempts are blocked; role permissions correctly limit feature access; login experience is visually appealing with smooth animations
 
 ### 2. Dashboard (Xebia Internal)
 - **Functionality**: Analytics dashboard displaying SOW statistics with filterable charts (total SOWs, approved, pending, approval rates, timeline trends)
@@ -27,11 +27,18 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Charts accurately reflect data; filters work correctly; performance remains smooth with large datasets
 
 ### 3. Dashboard (Client)
-- **Functionality**: Client portal showing their SOW submissions, status tracking, and access to Xebia service catalog
-- **Purpose**: Transparency for clients to monitor their SOW progress and explore available services
+- **Functionality**: Modern services dashboard showcasing Xebia's platform offerings (GitHub, GitLab, AWS, Azure, GCP, Kubernetes, Docker, Terraform) with real-time activity logs, health monitoring, and quick actions
+- **Purpose**: Provide clients with unified visibility into their cloud and DevOps services, activity monitoring, and service health status
 - **Trigger**: Successful client login
-- **Progression**: Login → View my SOWs → Check status → Access service catalog → View training options
-- **Success criteria**: Clients only see their own data; status updates are accurate; service catalog is comprehensive and searchable
+- **Progression**: Login → View services overview with platform cards → Monitor real-time activity logs → Filter activities by platform/status → Access quick actions → Navigate to detailed service views
+- **Success criteria**: All platform services display with accurate health status; activity logs update in real-time; filters work correctly; quick actions are contextual to each platform; responsive on all devices
+
+### 3a. Services Activity Monitoring
+- **Functionality**: Comprehensive activity log viewer with search, filtering by platform and status, displaying deployments, commits, builds, security scans, and infrastructure changes
+- **Purpose**: Give clients full visibility into all activities across their managed services with ability to identify issues and trends
+- **Trigger**: Navigate to Activity Logs tab in services dashboard
+- **Progression**: View activity feed → Search by keyword → Filter by platform (GitHub/AWS/etc.) → Filter by status (success/failed/pending/warning) → View activity details → Access related quick actions
+- **Success criteria**: Activity logs are sortable and filterable; search works across titles and descriptions; status indicators are clear; platform branding is consistent; timestamps are accurate
 
 ### 4. SOW Generation (Manual Entry)
 - **Functionality**: Multi-step form for creating SOWs with project details, organization info, migration scenarios, and training requirements

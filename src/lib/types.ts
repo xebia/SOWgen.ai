@@ -88,3 +88,31 @@ export interface DashboardStats {
   approvalRate: number
   avgApprovalTimeDays: number
 }
+
+export type ServicePlatform = 'github' | 'gitlab' | 'aws' | 'azure' | 'gcp' | 'kubernetes' | 'docker' | 'terraform'
+
+export type ActivityType = 'deployment' | 'commit' | 'pr' | 'issue' | 'build' | 'security' | 'infrastructure' | 'access'
+
+export type ActivityStatus = 'success' | 'failed' | 'pending' | 'warning'
+
+export interface ServiceActivity {
+  id: string
+  platform: ServicePlatform
+  type: ActivityType
+  title: string
+  description: string
+  status: ActivityStatus
+  timestamp: number
+  user?: string
+  metadata?: Record<string, any>
+}
+
+export interface PlatformService {
+  id: ServicePlatform
+  name: string
+  description: string
+  enabled: boolean
+  lastActivity?: number
+  activityCount: number
+  healthStatus: 'healthy' | 'warning' | 'error' | 'unknown'
+}

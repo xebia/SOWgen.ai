@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { AppProvider, useApp } from '@/lib/app-context'
 import { LoginPage } from '@/components/LoginPage'
 import { XebiaDashboard } from '@/components/XebiaDashboard'
-import { ClientDashboard } from '@/components/ClientDashboard'
+import { ServicesDashboard } from '@/components/ServicesDashboard'
 import { SOWForm } from '@/components/SOWForm'
 import { SOWList } from '@/components/SOWList'
 import { SOWDetail } from '@/components/SOWDetail'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
 import { SOW, User } from '@/lib/types'
-import { House, FileText, GraduationCap, Users, SignOut } from '@phosphor-icons/react'
+import { House, FileText, Stack, SignOut } from '@phosphor-icons/react'
 
-type View = 'dashboard' | 'sows' | 'sow-form' | 'sow-detail' | 'trainings'
+type View = 'dashboard' | 'services' | 'sows' | 'sow-form' | 'sow-detail'
 
 function AppContent() {
   const { currentUser, setCurrentUser, sows, setSows } = useApp()
@@ -76,6 +76,16 @@ function AppContent() {
                 <House size={18} />
                 Dashboard
               </Button>
+              {isClient && (
+                <Button
+                  variant={currentView === 'services' ? 'default' : 'ghost'}
+                  onClick={() => setCurrentView('services')}
+                  className="gap-2"
+                >
+                  <Stack size={18} />
+                  Services
+                </Button>
+              )}
               {isXebia && (
                 <Button
                   variant={currentView === 'sows' ? 'default' : 'ghost'}
@@ -102,16 +112,15 @@ function AppContent() {
 
       <main className="container mx-auto px-6 py-8">
         {currentView === 'dashboard' && isClient && (
-          <ClientDashboard
-            sows={sows}
-            user={currentUser}
-            onCreateSOW={() => setCurrentView('sow-form')}
-            onViewSOW={handleViewSOW}
-          />
+          <ServicesDashboard user={currentUser} />
         )}
 
         {currentView === 'dashboard' && isXebia && (
           <XebiaDashboard sows={sows} />
+        )}
+
+        {currentView === 'services' && isClient && (
+          <ServicesDashboard user={currentUser} />
         )}
 
         {currentView === 'sow-form' && (
