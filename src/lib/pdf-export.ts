@@ -14,8 +14,50 @@ export function generatePrintableHTML(sow: SOW): string {
               <div class="stage-meta">
                 <span class="badge">${stage.timelineWeeks} weeks</span>
                 ${stage.automated ? '<span class="badge badge-automated">Automated</span>' : ''}
+                ${stage.estimatedManHours ? `<span class="badge">${stage.estimatedManHours}h</span>` : ''}
               </div>
             </div>
+            ${stage.githubMigrationType ? `
+              <div class="field">
+                <label>GitHub Migration Type</label>
+                <p>${stage.githubMigrationType.replace(/-/g, ' ').toUpperCase()}</p>
+              </div>
+            ` : ''}
+            ${stage.repositoryInventory ? `
+              <div class="field">
+                <label>Repository Inventory</label>
+                <div class="inventory-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12pt; margin-top: 8pt;">
+                  <div>
+                    <span class="text-muted" style="display: block;">Total Repositories</span>
+                    <strong>${stage.repositoryInventory.totalRepositories}</strong>
+                  </div>
+                  <div>
+                    <span class="text-muted" style="display: block;">Public</span>
+                    <strong>${stage.repositoryInventory.publicRepos}</strong>
+                  </div>
+                  <div>
+                    <span class="text-muted" style="display: block;">Private</span>
+                    <strong>${stage.repositoryInventory.privateRepos}</strong>
+                  </div>
+                  <div>
+                    <span class="text-muted" style="display: block;">Total Size</span>
+                    <strong>${stage.repositoryInventory.totalSizeGB} GB</strong>
+                  </div>
+                  ${stage.repositoryInventory.usersToMigrate ? `
+                    <div>
+                      <span class="text-muted" style="display: block;">Users to Migrate</span>
+                      <strong>${stage.repositoryInventory.usersToMigrate}</strong>
+                    </div>
+                  ` : ''}
+                  ${stage.repositoryInventory.languages.length > 0 ? `
+                    <div style="grid-column: span 3;">
+                      <span class="text-muted" style="display: block;">Languages</span>
+                      <strong>${stage.repositoryInventory.languages.join(', ')}</strong>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            ` : ''}
             ${stage.description ? `
               <div class="field">
                 <label>Description</label>
@@ -26,6 +68,13 @@ export function generatePrintableHTML(sow: SOW): string {
               <div class="field">
                 <label>Technical Details</label>
                 <pre>${stage.technicalDetails}</pre>
+              </div>
+            ` : ''}
+            ${stage.includeCICDMigration && stage.cicdPlatform ? `
+              <div class="field">
+                <label>CI/CD Migration</label>
+                <p>From <strong>${stage.cicdPlatform}</strong> to <strong>GitHub Actions</strong></p>
+                ${stage.cicdDetails ? `<p class="text-muted">${stage.cicdDetails}</p>` : ''}
               </div>
             ` : ''}
           </div>

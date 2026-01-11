@@ -230,6 +230,12 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
                           <span className="text-muted-foreground text-xs">Size</span>
                           <p className="font-semibold">{stage.repositoryInventory.totalSizeGB} GB</p>
                         </div>
+                        {stage.repositoryInventory.usersToMigrate && (
+                          <div>
+                            <span className="text-muted-foreground text-xs">Users</span>
+                            <p className="font-semibold">{stage.repositoryInventory.usersToMigrate}</p>
+                          </div>
+                        )}
                       </div>
                       {stage.repositoryInventory.languages.length > 0 && (
                         <div>

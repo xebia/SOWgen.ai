@@ -34,6 +34,7 @@ export interface RepositoryInventory {
   hasLFS: boolean
   hasSubmodules: boolean
   averageRepoSizeMB: number
+  usersToMigrate?: number
 }
 
 export interface MigrationStageDetail {

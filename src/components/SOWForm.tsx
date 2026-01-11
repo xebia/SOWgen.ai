@@ -61,7 +61,8 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
     languages: [],
     hasLFS: false,
     hasSubmodules: false,
-    averageRepoSizeMB: undefined as any
+    averageRepoSizeMB: undefined as any,
+    usersToMigrate: undefined
   })
   const [includeCICD, setIncludeCICD] = useState(false)
   const [cicdPlatform, setCicdPlatform] = useState('')
@@ -115,6 +116,17 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
   }, [repoInventory, githubMigrationType])
 
   useEffect(() => {
+    if (repoInventory.usersToMigrate && repoInventory.usersToMigrate > 0) {
+      setSelectedTrainings(prev => 
+        prev.map(training => ({
+          ...training,
+          participantCount: repoInventory.usersToMigrate || training.participantCount
+        }))
+      )
+    }
+  }, [repoInventory.usersToMigrate])
+
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [currentTab])
 
@@ -143,7 +155,8 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
       toast.error('Training module already added')
       return
     }
-    setSelectedTrainings(prev => [...prev, { moduleId, participantCount: 1 }])
+    const defaultParticipants = repoInventory.usersToMigrate || 1
+    setSelectedTrainings(prev => [...prev, { moduleId, participantCount: defaultParticipants }])
     toast.success('Training module added')
   }
 
@@ -630,6 +643,22 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             * This field is required
                           </p>
                         )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="users-to-migrate" className="text-base font-semibold">Number of Users to Migrate</Label>
+                        <Input
+                          id="users-to-migrate"
+                          type="number"
+                          min="0"
+                          value={repoInventory.usersToMigrate ?? ''}
+                          onChange={e => setRepoInventory(prev => ({ ...prev, usersToMigrate: parseInt(e.target.value) || undefined }))}
+                          placeholder="e.g., 50"
+                          className="h-12"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Number of users that will be migrated to GitHub. This will be used as default for training participant counts.
+                        </p>
                       </div>
                       
                       <div className="mt-4 p-4 bg-muted/50 rounded-lg space-y-2">
