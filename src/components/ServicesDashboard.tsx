@@ -81,6 +81,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
   const [filterPlatform, setFilterPlatform] = useState<string>('all')
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [selectedService, setSelectedService] = useState<ServicePlatform | null>(null)
+  const [showSOWOptions, setShowSOWOptions] = useState(false)
 
   const filteredActivities = useMemo(() => {
     return activities.filter(activity => {
@@ -106,113 +107,158 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
     return <Badge variant={variant}>{label}</Badge>
   }
 
+  const handleServiceClick = (serviceId: ServicePlatform) => {
+    if (serviceId === 'github' || serviceId === 'gitlab') {
+      setSelectedService(serviceId)
+      setShowSOWOptions(true)
+    }
+  }
+
+  const handleBackToServices = () => {
+    setShowSOWOptions(false)
+    setSelectedService(null)
+  }
+
+  if (showSOWOptions && selectedService) {
+    const Icon = platformIcons[selectedService]
+    const serviceName = services.find(s => s.id === selectedService)?.name || selectedService
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <Button 
+              variant="ghost" 
+              onClick={handleBackToServices}
+              className="gap-2 mb-4 -ml-3"
+            >
+              <CaretRight size={18} className="rotate-180" />
+              Back to Services
+            </Button>
+            <div className="flex items-center gap-3 mb-2">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: `color-mix(in oklch, ${platformColors[selectedService]} 15%, transparent)` }}
+              >
+                <Icon size={24} weight="duotone" style={{ color: platformColors[selectedService] }} />
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight">{serviceName}</h2>
+            </div>
+            <p className="text-muted-foreground">Choose how to generate your Statement of Work</p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-primary/50 group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <CardHeader className="relative">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <PencilSimple size={28} weight="duotone" className="text-primary" />
+                </div>
+                <CardTitle className="text-2xl mb-2">Manual Entry</CardTitle>
+                <CardDescription className="text-base">
+                  Enter project details manually to generate your Statement of Work
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="relative space-y-4">
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                    <span>Complete control over all details</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                    <span>Step-by-step guided form</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                    <span>Perfect for new projects</span>
+                  </div>
+                </div>
+                <Button 
+                  size="lg" 
+                  className="w-full gap-2 mt-4"
+                  onClick={onCreateSOWManual}
+                >
+                  <PencilSimple size={20} weight="duotone" />
+                  Create Manually
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-accent/50 group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <CardHeader className="relative">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <GitBranch size={28} weight="duotone" className="text-accent" />
+                  </div>
+                  <Badge variant="outline" className="gap-1">
+                    <Sparkle size={14} weight="fill" />
+                    Recommended
+                  </Badge>
+                </div>
+                <CardTitle className="text-2xl mb-2">Automation</CardTitle>
+                <CardDescription className="text-base">
+                  Connect to {serviceName} via REST API to automatically fetch repository data
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="relative space-y-4">
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                    <span>Real-time data from {serviceName}</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                    <span>Auto-detect CI/CD pipelines</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
+                    <span>Analyze complexity & languages</span>
+                  </div>
+                </div>
+                <Button 
+                  size="lg" 
+                  variant="secondary"
+                  className="w-full gap-2 mt-4"
+                  onClick={onCreateSOWAutomation}
+                >
+                  <GitBranch size={20} weight="duotone" />
+                  Use Automation
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight mb-2">Services Dashboard</h2>
-          <p className="text-muted-foreground">Manage your cloud platforms and DevOps services</p>
+          <p className="text-muted-foreground">Select a service to generate your Statement of Work</p>
         </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-primary/50 group relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <CardHeader className="relative">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <PencilSimple size={28} weight="duotone" className="text-primary" />
-              </div>
-              <CardTitle className="text-2xl mb-2">Manual Entry</CardTitle>
-              <CardDescription className="text-base">
-                Enter project details manually to generate your Statement of Work
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="relative space-y-4">
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Complete control over all details</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Step-by-step guided form</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Perfect for new projects</span>
-                </div>
-              </div>
-              <Button 
-                size="lg" 
-                className="w-full gap-2 mt-4"
-                onClick={onCreateSOWManual}
-              >
-                <PencilSimple size={20} weight="duotone" />
-                Create Manually
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-accent/50 group relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <CardHeader className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <GitBranch size={28} weight="duotone" className="text-accent" />
-                </div>
-                <Badge variant="outline" className="gap-1">
-                  <Sparkle size={14} weight="fill" />
-                  Recommended
-                </Badge>
-              </div>
-              <CardTitle className="text-2xl mb-2">Automation</CardTitle>
-              <CardDescription className="text-base">
-                Connect to GitHub or GitLab via REST API to automatically fetch repository data
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="relative space-y-4">
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Real-time data from GitHub & GitLab</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Auto-detect CI/CD pipelines</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Analyze complexity & languages</span>
-                </div>
-              </div>
-              <Button 
-                size="lg" 
-                variant="secondary"
-                className="w-full gap-2 mt-4"
-                onClick={onCreateSOWAutomation}
-              >
-                <GitBranch size={20} weight="duotone" />
-                Use Automation
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {services.slice(0, 4).map((service, idx) => {
           const Icon = platformIcons[service.id]
+          const isClickable = service.id === 'github' || service.id === 'gitlab'
           return (
             <motion.div
               key={service.id}
@@ -221,8 +267,12 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
               transition={{ duration: 0.3, delay: idx * 0.05 }}
             >
               <Card
-                className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] group"
-                onClick={() => setSelectedService(service.id)}
+                className={`transition-all group ${
+                  isClickable 
+                    ? 'cursor-pointer hover:shadow-lg hover:scale-[1.02] hover:border-primary' 
+                    : 'opacity-60 cursor-not-allowed'
+                }`}
+                onClick={() => isClickable && handleServiceClick(service.id)}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between mb-2">
@@ -246,6 +296,12 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                     <div className="text-xs text-muted-foreground">
                       Last: {formatDistanceToNow(service.lastActivity, { addSuffix: true })}
                     </div>
+                  )}
+                  {isClickable && (
+                    <Button variant="ghost" size="sm" className="w-full gap-2 mt-2">
+                      Generate SOW
+                      <CaretRight size={16} />
+                    </Button>
                   )}
                 </CardContent>
               </Card>
@@ -419,6 +475,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             {services.map((service, idx) => {
               const Icon = platformIcons[service.id]
               const actions = quickActions[service.id]
+              const isClickable = service.id === 'github' || service.id === 'gitlab'
               return (
                 <motion.div
                   key={service.id}
@@ -426,7 +483,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.2, delay: idx * 0.03 }}
                 >
-                  <Card className="hover:shadow-md transition-shadow">
+                  <Card className={`transition-shadow ${isClickable ? 'hover:shadow-md' : 'opacity-60'}`}>
                     <CardHeader>
                       <div className="flex items-start justify-between mb-3">
                         <div
@@ -452,6 +509,17 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                           </div>
                         )}
                       </div>
+                      {isClickable && (
+                        <Button 
+                          variant="default" 
+                          size="sm" 
+                          className="w-full gap-2"
+                          onClick={() => handleServiceClick(service.id)}
+                        >
+                          Generate SOW
+                          <CaretRight size={16} />
+                        </Button>
+                      )}
                       <div className="space-y-2">
                         <p className="text-xs font-semibold text-muted-foreground">Quick Actions</p>
                         <div className="flex flex-wrap gap-2">
