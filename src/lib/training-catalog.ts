@@ -92,6 +92,96 @@ export const TRAINING_MODULES: TrainingModule[] = [
     ]
   },
   {
+    id: 'gitlab-beginner-1',
+    track: 'gitlab',
+    level: 'beginner',
+    title: 'GitLab Fundamentals',
+    description: 'Introduction to version control, GitLab interface, and basic workflows',
+    durationHours: 4,
+    agenda: [
+      'Introduction to Git and GitLab',
+      'Creating projects and commits',
+      'Basic branching strategies',
+      'Merge requests and code review basics',
+      'GitLab interface overview'
+    ]
+  },
+  {
+    id: 'gitlab-intermediate-1',
+    track: 'gitlab',
+    level: 'intermediate',
+    title: 'Advanced GitLab Workflows',
+    description: 'Branching strategies, code review processes, and team collaboration',
+    durationHours: 6,
+    agenda: [
+      'Advanced branching strategies',
+      'Code review best practices',
+      'Conflict resolution techniques',
+      'GitLab Issues and project management',
+      'Team collaboration workflows'
+    ]
+  },
+  {
+    id: 'gitlab-ci-beginner',
+    track: 'gitlab',
+    level: 'beginner',
+    title: 'GitLab CI/CD Basics',
+    description: 'Introduction to CI/CD with GitLab pipelines',
+    durationHours: 4,
+    agenda: [
+      'Understanding CI/CD concepts',
+      'Creating your first pipeline',
+      'Working with .gitlab-ci.yml',
+      'Basic testing and deployment',
+      'Pipeline triggers and schedules'
+    ]
+  },
+  {
+    id: 'gitlab-ci-advanced',
+    track: 'gitlab',
+    level: 'advanced',
+    title: 'Advanced GitLab CI/CD',
+    description: 'Complex pipelines, Auto DevOps, and multi-environment deployments',
+    durationHours: 8,
+    agenda: [
+      'Advanced pipeline configurations',
+      'Auto DevOps and templates',
+      'Multi-environment deployment strategies',
+      'Docker and Kubernetes integration',
+      'Pipeline optimization and best practices'
+    ]
+  },
+  {
+    id: 'gitlab-security-intermediate',
+    track: 'gitlab',
+    level: 'intermediate',
+    title: 'GitLab Security & Compliance',
+    description: 'Security scanning, dependency management, and compliance features',
+    durationHours: 6,
+    agenda: [
+      'SAST and DAST configuration',
+      'Dependency scanning setup',
+      'Container scanning',
+      'Security policies and compliance',
+      'Vulnerability management'
+    ]
+  },
+  {
+    id: 'gitlab-advanced-1',
+    track: 'gitlab',
+    level: 'advanced',
+    title: 'GitLab Enterprise Administration',
+    description: 'Enterprise features, administration, and advanced automation',
+    durationHours: 8,
+    agenda: [
+      'GitLab instance administration',
+      'User and group management',
+      'Advanced runner configuration',
+      'Geo replication and disaster recovery',
+      'Enterprise-scale project management'
+    ]
+  },
+  {
     id: 'azure-beginner-1',
     track: 'azure',
     level: 'beginner',

@@ -87,8 +87,8 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-background relative">
-      <div className="absolute inset-0 xebia-dots-pattern opacity-20 pointer-events-none" />
-      <header className="border-b bg-card/95 backdrop-blur-sm sticky top-0 z-10 shadow-sm relative">
+      <div className="absolute inset-0 xebia-dots-pattern opacity-15 pointer-events-none" />
+      <header className="border-b bg-card/95 backdrop-blur-md sticky top-0 z-10 shadow-sm relative">
         <div className="container mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
@@ -100,18 +100,18 @@ function AppContent() {
               <Button
                 variant={currentView === 'dashboard' ? 'default' : 'ghost'}
                 onClick={() => setCurrentView('dashboard')}
-                className="gap-2"
+                className="gap-2 transition-all duration-200"
               >
-                <House size={18} />
+                <House size={18} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
                 Dashboard
               </Button>
               {isClient && (
                 <Button
                   variant={currentView === 'services' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('services')}
-                  className="gap-2"
+                  className="gap-2 transition-all duration-200"
                 >
-                  <Stack size={18} />
+                  <Stack size={18} weight={currentView === 'services' ? 'fill' : 'regular'} />
                   Services
                 </Button>
               )}
@@ -119,9 +119,9 @@ function AppContent() {
                 <Button
                   variant={currentView === 'sows' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('sows')}
-                  className="gap-2"
+                  className="gap-2 transition-all duration-200"
                 >
-                  <FileText size={18} />
+                  <FileText size={18} weight={currentView === 'sows' ? 'fill' : 'regular'} />
                   All SOWs
                 </Button>
               )}
@@ -130,10 +130,10 @@ function AppContent() {
           <div className="flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 h-auto py-1.5 px-2 hover:bg-muted/50">
-                  <Avatar className="h-9 w-9 border-2 border-primary/20">
+                <Button variant="ghost" className="flex items-center gap-2 h-auto py-1.5 px-2 hover:bg-muted/50 transition-all duration-200">
+                  <Avatar className="h-9 w-9 border-2 border-primary/20 ring-2 ring-primary/10">
                     <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
-                    <AvatarFallback className="text-xs font-bold bg-primary/10 text-primary">
+                    <AvatarFallback className="text-xs font-bold bg-gradient-to-br from-primary/15 to-accent/10 text-primary">
                       {getInitials(currentUser.name)}
                     </AvatarFallback>
                   </Avatar>
@@ -172,13 +172,14 @@ function AppContent() {
       <main className="container mx-auto px-6 py-8 relative">
         {currentView === 'dashboard' && isClient && (
           <>
-            <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
-              <div className="absolute inset-0 xebia-pattern opacity-50" />
+            <div className="mb-8 p-8 rounded-2xl bg-gradient-to-r from-primary/8 via-accent/8 to-primary/8 border-2 border-primary/15 relative overflow-hidden shadow-lg">
+              <div className="absolute inset-0 xebia-pattern opacity-40" />
+              <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
               <div className="relative z-10">
-                <h2 className="text-2xl font-bold mb-1">Welcome to Xebia SOWGen</h2>
-                <p className="text-muted-foreground mb-3">Transforming ideas into actionable solutions</p>
-                <div className="flex items-center gap-2 text-sm font-medium text-primary">
-                  <Sparkle size={16} weight="fill" />
+                <h2 className="text-3xl font-bold mb-2 tracking-tight">Welcome to Xebia SOWGen</h2>
+                <p className="text-muted-foreground mb-4 text-base">Transforming ideas into actionable solutions</p>
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                  <Sparkle size={18} weight="fill" />
                   <span>Accelerate your project delivery with intelligent automation</span>
                 </div>
               </div>
@@ -199,13 +200,14 @@ function AppContent() {
 
         {currentView === 'dashboard' && isXebia && (
           <>
-            <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
-              <div className="absolute inset-0 xebia-pattern opacity-50" />
+            <div className="mb-8 p-8 rounded-2xl bg-gradient-to-r from-primary/8 via-accent/8 to-primary/8 border-2 border-primary/15 relative overflow-hidden shadow-lg">
+              <div className="absolute inset-0 xebia-pattern opacity-40" />
+              <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
               <div className="relative z-10">
-                <h2 className="text-2xl font-bold mb-1">Xebia SOW Dashboard</h2>
-                <p className="text-muted-foreground mb-3">Monitor, analyze, and optimize your Statement of Work pipeline</p>
-                <div className="flex items-center gap-2 text-sm font-medium text-primary">
-                  <Sparkle size={16} weight="fill" />
+                <h2 className="text-3xl font-bold mb-2 tracking-tight">Xebia SOW Dashboard</h2>
+                <p className="text-muted-foreground mb-4 text-base">Monitor, analyze, and optimize your Statement of Work pipeline</p>
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                  <Sparkle size={18} weight="fill" />
                   <span>Driving excellence through data-driven insights</span>
                 </div>
               </div>

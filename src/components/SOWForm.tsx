@@ -235,35 +235,60 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
     toast.success(isDraft ? 'SOW saved as draft' : 'SOW submitted for approval')
   }
 
-  const trackGroups = {
-    github: TRAINING_MODULES.filter(m => m.track === 'github'),
-    azure: TRAINING_MODULES.filter(m => m.track === 'azure'),
-    gcp: TRAINING_MODULES.filter(m => m.track === 'gcp'),
-    aws: TRAINING_MODULES.filter(m => m.track === 'aws'),
-    'ai-sap': TRAINING_MODULES.filter(m => m.track === 'ai-sap'),
+  const getRelevantTrainingModules = () => {
+    if (!includeMigration) {
+      return {
+        github: TRAINING_MODULES.filter(m => m.track === 'github'),
+        gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
+        azure: TRAINING_MODULES.filter(m => m.track === 'azure'),
+        gcp: TRAINING_MODULES.filter(m => m.track === 'gcp'),
+        aws: TRAINING_MODULES.filter(m => m.track === 'aws'),
+        'ai-sap': TRAINING_MODULES.filter(m => m.track === 'ai-sap'),
+      }
+    }
+
+    const scmPlatform = scmType || selectedPlatform
+    
+    if (scmPlatform === 'github') {
+      return {
+        github: TRAINING_MODULES.filter(m => m.track === 'github'),
+      }
+    } else if (scmPlatform === 'gitlab') {
+      return {
+        gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
+      }
+    }
+    
+    return {
+      github: TRAINING_MODULES.filter(m => m.track === 'github'),
+      gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
+    }
   }
+
+  const trackGroups = getRelevantTrainingModules()
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 border border-primary/10 relative overflow-hidden">
-        <div className="absolute inset-0 xebia-pattern opacity-50" />
+      <div className="p-8 rounded-2xl bg-gradient-to-r from-primary/8 via-accent/8 to-primary/8 border-2 border-primary/15 relative overflow-hidden shadow-lg">
+        <div className="absolute inset-0 xebia-pattern opacity-40" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-3">
             <h2 className="text-3xl font-bold tracking-tight">Create Statement of Work</h2>
             {automationMode && (
-              <Badge variant="secondary" className="gap-1.5">
+              <Badge variant="secondary" className="gap-1.5 bg-accent/15 text-accent-foreground border-accent/30">
                 <Sparkle size={14} weight="fill" />
                 Automation Mode
               </Badge>
             )}
           </div>
-          <p className="text-muted-foreground mb-2">
+          <p className="text-muted-foreground mb-3 text-base">
             {automationMode 
               ? 'Fetch project data from your SCM repository and fill in additional details'
               : 'Fill in the details for your project requirements'}
           </p>
-          <div className="flex items-center gap-2 text-sm font-medium text-primary mt-3">
-            <Sparkle size={14} weight="fill" />
+          <div className="flex items-center gap-2 text-sm font-semibold text-primary mt-3">
+            <Sparkle size={16} weight="fill" />
             <span>Powered by Xebia's intelligent project analysis</span>
           </div>
         </div>
@@ -947,14 +972,25 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                 )}
 
                 <div className="space-y-4">
-                  <Label className="text-base font-semibold">Available Training Modules</Label>
-                  {Object.entries({
-                    github: TRAINING_MODULES.filter(m => m.track === 'github'),
-                    azure: TRAINING_MODULES.filter(m => m.track === 'azure'),
-                    gcp: TRAINING_MODULES.filter(m => m.track === 'gcp'),
-                    aws: TRAINING_MODULES.filter(m => m.track === 'aws'),
-                    'ai-sap': TRAINING_MODULES.filter(m => m.track === 'ai-sap'),
-                  }).map(([track, modules]) => (
+                  <div className="flex items-start justify-between mb-2">
+                    <Label className="text-base font-semibold">Available Training Modules</Label>
+                    {includeMigration && (scmType === 'github' || scmType === 'gitlab') && (
+                      <Badge variant="outline" className="gap-1.5 text-xs">
+                        <Info size={12} />
+                        Filtered for {scmType === 'github' ? 'GitHub' : 'GitLab'} migration
+                      </Badge>
+                    )}
+                  </div>
+                  {includeMigration && (scmType === 'github' || scmType === 'gitlab') && (
+                    <Alert className="bg-accent/5 border-accent/20 mb-4">
+                      <Info size={16} className="text-accent" />
+                      <AlertDescription className="text-sm">
+                        Training modules are filtered based on your selected migration platform ({scmType === 'github' ? 'GitHub' : 'GitLab'}). 
+                        Only {scmType === 'github' ? 'GitHub' : 'GitLab'}-specific training is displayed for better alignment with your migration needs.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {Object.entries(trackGroups).map(([track, modules]) => (
                     <div key={track} className="border rounded-lg p-4">
                       <h4 className="font-semibold capitalize mb-3">{track.replace('-', ' / ')} Training</h4>
                       <div className="space-y-2">

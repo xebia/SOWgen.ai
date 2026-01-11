@@ -47,14 +47,14 @@ const platformIcons: Record<ServicePlatform, any> = {
 }
 
 const platformColors: Record<ServicePlatform, string> = {
-  github: 'oklch(0.3 0.05 250)',
-  gitlab: 'oklch(0.45 0.15 25)',
-  aws: 'oklch(0.35 0.08 45)',
-  azure: 'oklch(0.45 0.15 230)',
-  gcp: 'oklch(0.55 0.12 25)',
-  kubernetes: 'oklch(0.40 0.12 240)',
-  docker: 'oklch(0.45 0.12 220)',
-  terraform: 'oklch(0.35 0.08 270)'
+  github: 'oklch(0.32 0.08 270)',
+  gitlab: 'oklch(0.52 0.18 30)',
+  aws: 'oklch(0.42 0.12 50)',
+  azure: 'oklch(0.48 0.18 240)',
+  gcp: 'oklch(0.58 0.14 28)',
+  kubernetes: 'oklch(0.42 0.15 250)',
+  docker: 'oklch(0.48 0.14 230)',
+  terraform: 'oklch(0.38 0.10 280)'
 }
 
 const statusConfig: Record<ActivityStatus, { icon: any; color: string; label: string }> = {

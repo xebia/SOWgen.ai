@@ -76,11 +76,11 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Migration type selection updates man-hour calculations; repository inventory inputs validated; calculations accurate for all migration types; CI/CD platform options displayed when enabled; training modules organized by track and level; participant counts adjustable; all configurations saved correctly in SOW; clear visual separation between migration and training sections while maintaining unified workflow
 
 ### 6. Training Module Catalog
-- **Functionality**: Within the Migration & Training tab, training modules are displayed organized by technology track (GitHub, Azure, GCP, AWS, AI/SAP) and expertise level (Beginner, Intermediate, Advanced), allowing selection directly within the SOW creation flow
-- **Purpose**: Enable clients to select appropriate training for their team's needs as part of the comprehensive SOW, with clear module descriptions, durations, and participant count configuration
+- **Functionality**: Within the Migration & Training tab, training modules are displayed organized by technology track (GitHub, GitLab, Azure, GCP, AWS, AI/SAP) and expertise level (Beginner, Intermediate, Advanced). When migration services are enabled with a specific SCM platform selected (GitHub or GitLab), training modules are intelligently filtered to show only relevant modules for that platform. For example, GitHub migrations display only GitHub training modules, and GitLab migrations display only GitLab training modules.
+- **Purpose**: Enable clients to select appropriate training for their team's needs as part of the comprehensive SOW, with clear module descriptions, durations, and participant count configuration. Smart filtering ensures training aligns with the migration platform, creating a cohesive migration and training strategy.
 - **Trigger**: Enable "Training Services" checkbox in Project Details tab, then navigate to Migration & Training tab
-- **Progression**: View training modules organized by track → Expand track sections to see available levels → Review module details (title, level, duration) → Click "Add" to include in SOW → Set participant count for each module → Remove modules if needed
-- **Success criteria**: All training options visible and organized by track/level; module details display correctly; "Add" button adds to selected list; participant counts adjustable; selected modules show in summary; pricing calculated based on modules and participants; selections persist correctly in SOW
+- **Progression**: View training modules organized by track → System automatically filters modules based on migration SCM platform (if applicable) → See informational badge and alert explaining the filtering → Expand track sections to see available levels → Review module details (title, level, duration) → Click "Add" to include in SOW → Set participant count for each module → Remove modules if needed
+- **Success criteria**: All training options visible and organized by track/level when no migration selected; modules intelligently filtered to GitHub-only when GitHub migration selected; modules filtered to GitLab-only when GitLab migration selected; clear UI indication (badge and alert) explaining the filtering logic; module details display correctly; "Add" button adds to selected list; participant counts adjustable; selected modules show in summary; pricing calculated based on modules and participants; selections persist correctly in SOW
 
 ### 7. Approval Workflow System
 - **Functionality**: Multi-level approval process with email notifications, commenting, and status tracking
@@ -132,20 +132,20 @@ The design should evoke **enterprise-grade professionalism with modern sophistic
 
 ## Color Selection
 
-A professional yet distinctive palette aligned with Xebia's official brand identity from xebia.com, featuring their signature purple with complementary accents for a modern, premium enterprise feel.
+A professional yet distinctive palette aligned with Xebia's official brand identity, featuring vibrant purple tones with enhanced saturation for a modern, premium enterprise feel that feels fresh and energetic.
 
-- **Primary Color**: Xebia Brand Purple `oklch(0.42 0.20 295)` - The official Xebia brand color from their website, conveying innovation, creativity, and technical excellence
+- **Primary Color**: Xebia Brand Purple `oklch(0.42 0.20 295)` - Bold and vibrant official Xebia brand color, conveying innovation, creativity, and technical excellence
 - **Secondary Colors**: 
   - Rich Violet `oklch(0.55 0.15 295)` - Supporting UI elements and secondary actions
-  - Light Lavender `oklch(0.96 0.01 280)` - Card backgrounds and subtle surfaces
-- **Accent Color**: Vibrant Purple `oklch(0.58 0.22 295)` - Energetic highlight for CTAs, progress indicators, and active states; emphasizes brand energy
+  - Light Lavender `oklch(0.96 0.008 280)` - Card backgrounds and subtle surfaces with reduced saturation for elegance
+- **Accent Color**: Vibrant Purple `oklch(0.58 0.22 295)` - High-energy highlight for CTAs, progress indicators, and active states; emphasizes brand dynamism
 - **Success/Status Colors**:
   - Success Green `oklch(0.62 0.17 145)` - Approved items
   - Warning Gold `oklch(0.72 0.15 70)` - Pending reviews
   - Alert Red `oklch(0.58 0.22 25)` - Rejections or required actions
 
 **Foreground/Background Pairings**:
-- Background (Light `oklch(0.99 0.005 280)`): Deep Purple text `oklch(0.20 0.015 280)` - Ratio 11.2:1 ✓
+- Background (Light `oklch(0.99 0.005 280)`): Deep Purple text `oklch(0.18 0.02 280)` - Ratio 12.1:1 ✓
 - Primary (Xebia Purple `oklch(0.42 0.20 295)`): White text `oklch(1 0 0)` - Ratio 6.2:1 ✓
 - Accent (Vibrant Purple `oklch(0.58 0.22 295)`): White text `oklch(1 0 0)` - Ratio 4.8:1 ✓
 - Secondary (Rich Violet `oklch(0.55 0.15 295)`): White text `oklch(1 0 0)` - Ratio 5.1:1 ✓
