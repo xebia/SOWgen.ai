@@ -309,10 +309,9 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
       </div>
 
       <Tabs value={currentTab} onValueChange={setCurrentTab}>
-        <TabsList className={automationMode ? 'grid w-full grid-cols-3' : 'grid w-full grid-cols-2'}>
+        <TabsList className={automationMode ? 'grid w-full grid-cols-2' : 'grid w-full'}>
           {automationMode && <TabsTrigger value="scm-integration">SCM Integration</TabsTrigger>}
-          <TabsTrigger value="details">Project Details</TabsTrigger>
-          <TabsTrigger value="migration">Migration & Training</TabsTrigger>
+          <TabsTrigger value="details">Project Configuration</TabsTrigger>
         </TabsList>
 
         {automationMode && (
@@ -542,7 +541,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
           </TabsContent>
         )}
 
-        <TabsContent value="details" className="space-y-4">
+        <TabsContent value="details" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
@@ -595,415 +594,419 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="migration" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Migration Services</CardTitle>
-              <CardDescription>Configure repository migration, CI/CD setup, and team training</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {!includeMigration ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>Enable migration services in the Project Details tab to configure options</p>
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-6">
-                    <div className="border rounded-lg p-6 bg-muted/30">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <GitHubLogo size={24} className="object-contain" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-lg">GitHub Migration Type *</h3>
-                          <p className="text-sm text-muted-foreground">Select the target GitHub platform for migration</p>
-                        </div>
+          {includeMigration && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle>Migration Configuration</CardTitle>
+                  <CardDescription>Configure repository migration and CI/CD setup</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="border rounded-lg p-6 bg-muted/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <GitHubLogo size={24} className="object-contain" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">GitHub Migration Type *</h3>
+                        <p className="text-sm text-muted-foreground">Select the target GitHub platform for migration</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Select value={githubMigrationType} onValueChange={(value: any) => setGithubMigrationType(value)}>
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select GitHub migration type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="github-classic">
+                            <div className="flex items-center gap-2">
+                              <GitHubLogo size={16} />
+                              <span className="font-medium">GitHub Classic (Cloud)</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="github-emu">
+                            <div className="flex items-center gap-2">
+                              <PlatformLogo platform="github" size={16} className="object-contain" />
+                              <span className="font-medium">GitHub EMU (Enterprise Managed Users)</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="ghes">
+                            <div className="flex items-center gap-2">
+                              <PlatformLogo platform="github" size={16} className="object-contain" />
+                              <span className="font-medium">GitHub Enterprise Server (GHES)</span>
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {!githubMigrationType && (
+                        <p className="text-xs text-muted-foreground">
+                          * This field is required
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2 mt-4">
+                      <Label htmlFor="users-to-migrate" className="text-base font-semibold">Number of Users to Migrate</Label>
+                      <Input
+                        id="users-to-migrate"
+                        type="number"
+                        min="0"
+                        value={repoInventory.usersToMigrate ?? ''}
+                        onChange={e => setRepoInventory(prev => ({ ...prev, usersToMigrate: parseInt(e.target.value) || undefined }))}
+                        placeholder="e.g., 50"
+                        className="h-12"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Number of users that will be migrated to GitHub. <span className="font-semibold text-accent">This will be used as the default participant count for all training modules.</span>
+                      </p>
+                    </div>
+                    
+                    <div className="mt-4 p-4 bg-muted/50 rounded-lg space-y-2">
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold">Migration Type Descriptions:</p>
+                        <ul className="text-xs text-muted-foreground space-y-1 ml-4 list-disc">
+                          <li><strong>GitHub Classic:</strong> Standard GitHub cloud platform with individual user accounts</li>
+                          <li><strong>GitHub EMU:</strong> Enterprise platform with centrally managed user identities and enhanced security</li>
+                          <li><strong>GHES:</strong> Self-hosted GitHub instance on your own infrastructure</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <MigrationPathDiagram 
+                    sourcePlatform={selectedPlatform || scmType as ServicePlatform} 
+                    className="my-6"
+                  />
+
+                  <div className="border rounded-lg p-6 bg-muted/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                        <Calculator size={24} weight="duotone" className="text-accent" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Repository Inventory</h3>
+                        <p className="text-sm text-muted-foreground">Provide details about repositories to be migrated</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="total-repos">Total Repositories *</Label>
+                        <Input
+                          id="total-repos"
+                          type="number"
+                          min="0"
+                          value={repoInventory.totalRepositories ?? ''}
+                          onChange={e => setRepoInventory(prev => ({ ...prev, totalRepositories: parseInt(e.target.value) || undefined as any }))}
+                          placeholder="e.g., 100"
+                        />
                       </div>
                       
                       <div className="space-y-2">
-                        <Select value={githubMigrationType} onValueChange={(value: any) => setGithubMigrationType(value)}>
-                          <SelectTrigger className="h-12">
-                            <SelectValue placeholder="Select GitHub migration type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="github-classic">
-                              <div className="flex items-center gap-2">
-                                <GitHubLogo size={16} />
-                                <span className="font-medium">GitHub Classic (Cloud)</span>
+                        <Label htmlFor="public-repos">Public Repositories</Label>
+                        <Input
+                          id="public-repos"
+                          type="number"
+                          min="0"
+                          value={repoInventory.publicRepos ?? ''}
+                          onChange={e => setRepoInventory(prev => ({ ...prev, publicRepos: parseInt(e.target.value) || undefined as any }))}
+                          placeholder="e.g., 20"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="private-repos">Private Repositories</Label>
+                        <Input
+                          id="private-repos"
+                          type="number"
+                          min="0"
+                          value={repoInventory.privateRepos ?? ''}
+                          onChange={e => setRepoInventory(prev => ({ ...prev, privateRepos: parseInt(e.target.value) || undefined as any }))}
+                          placeholder="e.g., 80"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="archived-repos">Archived Repositories</Label>
+                        <Input
+                          id="archived-repos"
+                          type="number"
+                          min="0"
+                          value={repoInventory.archivedRepos ?? ''}
+                          onChange={e => setRepoInventory(prev => ({ ...prev, archivedRepos: parseInt(e.target.value) || undefined as any }))}
+                          placeholder="e.g., 10"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="total-size">Total Size (GB) *</Label>
+                        <Input
+                          id="total-size"
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          value={repoInventory.totalSizeGB ?? ''}
+                          onChange={e => setRepoInventory(prev => ({ ...prev, totalSizeGB: parseFloat(e.target.value) || undefined as any }))}
+                          placeholder="e.g., 50.5"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="avg-repo-size">Avg Repository Size (MB)</Label>
+                        <Input
+                          id="avg-repo-size"
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          value={repoInventory.averageRepoSizeMB ?? ''}
+                          onChange={e => setRepoInventory(prev => ({ ...prev, averageRepoSizeMB: parseFloat(e.target.value) || undefined as any }))}
+                          placeholder="e.g., 500"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 mt-4">
+                      <Label htmlFor="languages">Programming Languages (comma-separated)</Label>
+                      <Input
+                        id="languages"
+                        value={repoInventory.languages.join(', ')}
+                        onChange={e => setRepoInventory(prev => ({ 
+                          ...prev, 
+                          languages: e.target.value.split(',').map(l => l.trim()).filter(Boolean) 
+                        }))}
+                        placeholder="JavaScript, Python, Java, Go"
+                      />
+                    </div>
+                    
+                    <div className="flex gap-6 mt-4">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="has-lfs"
+                          checked={repoInventory.hasLFS}
+                          onCheckedChange={(checked) => setRepoInventory(prev => ({ ...prev, hasLFS: checked as boolean }))}
+                        />
+                        <Label htmlFor="has-lfs" className="cursor-pointer">
+                          Includes Git LFS
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="has-submodules"
+                          checked={repoInventory.hasSubmodules}
+                          onCheckedChange={(checked) => setRepoInventory(prev => ({ ...prev, hasSubmodules: checked as boolean }))}
+                        />
+                        <Label htmlFor="has-submodules" className="cursor-pointer">
+                          Includes Git Submodules
+                        </Label>
+                      </div>
+                    </div>
+                    
+                    {repoInventory.totalRepositories > 0 && githubMigrationType && (
+                      <Alert className="mt-4 bg-accent/5 border-accent/20">
+                        <Calculator size={18} className="text-accent" />
+                        <AlertDescription className="text-sm">
+                          <strong className="text-foreground">Estimated Man Hours:</strong> {calculateManHours(repoInventory, githubMigrationType as GitHubMigrationType)} hours
+                          <span className="text-muted-foreground ml-2">
+                            ({Math.ceil(calculateManHours(repoInventory, githubMigrationType as GitHubMigrationType) / 40)} weeks @ 40 hrs/week)
+                          </span>
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </div>
+
+                  <div className="border rounded-lg p-6 bg-muted/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+                          <CheckCircle size={24} weight="duotone" className="text-success" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-lg">CI/CD Migration</h3>
+                          <p className="text-sm text-muted-foreground">Migrate existing CI/CD pipelines</p>
+                        </div>
+                      </div>
+                      <Checkbox
+                        id="include-cicd"
+                        checked={includeCICD}
+                        onCheckedChange={(checked) => setIncludeCICD(checked as boolean)}
+                      />
+                    </div>
+                    
+                    {includeCICD && (
+                      <div className="space-y-4 pl-13">
+                        <div className="space-y-2">
+                          <Label htmlFor="cicd-platform">Current CI/CD Platform</Label>
+                          <Select value={cicdPlatform} onValueChange={setCicdPlatform}>
+                            <SelectTrigger id="cicd-platform">
+                              <SelectValue placeholder="Select platform" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="jenkins">Jenkins</SelectItem>
+                              <SelectItem value="gitlab-ci">GitLab CI</SelectItem>
+                              <SelectItem value="circleci">CircleCI</SelectItem>
+                              <SelectItem value="travis">Travis CI</SelectItem>
+                              <SelectItem value="azure-devops">Azure DevOps</SelectItem>
+                              <SelectItem value="teamcity">TeamCity</SelectItem>
+                              <SelectItem value="bamboo">Bamboo</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="cicd-details">CI/CD Details</Label>
+                          <Textarea
+                            id="cicd-details"
+                            value={cicdDetails}
+                            onChange={e => setCicdDetails(e.target.value)}
+                            placeholder="Number of pipelines, complexity, deployment targets, etc."
+                            rows={3}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {includeTraining && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center">
+                      <GraduationCap size={24} weight="duotone" className="text-warning" />
+                    </div>
+                    <div>
+                      <CardTitle>Training Modules</CardTitle>
+                      <CardDescription>Select training programs for your team</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {selectedTrainings.length > 0 && (
+                    <div className="space-y-3 mb-6">
+                      <Label className="text-base font-semibold">Selected Modules</Label>
+                      {selectedTrainings.map(st => {
+                        const module = getModuleById(st.moduleId)
+                        if (!module) return null
+                        return (
+                          <div key={st.moduleId} className="flex items-center justify-between p-3 border rounded-lg bg-background">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h4 className="font-semibold">{module.title}</h4>
+                                <Badge variant="secondary" className="text-xs">
+                                  {module.track.toUpperCase()}
+                                </Badge>
+                                <Badge variant="outline" className="text-xs capitalize">
+                                  {module.level}
+                                </Badge>
                               </div>
-                            </SelectItem>
-                            <SelectItem value="github-emu">
+                              <p className="text-sm text-muted-foreground">{module.durationHours}h duration</p>
+                            </div>
+                            <div className="flex items-center gap-3">
                               <div className="flex items-center gap-2">
-                                <PlatformLogo platform="github" size={16} className="object-contain" />
-                                <span className="font-medium">GitHub EMU (Enterprise Managed Users)</span>
+                                <Label className="text-sm whitespace-nowrap">Participants:</Label>
+                                <Input
+                                  type="number"
+                                  min="1"
+                                  value={st.participantCount}
+                                  onChange={e => handleUpdateParticipants(st.moduleId, parseInt(e.target.value))}
+                                  className="w-24"
+                                  placeholder={repoInventory.usersToMigrate ? `${repoInventory.usersToMigrate}` : '1'}
+                                />
                               </div>
-                            </SelectItem>
-                            <SelectItem value="ghes">
-                              <div className="flex items-center gap-2">
-                                <PlatformLogo platform="github" size={16} className="object-contain" />
-                                <span className="font-medium">GitHub Enterprise Server (GHES)</span>
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        {!githubMigrationType && (
-                          <p className="text-xs text-muted-foreground">
-                            * This field is required
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleRemoveTraining(st.moduleId)}
+                                className="text-muted-foreground hover:text-destructive"
+                              >
+                                <X size={20} />
+                              </Button>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <Label className="text-base font-semibold">Available Training Modules</Label>
+                        {repoInventory.usersToMigrate && repoInventory.usersToMigrate > 0 && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Adding a module will use <span className="font-semibold text-primary">{repoInventory.usersToMigrate} participants</span> by default
                           </p>
                         )}
                       </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="users-to-migrate" className="text-base font-semibold">Number of Users to Migrate</Label>
-                        <Input
-                          id="users-to-migrate"
-                          type="number"
-                          min="0"
-                          value={repoInventory.usersToMigrate ?? ''}
-                          onChange={e => setRepoInventory(prev => ({ ...prev, usersToMigrate: parseInt(e.target.value) || undefined }))}
-                          placeholder="e.g., 50"
-                          className="h-12"
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          Number of users that will be migrated to GitHub. <span className="font-semibold text-accent">This will be used as the default participant count for all training modules.</span>
-                        </p>
-                      </div>
-                      
-                      <div className="mt-4 p-4 bg-muted/50 rounded-lg space-y-2">
-                        <div className="space-y-1">
-                          <p className="text-sm font-semibold">Migration Type Descriptions:</p>
-                          <ul className="text-xs text-muted-foreground space-y-1 ml-4 list-disc">
-                            <li><strong>GitHub Classic:</strong> Standard GitHub cloud platform with individual user accounts</li>
-                            <li><strong>GitHub EMU:</strong> Enterprise platform with centrally managed user identities and enhanced security</li>
-                            <li><strong>GHES:</strong> Self-hosted GitHub instance on your own infrastructure</li>
-                          </ul>
-                        </div>
-                      </div>
+                      <Badge variant="outline" className="gap-1.5 text-xs">
+                        <Info size={12} />
+                        GitHub Training
+                      </Badge>
                     </div>
-
-                    <MigrationPathDiagram 
-                      sourcePlatform={selectedPlatform || scmType as ServicePlatform} 
-                      className="my-6"
-                    />
-
-                    <div className="border rounded-lg p-6 bg-muted/30">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                          <Calculator size={24} weight="duotone" className="text-accent" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-lg">Repository Inventory</h3>
-                          <p className="text-sm text-muted-foreground">Provide details about repositories to be migrated</p>
-                        </div>
-                      </div>
-                      
-                      <div className="grid md:grid-cols-2 gap-4">
+                    <Alert className="bg-accent/5 border-accent/20 mb-4">
+                      <Info size={16} className="text-accent" />
+                      <AlertDescription className="text-sm">
+                        All training modules focus on GitHub platform and best practices, regardless of migration source platform.
+                        {repoInventory.usersToMigrate && repoInventory.usersToMigrate > 0 && (
+                          <span className="block mt-2 font-semibold text-primary">
+                            Default participant count: {repoInventory.usersToMigrate} users (from migration users)
+                          </span>
+                        )}
+                      </AlertDescription>
+                    </Alert>
+                    {Object.entries(trackGroups).map(([track, modules]) => (
+                      <div key={track} className="border rounded-lg p-4">
+                        <h4 className="font-semibold capitalize mb-3">{track.replace('-', ' / ')} Training</h4>
                         <div className="space-y-2">
-                          <Label htmlFor="total-repos">Total Repositories *</Label>
-                          <Input
-                            id="total-repos"
-                            type="number"
-                            min="0"
-                            value={repoInventory.totalRepositories ?? ''}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, totalRepositories: parseInt(e.target.value) || undefined as any }))}
-                            placeholder="e.g., 100"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="public-repos">Public Repositories</Label>
-                          <Input
-                            id="public-repos"
-                            type="number"
-                            min="0"
-                            value={repoInventory.publicRepos ?? ''}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, publicRepos: parseInt(e.target.value) || undefined as any }))}
-                            placeholder="e.g., 20"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="private-repos">Private Repositories</Label>
-                          <Input
-                            id="private-repos"
-                            type="number"
-                            min="0"
-                            value={repoInventory.privateRepos ?? ''}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, privateRepos: parseInt(e.target.value) || undefined as any }))}
-                            placeholder="e.g., 80"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="archived-repos">Archived Repositories</Label>
-                          <Input
-                            id="archived-repos"
-                            type="number"
-                            min="0"
-                            value={repoInventory.archivedRepos ?? ''}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, archivedRepos: parseInt(e.target.value) || undefined as any }))}
-                            placeholder="e.g., 10"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="total-size">Total Size (GB) *</Label>
-                          <Input
-                            id="total-size"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value={repoInventory.totalSizeGB ?? ''}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, totalSizeGB: parseFloat(e.target.value) || undefined as any }))}
-                            placeholder="e.g., 50.5"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="avg-repo-size">Avg Repository Size (MB)</Label>
-                          <Input
-                            id="avg-repo-size"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value={repoInventory.averageRepoSizeMB ?? ''}
-                            onChange={e => setRepoInventory(prev => ({ ...prev, averageRepoSizeMB: parseFloat(e.target.value) || undefined as any }))}
-                            placeholder="e.g., 500"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2 mt-4">
-                        <Label htmlFor="languages">Programming Languages (comma-separated)</Label>
-                        <Input
-                          id="languages"
-                          value={repoInventory.languages.join(', ')}
-                          onChange={e => setRepoInventory(prev => ({ 
-                            ...prev, 
-                            languages: e.target.value.split(',').map(l => l.trim()).filter(Boolean) 
-                          }))}
-                          placeholder="JavaScript, Python, Java, Go"
-                        />
-                      </div>
-                      
-                      <div className="flex gap-6 mt-4">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="has-lfs"
-                            checked={repoInventory.hasLFS}
-                            onCheckedChange={(checked) => setRepoInventory(prev => ({ ...prev, hasLFS: checked as boolean }))}
-                          />
-                          <Label htmlFor="has-lfs" className="cursor-pointer">
-                            Includes Git LFS
-                          </Label>
-                        </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="has-submodules"
-                            checked={repoInventory.hasSubmodules}
-                            onCheckedChange={(checked) => setRepoInventory(prev => ({ ...prev, hasSubmodules: checked as boolean }))}
-                          />
-                          <Label htmlFor="has-submodules" className="cursor-pointer">
-                            Includes Git Submodules
-                          </Label>
-                        </div>
-                      </div>
-                      
-                      {repoInventory.totalRepositories > 0 && githubMigrationType && (
-                        <Alert className="mt-4 bg-accent/5 border-accent/20">
-                          <Calculator size={18} className="text-accent" />
-                          <AlertDescription className="text-sm">
-                            <strong className="text-foreground">Estimated Man Hours:</strong> {calculateManHours(repoInventory, githubMigrationType as GitHubMigrationType)} hours
-                            <span className="text-muted-foreground ml-2">
-                              ({Math.ceil(calculateManHours(repoInventory, githubMigrationType as GitHubMigrationType) / 40)} weeks @ 40 hrs/week)
-                            </span>
-                          </AlertDescription>
-                        </Alert>
-                      )}
-                    </div>
-
-                    <div className="border rounded-lg p-6 bg-muted/30">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
-                            <CheckCircle size={24} weight="duotone" className="text-success" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-lg">CI/CD Migration</h3>
-                            <p className="text-sm text-muted-foreground">Migrate existing CI/CD pipelines</p>
-                          </div>
-                        </div>
-                        <Checkbox
-                          id="include-cicd"
-                          checked={includeCICD}
-                          onCheckedChange={(checked) => setIncludeCICD(checked as boolean)}
-                        />
-                      </div>
-                      
-                      {includeCICD && (
-                        <div className="space-y-4 pl-13">
-                          <div className="space-y-2">
-                            <Label htmlFor="cicd-platform">Current CI/CD Platform</Label>
-                            <Select value={cicdPlatform} onValueChange={setCicdPlatform}>
-                              <SelectTrigger id="cicd-platform">
-                                <SelectValue placeholder="Select platform" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="jenkins">Jenkins</SelectItem>
-                                <SelectItem value="gitlab-ci">GitLab CI</SelectItem>
-                                <SelectItem value="circleci">CircleCI</SelectItem>
-                                <SelectItem value="travis">Travis CI</SelectItem>
-                                <SelectItem value="azure-devops">Azure DevOps</SelectItem>
-                                <SelectItem value="teamcity">TeamCity</SelectItem>
-                                <SelectItem value="bamboo">Bamboo</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          
-                          <div className="space-y-2">
-                            <Label htmlFor="cicd-details">CI/CD Details</Label>
-                            <Textarea
-                              id="cicd-details"
-                              value={cicdDetails}
-                              onChange={e => setCicdDetails(e.target.value)}
-                              placeholder="Number of pipelines, complexity, deployment targets, etc."
-                              rows={3}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-
-          {includeTraining && (
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center">
-                    <GraduationCap size={24} weight="duotone" className="text-warning" />
-                  </div>
-                  <div>
-                    <CardTitle>Training Modules</CardTitle>
-                    <CardDescription>Select training programs for your team</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {selectedTrainings.length > 0 && (
-                  <div className="space-y-3 mb-6">
-                    <Label className="text-base font-semibold">Selected Modules</Label>
-                    {selectedTrainings.map(st => {
-                      const module = getModuleById(st.moduleId)
-                      if (!module) return null
-                      return (
-                        <div key={st.moduleId} className="flex items-center justify-between p-3 border rounded-lg bg-background">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-semibold">{module.title}</h4>
-                              <Badge variant="secondary" className="text-xs">
-                                {module.track.toUpperCase()}
-                              </Badge>
-                              <Badge variant="outline" className="text-xs capitalize">
-                                {module.level}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground">{module.durationHours}h duration</p>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <Label className="text-sm whitespace-nowrap">Participants:</Label>
-                              <Input
-                                type="number"
-                                min="1"
-                                value={st.participantCount}
-                                onChange={e => handleUpdateParticipants(st.moduleId, parseInt(e.target.value))}
-                                className="w-24"
-                                placeholder={repoInventory.usersToMigrate ? `${repoInventory.usersToMigrate}` : '1'}
-                              />
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleRemoveTraining(st.moduleId)}
-                              className="text-muted-foreground hover:text-destructive"
-                            >
-                              <X size={20} />
-                            </Button>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <Label className="text-base font-semibold">Available Training Modules</Label>
-                      {repoInventory.usersToMigrate && repoInventory.usersToMigrate > 0 && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Adding a module will use <span className="font-semibold text-primary">{repoInventory.usersToMigrate} participants</span> by default
-                        </p>
-                      )}
-                    </div>
-                    <Badge variant="outline" className="gap-1.5 text-xs">
-                      <Info size={12} />
-                      GitHub Training
-                    </Badge>
-                  </div>
-                  <Alert className="bg-accent/5 border-accent/20 mb-4">
-                    <Info size={16} className="text-accent" />
-                    <AlertDescription className="text-sm">
-                      All training modules focus on GitHub platform and best practices, regardless of migration source platform.
-                      {repoInventory.usersToMigrate && repoInventory.usersToMigrate > 0 && (
-                        <span className="block mt-2 font-semibold text-primary">
-                          Default participant count: {repoInventory.usersToMigrate} users (from migration users)
-                        </span>
-                      )}
-                    </AlertDescription>
-                  </Alert>
-                  {Object.entries(trackGroups).map(([track, modules]) => (
-                    <div key={track} className="border rounded-lg p-4">
-                      <h4 className="font-semibold capitalize mb-3">{track.replace('-', ' / ')} Training</h4>
-                      <div className="space-y-2">
-                        {modules.map(module => {
-                          const isSelected = selectedTrainings.some(t => t.moduleId === module.id)
-                          return (
-                            <div key={module.id} className="flex items-center justify-between p-3 border rounded bg-muted/30 hover:bg-muted/50 transition-colors">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">{module.title}</span>
-                                  <Badge variant="outline" className="text-xs capitalize">{module.level}</Badge>
-                                  <span className="text-sm text-muted-foreground">{module.durationHours}h</span>
+                          {modules.map(module => {
+                            const isSelected = selectedTrainings.some(t => t.moduleId === module.id)
+                            return (
+                              <div key={module.id} className="flex items-center justify-between p-3 border rounded bg-muted/30 hover:bg-muted/50 transition-colors">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium">{module.title}</span>
+                                    <Badge variant="outline" className="text-xs capitalize">{module.level}</Badge>
+                                    <span className="text-sm text-muted-foreground">{module.durationHours}h</span>
+                                  </div>
                                 </div>
+                                <Button
+                                  onClick={() => handleAddTraining(module.id)}
+                                  disabled={isSelected}
+                                  size="sm"
+                                  variant={isSelected ? "outline" : "default"}
+                                >
+                                  {isSelected ? 'Added' : 'Add'}
+                                </Button>
                               </div>
-                              <Button
-                                onClick={() => handleAddTraining(module.id)}
-                                disabled={isSelected}
-                                size="sm"
-                                variant={isSelected ? "outline" : "default"}
-                              >
-                                {isSelected ? 'Added' : 'Add'}
-                              </Button>
-                            </div>
-                          )
-                        })}
+                            )
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           )}
         </TabsContent>
+
+
       </Tabs>
 
       <div className="flex justify-between pt-4">

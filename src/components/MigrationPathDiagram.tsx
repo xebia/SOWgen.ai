@@ -260,7 +260,7 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
             </div>
           </div>
           <div className="relative">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3">
               {migrationSteps.map((step, index) => {
                 const StepIcon = step.icon
                 const isNotLast = index < migrationSteps.length - 1
@@ -272,18 +272,18 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
                     transition={{ duration: 0.4, delay: 0.1 * index }}
                     className="relative"
                   >
-                    <div className="relative">
-                      <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center border-2 border-background shadow-md z-10">
-                        <span className="text-xs font-bold text-primary-foreground">{index + 1}</span>
+                    <div className="relative h-full">
+                      <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center border-2 border-background shadow-md z-10">
+                        <span className="text-[10px] font-bold text-primary-foreground">{index + 1}</span>
                       </div>
                       <Card className="h-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-primary/20 bg-background relative overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <CardContent className="p-5 space-y-3 relative z-10">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center shadow-sm">
-                            <StepIcon size={24} weight="duotone" className="text-primary" />
+                        <CardContent className="p-3 space-y-2 relative z-10 flex flex-col items-center text-center">
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center shadow-sm flex-shrink-0">
+                            <StepIcon size={20} weight="duotone" className="text-primary" />
                           </div>
-                          <h5 className="font-bold text-sm leading-tight">{step.title}</h5>
-                          <p className="text-xs text-muted-foreground leading-relaxed">{step.description}</p>
+                          <h5 className="font-bold text-xs leading-tight">{step.title}</h5>
+                          <p className="text-[10px] text-muted-foreground leading-snug line-clamp-2">{step.description}</p>
                         </CardContent>
                       </Card>
                     </div>
@@ -292,22 +292,10 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3, delay: 0.1 * index + 0.2 }}
-                        className="hidden xl:block absolute top-1/2 -right-4 -translate-y-1/2 z-20"
+                        className="hidden xl:block absolute top-1/2 -right-1.5 -translate-y-1/2 z-20"
                       >
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-background shadow-md backdrop-blur-sm">
-                          <ArrowRight size={16} weight="bold" className="text-primary" />
-                        </div>
-                      </motion.div>
-                    )}
-                    {isNotLast && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.3, delay: 0.1 * index + 0.2 }}
-                        className="xl:hidden flex justify-center my-2"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-background shadow-md">
-                          <ArrowRight size={16} weight="bold" className="text-primary rotate-90" />
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-background shadow-sm backdrop-blur-sm">
+                          <ArrowRight size={12} weight="bold" className="text-primary" />
                         </div>
                       </motion.div>
                     )}
