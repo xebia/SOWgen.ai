@@ -171,6 +171,60 @@ export function generatePrintableHTML(sow: SOW): string {
           line-height: 1.6;
           color: #1a1a1a;
           font-size: 11pt;
+          position: relative;
+        }
+
+        body::before {
+          content: '';
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-45deg);
+          width: 80%;
+          height: 80%;
+          background-image: url('${xebiaLogo}');
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          opacity: 0.03;
+          z-index: -1;
+          pointer-events: none;
+        }
+
+        .watermark-text {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-45deg);
+          font-size: 72pt;
+          font-weight: 700;
+          font-family: 'Space Grotesk', sans-serif;
+          color: oklch(0.35 0.18 295);
+          opacity: 0.04;
+          z-index: -1;
+          pointer-events: none;
+          white-space: nowrap;
+          letter-spacing: 8pt;
+        }
+
+        .page-watermark {
+          position: fixed;
+          bottom: 10mm;
+          right: 15mm;
+          font-size: 8pt;
+          font-weight: 500;
+          color: oklch(0.35 0.18 295);
+          opacity: 0.4;
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          gap: 6pt;
+        }
+
+        .page-watermark img {
+          height: 18pt;
+          width: auto;
+          opacity: 0.5;
         }
 
         h1, h2, h3 {
@@ -442,6 +496,24 @@ export function generatePrintableHTML(sow: SOW): string {
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
           }
+
+          body::before {
+            position: fixed;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+
+          .watermark-text {
+            position: fixed;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
+
+          .page-watermark {
+            position: fixed;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+          }
           
           .page-break {
             page-break-before: always;
@@ -450,6 +522,11 @@ export function generatePrintableHTML(sow: SOW): string {
       </style>
     </head>
     <body>
+      <div class="watermark-text">XEBIA</div>
+      <div class="page-watermark">
+        <img src="${xebiaLogo}" alt="Xebia" />
+        <span>Xebia Confidential</span>
+      </div>
       <div class="header">
         <div class="header-content">
           <h1>${sow.projectName}</h1>
