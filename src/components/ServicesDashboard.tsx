@@ -138,31 +138,26 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
     
     return (
       <div className="space-y-8">
-        <div className="flex items-start justify-between">
-          <div>
-            <Button 
-              variant="ghost" 
-              onClick={handleBackToServices}
-              className="gap-2 mb-4 -ml-3 hover:bg-primary/5"
+        <div className="sticky top-[73px] z-20 bg-background/95 backdrop-blur-md border-b pb-4 -mx-6 px-6 -mt-8 pt-4 mb-6 shadow-sm">
+          <Button 
+            variant="ghost" 
+            onClick={handleBackToServices}
+            className="gap-2 mb-3 -ml-3 hover:bg-primary/5"
+          >
+            <CaretRight size={18} className="rotate-180" />
+            Back to Platforms
+          </Button>
+          <div className="flex items-center gap-3 mb-2">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border relative overflow-hidden p-2"
+              style={{ backgroundColor: `color-mix(in oklch, ${platformColors[selectedService]} 10%, transparent)` }}
             >
-              <CaretRight size={18} className="rotate-180" />
-              Back to Platforms
-            </Button>
-            <div className="flex items-center gap-4 mb-3">
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden p-2"
-                style={{ backgroundColor: `color-mix(in oklch, ${platformColors[selectedService]} 10%, transparent)` }}
-              >
-                <PlatformLogo platform={selectedService} size={40} className="object-contain" />
-              </div>
-              <div>
-                <h2 className="text-3xl font-bold tracking-tight">{serviceName}</h2>
-                <p className="text-sm text-muted-foreground mt-1">SOWGen Platform - Generate SOW</p>
-              </div>
+              <PlatformLogo platform={selectedService} size={32} className="object-contain" />
             </div>
-            <p className="text-muted-foreground max-w-2xl">
-              Choose your preferred method to create a comprehensive SOW for your {serviceName} project
-            </p>
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">{serviceName}</h2>
+              <p className="text-xs text-muted-foreground">Choose your SOW generation method</p>
+            </div>
           </div>
         </div>
 
@@ -396,13 +391,15 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
 
   return (
     <div className="space-y-8">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">Platform Services</h2>
-          <p className="text-muted-foreground">Select a platform to generate your SOW</p>
-          <div className="flex items-center gap-2 mt-3 text-sm font-medium text-accent">
-            <Sparkle size={14} weight="fill" />
-            <span>Powered by Xebia's intelligent automation</span>
+      <div className="sticky top-[73px] z-20 bg-background/95 backdrop-blur-md border-b pb-4 -mx-6 px-6 -mt-8 pt-6 mb-6 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight mb-1">Platform Services</h2>
+            <p className="text-sm text-muted-foreground">Select a platform to generate your SOW</p>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-medium text-accent bg-accent/10 px-3 py-1.5 rounded-full border border-accent/20">
+            <Sparkle size={12} weight="fill" />
+            <span>Powered by Xebia</span>
           </div>
         </div>
       </div>
