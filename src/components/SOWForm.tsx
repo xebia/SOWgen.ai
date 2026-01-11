@@ -10,8 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage } from '@/lib/types'
 import { TRAINING_MODULES, getModuleById } from '@/lib/training-catalog'
-import { X, Plus, GithubLogo, GitlabLogo, Sparkle, CloudArrowDown } from '@phosphor-icons/react'
+import { X, Plus, GithubLogo, GitlabLogo, Sparkle, CloudArrowDown, CheckCircle, Info } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { fetchRepositoryData, generateProjectDescription, type RepositoryData, type SCMPlatform } from '@/lib/scm-api'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 interface SOWFormProps {
   user: User
@@ -37,11 +39,12 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
   const [selectedTrainings, setSelectedTrainings] = useState<SelectedTraining[]>([])
   const [currentTab, setCurrentTab] = useState(automationMode ? 'scm-integration' : 'details')
   
-  const [scmType, setScmType] = useState<'github' | 'gitlab' | 'bitbucket'>('github')
+  const [scmType, setScmType] = useState<SCMPlatform>('github')
   const [repoUrl, setRepoUrl] = useState('')
   const [accessToken, setAccessToken] = useState('')
   const [isFetching, setIsFetching] = useState(false)
-  const [fetchedData, setFetchedData] = useState<any>(null)
+  const [fetchedData, setFetchedData] = useState<RepositoryData | null>(null)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   const handleAddMigrationStage = () => {
     setMigrationStages(prev => [...prev, {
@@ -89,28 +92,21 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
     }
 
     setIsFetching(true)
+    setFetchError(null)
+    
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const data = await fetchRepositoryData(repoUrl, scmType, accessToken || undefined)
       
-      const mockData = {
-        repoName: repoUrl.split('/').pop() || 'Project',
-        description: 'Fetched from SCM repository - includes comprehensive CI/CD pipeline setup and deployment automation',
-        branches: 15,
-        commits: 342,
-        contributors: 8,
-        languages: ['TypeScript', 'Python', 'Go'],
-        hasCI: true,
-        estimatedComplexity: 'medium'
-      }
-      
-      setFetchedData(mockData)
-      setProjectName(mockData.repoName)
-      setProjectDescription(mockData.description)
-      setIncludeMigration(true)
+      setFetchedData(data)
+      setProjectName(data.repoName)
+      setProjectDescription(generateProjectDescription(data))
+      setIncludeMigration(data.hasCI)
       
       toast.success('Repository data fetched successfully!')
     } catch (error) {
-      toast.error('Failed to fetch repository data')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch repository data'
+      setFetchError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsFetching(false)
     }
@@ -230,10 +226,27 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
                     onChange={e => setAccessToken(e.target.value)}
                     placeholder="For private repositories"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Required only for private repositories. Your token is not stored.
-                  </p>
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p>Required only for private repositories. Your token is not stored.</p>
+                    {scmType === 'github' && (
+                      <p className="text-accent">
+                        Generate token: Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (select 'repo' scope)
+                      </p>
+                    )}
+                    {scmType === 'gitlab' && (
+                      <p className="text-accent">
+                        Generate token: User Settings → Access Tokens → Add new token (select 'read_api' scope)
+                      </p>
+                    )}
+                  </div>
                 </div>
+
+                {fetchError && (
+                  <Alert variant="destructive">
+                    <Info size={16} />
+                    <AlertDescription>{fetchError}</AlertDescription>
+                  </Alert>
+                )}
 
                 <Button 
                   onClick={handleFetchFromSCM}
@@ -255,53 +268,114 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
                 </Button>
 
                 {fetchedData && (
-                  <Card className="bg-muted/50">
+                  <Card className="bg-muted/50 border-success/20">
                     <CardHeader>
                       <CardTitle className="text-base flex items-center gap-2">
-                        <Sparkle size={18} weight="fill" className="text-success" />
+                        <CheckCircle size={18} weight="fill" className="text-success" />
                         Data Fetched Successfully
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2 text-sm">
-                      <div className="grid grid-cols-2 gap-3">
+                    <CardContent className="space-y-3">
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <span className="text-muted-foreground">Repository:</span>
-                          <p className="font-semibold">{fetchedData.repoName}</p>
+                          <span className="text-xs text-muted-foreground">Repository</span>
+                          <p className="font-semibold">{fetchedData.fullName}</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Complexity:</span>
-                          <p className="font-semibold capitalize">{fetchedData.estimatedComplexity}</p>
+                          <span className="text-xs text-muted-foreground">Visibility</span>
+                          <p className="font-semibold capitalize">{fetchedData.visibility}</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Branches:</span>
+                          <span className="text-xs text-muted-foreground">Complexity</span>
+                          <Badge variant="secondary" className="capitalize">
+                            {fetchedData.estimatedComplexity}
+                          </Badge>
+                        </div>
+                        <div>
+                          <span className="text-xs text-muted-foreground">Default Branch</span>
+                          <p className="font-semibold">{fetchedData.defaultBranch}</p>
+                        </div>
+                        <div>
+                          <span className="text-xs text-muted-foreground">Branches</span>
                           <p className="font-semibold">{fetchedData.branches}</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Contributors:</span>
+                          <span className="text-xs text-muted-foreground">Contributors</span>
                           <p className="font-semibold">{fetchedData.contributors}</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Total Commits:</span>
-                          <p className="font-semibold">{fetchedData.commits}</p>
+                          <span className="text-xs text-muted-foreground">Total Commits</span>
+                          <p className="font-semibold">{fetchedData.commits}+</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Has CI/CD:</span>
+                          <span className="text-xs text-muted-foreground">Has CI/CD</span>
                           <p className="font-semibold">{fetchedData.hasCI ? 'Yes' : 'No'}</p>
                         </div>
+                        {fetchedData.stars > 0 && (
+                          <div>
+                            <span className="text-xs text-muted-foreground">Stars</span>
+                            <p className="font-semibold">{fetchedData.stars}</p>
+                          </div>
+                        )}
+                        {fetchedData.forks > 0 && (
+                          <div>
+                            <span className="text-xs text-muted-foreground">Forks</span>
+                            <p className="font-semibold">{fetchedData.forks}</p>
+                          </div>
+                        )}
+                        {fetchedData.openIssues > 0 && (
+                          <div>
+                            <span className="text-xs text-muted-foreground">Open Issues</span>
+                            <p className="font-semibold">{fetchedData.openIssues}</p>
+                          </div>
+                        )}
+                        {fetchedData.openPRs > 0 && (
+                          <div>
+                            <span className="text-xs text-muted-foreground">Open PRs</span>
+                            <p className="font-semibold">{fetchedData.openPRs}</p>
+                          </div>
+                        )}
                       </div>
-                      <div>
-                        <span className="text-muted-foreground">Languages:</span>
-                        <div className="flex gap-2 mt-1">
-                          {fetchedData.languages.map((lang: string) => (
-                            <Badge key={lang} variant="secondary" className="text-xs">
-                              {lang}
-                            </Badge>
-                          ))}
+                      
+                      {fetchedData.languages.length > 0 && (
+                        <div>
+                          <span className="text-xs text-muted-foreground block mb-1.5">Languages</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {fetchedData.languages.map((lang: string) => (
+                              <Badge key={lang} variant="outline" className="text-xs">
+                                {lang}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                      <p className="text-muted-foreground text-xs pt-2">
-                        Project details have been pre-filled. You can review and modify them in the next tabs.
-                      </p>
+                      )}
+
+                      {fetchedData.topics.length > 0 && (
+                        <div>
+                          <span className="text-xs text-muted-foreground block mb-1.5">Topics</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {fetchedData.topics.map((topic: string) => (
+                              <Badge key={topic} variant="secondary" className="text-xs">
+                                {topic}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {fetchedData.license && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">License</span>
+                          <p className="text-sm font-medium">{fetchedData.license}</p>
+                        </div>
+                      )}
+                      
+                      <Alert>
+                        <Sparkle size={16} weight="fill" />
+                        <AlertDescription className="text-xs">
+                          Project details have been pre-filled. Review them in the next tabs and add additional information as needed.
+                        </AlertDescription>
+                      </Alert>
                     </CardContent>
                   </Card>
                 )}

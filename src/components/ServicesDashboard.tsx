@@ -178,22 +178,22 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
               </div>
               <CardTitle className="text-2xl mb-2">Automation</CardTitle>
               <CardDescription className="text-base">
-                Fetch data from your SCM using REST API for faster SOW generation
+                Connect to GitHub or GitLab via REST API to automatically fetch repository data
               </CardDescription>
             </CardHeader>
             <CardContent className="relative space-y-4">
               <div className="space-y-2 text-sm text-muted-foreground">
                 <div className="flex items-start gap-2">
                   <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Auto-fetch from GitHub, GitLab, etc.</span>
+                  <span>Real-time data from GitHub & GitLab</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Save time with automated data</span>
+                  <span>Auto-detect CI/CD pipelines</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                  <span>Best for existing repositories</span>
+                  <span>Analyze complexity & languages</span>
                 </div>
               </div>
               <Button 

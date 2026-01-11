@@ -55,11 +55,11 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Form validates all required fields; can save drafts; successful submission triggers approval workflow; data persists correctly
 
 ### 4b. SOW Generation (Automation Mode)
-- **Functionality**: SCM-integrated SOW creation with REST API data fetching from GitHub, GitLab, or Bitbucket, followed by review and additional details form
-- **Purpose**: Accelerate SOW creation by automatically fetching repository metadata, complexity analysis, and project details from existing SCM platforms
+- **Functionality**: SCM-integrated SOW creation with real REST API data fetching from GitHub and GitLab, followed by review and additional details form
+- **Purpose**: Accelerate SOW creation by automatically fetching comprehensive repository metadata including branches, commits, contributors, languages, CI/CD detection, topics, issues, PRs, stars, forks, and complexity analysis from existing SCM platforms
 - **Trigger**: Client clicks "Use Automation" card on dashboard
-- **Progression**: Select SCM platform (GitHub/GitLab/Bitbucket) → Enter repository URL and optional access token → Fetch data via API → Review auto-populated project details (name, description, branches, commits, languages, CI/CD status) → Modify/enhance details → Add migration stages → Select training modules → Submit
-- **Success criteria**: Successfully fetches data from GitHub, GitLab, and Bitbucket APIs; handles authentication for private repos; pre-fills project name and description; displays repository metrics; allows user to review and modify fetched data; gracefully handles API failures with clear error messages; proceeding to other tabs shows pre-filled data
+- **Progression**: Select SCM platform (GitHub/GitLab) → Enter repository URL and optional access token → Fetch data via real API → Review comprehensive auto-populated project details (repository name, full path, description, visibility, default branch, branches count, commits count, contributors, languages, CI/CD status, topics, open issues/PRs, stars, forks, license, complexity estimate) → Modify/enhance details → Add migration stages → Select training modules → Submit
+- **Success criteria**: Successfully fetches real data from GitHub REST API v3 and GitLab API v4; handles public and private repositories with token authentication; pre-fills project name with rich generated description; displays comprehensive repository metrics with proper badges and formatting; allows user to review and modify fetched data; gracefully handles API failures (404, 401, network errors) with clear, actionable error messages; detects GitHub Actions workflows and GitLab CI pipelines; calculates complexity score based on multiple factors; proceeding to other tabs shows pre-filled data; provides token generation guidance for each platform
 
 ### 5. Migration Scenario Builder
 - **Functionality**: Structured input for migration stages (Initial Setup, Repository Migration, CI/CD Migration, CI/CD Implementation, Training Sessions)
@@ -108,9 +108,9 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Approval Deadlines**: Send escalation notifications; highlight overdue approvals in dashboard
 - **PDF Export Failures**: Catch popup blocker issues with user-friendly error message; provide fallback instructions for enabling popups
 - **Empty SOW Sections**: Handle SOWs with no migration or training modules gracefully in PDF; show appropriate "not included" messaging
-- **SCM API Failures**: Display clear error messages for connection failures, invalid URLs, or authentication issues; allow retry with different credentials; gracefully fall back to manual entry
-- **Private Repository Access**: Guide users on generating access tokens; validate token permissions; handle expired or invalid tokens with helpful instructions
-- **Incomplete SCM Data**: Handle repositories with missing metadata gracefully; allow users to supplement auto-filled data; warn when critical data is unavailable
+- **SCM API Failures**: Display clear error messages for connection failures, invalid URLs, or authentication issues; allow retry with different credentials; gracefully fall back to manual entry; provide specific guidance for 404 (repository not found), 401 (invalid token), and network errors
+- **Private Repository Access**: Guide users on generating access tokens with platform-specific instructions (GitHub: Settings → Developer settings → Personal access tokens, GitLab: User Settings → Access Tokens); validate token permissions; handle expired or invalid tokens with helpful re-authentication instructions
+- **Incomplete SCM Data**: Handle repositories with missing metadata gracefully; allow users to supplement auto-filled data; warn when critical data is unavailable; provide defaults for optional fields; handle API rate limiting with clear messaging
 
 ## Design Direction
 
