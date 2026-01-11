@@ -1,4 +1,4 @@
-export type SCMPlatform = 'github' | 'gitlab' | 'bitbucket'
+export type SCMPlatform = 'github' | 'gitlab' | 'bitbucket' | 'azure-devops'
 
 export interface RepositoryData {
   repoName: string
@@ -73,7 +73,18 @@ export interface BitbucketRepository {
   language: string
 }
 
-function parseRepoUrl(url: string, platform: SCMPlatform): { owner: string; repo: string } | null {
+export interface AzureDevOpsRepository {
+  name: string
+  project: {
+    name: string
+  }
+  defaultBranch: string
+  size: number
+  isDisabled: boolean
+  remoteUrl: string
+}
+
+function parseRepoUrl(url: string, platform: SCMPlatform): { owner: string; repo: string; organization?: string } | null {
   try {
     const cleanUrl = url.trim().replace(/\.git$/, '')
     let match: RegExpMatchArray | null = null
@@ -84,6 +95,12 @@ function parseRepoUrl(url: string, platform: SCMPlatform): { owner: string; repo
       match = cleanUrl.match(/gitlab\.com[:/]([^/]+)\/([^/]+)\/?$/)
     } else if (platform === 'bitbucket') {
       match = cleanUrl.match(/bitbucket\.org[:/]([^/]+)\/([^/]+)\/?$/)
+    } else if (platform === 'azure-devops') {
+      const azureMatch = cleanUrl.match(/dev\.azure\.com\/([^/]+)\/([^/]+)\/_git\/([^/]+)\/?$/)
+      if (azureMatch) {
+        return { organization: azureMatch[1], owner: azureMatch[2], repo: azureMatch[3] }
+      }
+      return null
     }
 
     if (match) {
@@ -541,6 +558,141 @@ async function checkBitbucketCI(owner: string, repo: string, token?: string): Pr
   return false
 }
 
+async function fetchAzureDevOpsData(
+  organization: string,
+  project: string,
+  repo: string,
+  token?: string
+): Promise<RepositoryData> {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  }
+
+  if (token) {
+    const base64Token = btoa(`:${token}`)
+    headers['Authorization'] = `Basic ${base64Token}`
+  }
+
+  const repoResponse = await fetch(
+    `https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repo}?api-version=7.0`,
+    { headers }
+  )
+
+  if (!repoResponse.ok) {
+    if (repoResponse.status === 404) {
+      throw new Error('Repository not found. Check the URL or ensure you have access.')
+    }
+    if (repoResponse.status === 401) {
+      throw new Error('Invalid access token. Please check your Personal Access Token and try again.')
+    }
+    throw new Error(`Azure DevOps API error: ${repoResponse.statusText}`)
+  }
+
+  const repoData: AzureDevOpsRepository = await repoResponse.json()
+
+  const [branchesResponse, commitsResponse, prsResponse] = await Promise.allSettled([
+    fetch(
+      `https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repo}/refs?filter=heads/&api-version=7.0`,
+      { headers }
+    ),
+    fetch(
+      `https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repo}/commits?api-version=7.0&$top=1`,
+      { headers }
+    ),
+    fetch(
+      `https://dev.azure.com/${organization}/${project}/_apis/git/repositories/${repo}/pullrequests?searchCriteria.status=active&api-version=7.0`,
+      { headers }
+    ),
+  ])
+
+  let branches = 0
+  if (branchesResponse.status === 'fulfilled' && branchesResponse.value.ok) {
+    const branchesData = await branchesResponse.value.json()
+    branches = branchesData.count || branchesData.value?.length || 0
+  }
+
+  let commits = 0
+  let lastCommitDate: string | undefined
+  if (commitsResponse.status === 'fulfilled' && commitsResponse.value.ok) {
+    const commitsData = await commitsResponse.value.json()
+    commits = commitsData.count || 0
+    if (commitsData.value && commitsData.value.length > 0) {
+      lastCommitDate = commitsData.value[0].author.date
+    }
+  }
+
+  let openPRs = 0
+  if (prsResponse.status === 'fulfilled' && prsResponse.value.ok) {
+    const prsData = await prsResponse.value.json()
+    openPRs = prsData.count || 0
+  }
+
+  const hasCI = await checkAzureDevOpsCI(organization, project, token)
+
+  const estimatedComplexity = estimateComplexity({
+    branches,
+    commits,
+    contributors: 0,
+    size: repoData.size || 0,
+    languages: 0,
+  })
+
+  return {
+    repoName: repoData.name,
+    fullName: `${repoData.project.name}/${repoData.name}`,
+    description: 'Azure DevOps Repository',
+    defaultBranch: repoData.defaultBranch?.replace('refs/heads/', '') || 'main',
+    branches,
+    commits,
+    contributors: 0,
+    languages: [],
+    hasCI,
+    topics: [],
+    visibility: 'private',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    size: repoData.size || 0,
+    openIssues: 0,
+    openPRs,
+    stars: 0,
+    forks: 0,
+    estimatedComplexity,
+    lastCommitDate,
+    license: undefined,
+  }
+}
+
+async function checkAzureDevOpsCI(
+  organization: string,
+  project: string,
+  token?: string
+): Promise<boolean> {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  }
+
+  if (token) {
+    const base64Token = btoa(`:${token}`)
+    headers['Authorization'] = `Basic ${base64Token}`
+  }
+
+  try {
+    const pipelinesResponse = await fetch(
+      `https://dev.azure.com/${organization}/${project}/_apis/pipelines?api-version=7.0`,
+      { headers }
+    )
+
+    if (pipelinesResponse.ok) {
+      const pipelinesData = await pipelinesResponse.json()
+      return (pipelinesData.count || 0) > 0
+    }
+  } catch {
+    return false
+  }
+
+  return false
+}
+
 export async function fetchRepositoryData(
   url: string,
   platform: SCMPlatform,
@@ -552,7 +704,7 @@ export async function fetchRepositoryData(
     throw new Error('Invalid repository URL. Please check the format and try again.')
   }
 
-  const { owner, repo } = parsed
+  const { owner, repo, organization } = parsed
 
   switch (platform) {
     case 'github':
@@ -561,6 +713,11 @@ export async function fetchRepositoryData(
       return await fetchGitLabData(owner, repo, token)
     case 'bitbucket':
       return await fetchBitbucketData(owner, repo, token)
+    case 'azure-devops':
+      if (!organization) {
+        throw new Error('Invalid Azure DevOps URL format')
+      }
+      return await fetchAzureDevOpsData(organization, owner, repo, token)
     default:
       throw new Error(`Unsupported platform: ${platform}`)
   }

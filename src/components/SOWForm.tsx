@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { SOW, User, MigrationStageDetail, SelectedTraining, MigrationStage, GitHubMigrationType, RepositoryInventory, ServicePlatform } from '@/lib/types'
 import { TRAINING_MODULES, getModuleById } from '@/lib/training-catalog'
-import { X, Plus, GithubLogo, GitlabLogo, GitBranch, Sparkle, CloudArrowDown, CheckCircle, Info, Calculator, GraduationCap } from '@phosphor-icons/react'
+import { X, Plus, GithubLogo, GitlabLogo, GitBranch, Sparkle, CloudArrowDown, CheckCircle, Info, Calculator, GraduationCap, Cloud } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { fetchRepositoryData, generateProjectDescription, type RepositoryData, type SCMPlatform } from '@/lib/scm-api'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -46,6 +46,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
     if (selectedPlatform === 'github') return 'github'
     if (selectedPlatform === 'gitlab') return 'gitlab'
     if (selectedPlatform === 'bitbucket') return 'bitbucket'
+    if (selectedPlatform === 'azure') return 'azure-devops'
     return 'github'
   }
   
@@ -242,6 +243,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
         github: TRAINING_MODULES.filter(m => m.track === 'github'),
         gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
         bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
+        'azure-devops': TRAINING_MODULES.filter(m => m.track === 'azure-devops'),
         azure: TRAINING_MODULES.filter(m => m.track === 'azure'),
         gcp: TRAINING_MODULES.filter(m => m.track === 'gcp'),
         aws: TRAINING_MODULES.filter(m => m.track === 'aws'),
@@ -263,12 +265,17 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
       return {
         bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
       }
+    } else if (scmPlatform === 'azure-devops' || scmPlatform === 'azure') {
+      return {
+        'azure-devops': TRAINING_MODULES.filter(m => m.track === 'azure-devops'),
+      }
     }
     
     return {
       github: TRAINING_MODULES.filter(m => m.track === 'github'),
       gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
       bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
+      'azure-devops': TRAINING_MODULES.filter(m => m.track === 'azure-devops'),
     }
   }
 
@@ -358,6 +365,15 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             </div>
                           </div>
                         </SelectItem>
+                        <SelectItem value="azure-devops">
+                          <div className="flex items-center gap-3 py-1">
+                            <Cloud size={20} weight="duotone" />
+                            <div>
+                              <div className="font-semibold">Azure DevOps</div>
+                              <div className="text-xs text-muted-foreground">Connect to Azure Repos</div>
+                            </div>
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -390,6 +406,13 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                             <p>• Detects Bitbucket Pipelines</p>
                           </>
                         )}
+                        {scmType === 'azure-devops' && (
+                          <>
+                            <p>• Uses Azure DevOps REST API v7.0</p>
+                            <p>• Supports Azure Repos</p>
+                            <p>• Detects Azure Pipelines</p>
+                          </>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -406,7 +429,9 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                         ? 'https://github.com/owner/repository' 
                         : scmType === 'gitlab'
                         ? 'https://gitlab.com/owner/project'
-                        : 'https://bitbucket.org/owner/repository'
+                        : scmType === 'bitbucket'
+                        ? 'https://bitbucket.org/owner/repository'
+                        : 'https://dev.azure.com/organization/project/_git/repository'
                     }
                     className="h-12 text-base"
                   />
@@ -416,7 +441,9 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                         ? 'https://github.com/facebook/react' 
                         : scmType === 'gitlab'
                         ? 'https://gitlab.com/gitlab-org/gitlab'
-                        : 'https://bitbucket.org/atlassian/python-bitbucket'
+                        : scmType === 'bitbucket'
+                        ? 'https://bitbucket.org/atlassian/python-bitbucket'
+                        : 'https://dev.azure.com/myorg/myproject/_git/myrepo'
                     })
                   </p>
                 </div>
@@ -453,6 +480,24 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                           <li>Click "Add new token"</li>
                           <li>Select the <code className="bg-muted px-1 rounded">read_api</code> scope</li>
                           <li>Click "Create personal access token"</li>
+                          <li>Copy and paste the generated token above</li>
+                        </ol>
+                      )}
+                      {scmType === 'bitbucket' && (
+                        <ol className="list-decimal list-inside space-y-1 ml-2">
+                          <li>Go to Bitbucket Settings → Personal Access Tokens</li>
+                          <li>Click "Create app password"</li>
+                          <li>Select <code className="bg-muted px-1 rounded">Repositories: Read</code> permission</li>
+                          <li>Click "Create"</li>
+                          <li>Copy and paste the generated token above</li>
+                        </ol>
+                      )}
+                      {scmType === 'azure-devops' && (
+                        <ol className="list-decimal list-inside space-y-1 ml-2">
+                          <li>Go to Azure DevOps User Settings → Personal Access Tokens</li>
+                          <li>Click "New Token"</li>
+                          <li>Select <code className="bg-muted px-1 rounded">Code: Read</code> scope</li>
+                          <li>Click "Create"</li>
                           <li>Copy and paste the generated token above</li>
                         </ol>
                       )}

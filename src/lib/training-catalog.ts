@@ -272,6 +272,96 @@ export const TRAINING_MODULES: TrainingModule[] = [
     ]
   },
   {
+    id: 'azure-devops-beginner-1',
+    track: 'azure-devops',
+    level: 'beginner',
+    title: 'Azure DevOps Fundamentals',
+    description: 'Introduction to Azure DevOps services, repos, and basic workflows',
+    durationHours: 4,
+    agenda: [
+      'Introduction to Azure DevOps platform',
+      'Azure Repos and version control',
+      'Creating repositories and branches',
+      'Pull requests and code review basics',
+      'Azure DevOps interface overview'
+    ]
+  },
+  {
+    id: 'azure-devops-intermediate-1',
+    track: 'azure-devops',
+    level: 'intermediate',
+    title: 'Advanced Azure DevOps Workflows',
+    description: 'Branching strategies, work items, and team collaboration',
+    durationHours: 6,
+    agenda: [
+      'Advanced branching strategies',
+      'Code review and policies',
+      'Azure Boards and work item tracking',
+      'Team collaboration workflows',
+      'Integration with Azure services'
+    ]
+  },
+  {
+    id: 'azure-devops-pipelines-beginner',
+    track: 'azure-devops',
+    level: 'beginner',
+    title: 'Azure Pipelines Basics',
+    description: 'Introduction to CI/CD with Azure Pipelines',
+    durationHours: 4,
+    agenda: [
+      'Understanding CI/CD concepts',
+      'Creating your first pipeline',
+      'Working with YAML pipelines',
+      'Basic build and deployment',
+      'Pipeline triggers and agents'
+    ]
+  },
+  {
+    id: 'azure-devops-pipelines-advanced',
+    track: 'azure-devops',
+    level: 'advanced',
+    title: 'Advanced Azure Pipelines',
+    description: 'Complex pipelines, deployment strategies, and multi-stage workflows',
+    durationHours: 8,
+    agenda: [
+      'Advanced pipeline configurations',
+      'Multi-stage deployment strategies',
+      'Pipeline templates and reusability',
+      'Deployment gates and approvals',
+      'Pipeline monitoring and optimization'
+    ]
+  },
+  {
+    id: 'azure-devops-security-intermediate',
+    track: 'azure-devops',
+    level: 'intermediate',
+    title: 'Azure DevOps Security & Compliance',
+    description: 'Security scanning, access control, and compliance features',
+    durationHours: 6,
+    agenda: [
+      'Security best practices',
+      'Branch policies and protection',
+      'Access control and permissions',
+      'Audit logs and compliance',
+      'Secure pipeline workflows'
+    ]
+  },
+  {
+    id: 'azure-devops-advanced-1',
+    track: 'azure-devops',
+    level: 'advanced',
+    title: 'Azure DevOps Enterprise Administration',
+    description: 'Enterprise features, organization management, and advanced automation',
+    durationHours: 8,
+    agenda: [
+      'Azure DevOps organization administration',
+      'User and group management',
+      'Advanced integration patterns',
+      'Disaster recovery and backup',
+      'Enterprise-scale project management'
+    ]
+  },
+  {
     id: 'azure-beginner-1',
     track: 'azure',
     level: 'beginner',

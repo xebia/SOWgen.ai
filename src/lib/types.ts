@@ -11,7 +11,7 @@ export type MigrationStage =
 
 export type GitHubMigrationType = 'github-classic' | 'github-emu' | 'ghes'
 
-export type TrainingTrack = 'github' | 'gitlab' | 'bitbucket' | 'azure' | 'gcp' | 'aws' | 'ai-sap'
+export type TrainingTrack = 'github' | 'gitlab' | 'bitbucket' | 'azure-devops' | 'azure' | 'gcp' | 'aws' | 'ai-sap'
 
 export type TrainingLevel = 'beginner' | 'intermediate' | 'advanced'
 
