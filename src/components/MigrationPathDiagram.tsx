@@ -9,7 +9,7 @@ interface MigrationPathDiagramProps {
   className?: string
 }
 
-const platformConfig = {
+const platformConfig: Record<ServicePlatform, { name: string; icon: any; color: string; bgColor: string }> = {
   github: {
     name: 'GitHub',
     icon: GithubLogo,
@@ -39,6 +39,42 @@ const platformConfig = {
     icon: GitBranch,
     color: 'oklch(0.52 0.20 295)',
     bgColor: 'oklch(0.52 0.20 295 / 0.1)'
+  },
+  perforce: {
+    name: 'Perforce Helix Core',
+    icon: GitBranch,
+    color: 'oklch(0.38 0.17 295)',
+    bgColor: 'oklch(0.38 0.17 295 / 0.1)'
+  },
+  mercurial: {
+    name: 'Mercurial',
+    icon: GitBranch,
+    color: 'oklch(0.45 0.19 295)',
+    bgColor: 'oklch(0.45 0.19 295 / 0.1)'
+  },
+  aws: {
+    name: 'Amazon Web Services',
+    icon: Cloud,
+    color: 'oklch(0.45 0.16 295)',
+    bgColor: 'oklch(0.45 0.16 295 / 0.1)'
+  },
+  gcp: {
+    name: 'Google Cloud Platform',
+    icon: Cloud,
+    color: 'oklch(0.38 0.18 295)',
+    bgColor: 'oklch(0.38 0.18 295 / 0.1)'
+  },
+  azure: {
+    name: 'Microsoft Azure',
+    icon: Cloud,
+    color: 'oklch(0.40 0.17 295)',
+    bgColor: 'oklch(0.40 0.17 295 / 0.1)'
+  },
+  terraform: {
+    name: 'Terraform',
+    icon: Database,
+    color: 'oklch(0.48 0.16 295)',
+    bgColor: 'oklch(0.48 0.16 295 / 0.1)'
   }
 }
 

@@ -32,6 +32,18 @@ const activityTemplates: Record<ServicePlatform, Array<{ type: ActivityType; tit
     { type: 'commit', titleTemplate: 'Tag created', descTemplate: 'Tagged stable release v1.9.5' },
     { type: 'build', titleTemplate: 'Build completed', descTemplate: 'Automated build successful' }
   ],
+  perforce: [
+    { type: 'commit', titleTemplate: 'Changelist submitted', descTemplate: 'to main depot in //project/main' },
+    { type: 'commit', titleTemplate: 'Branch created', descTemplate: 'Created dev branch from mainline' },
+    { type: 'commit', titleTemplate: 'Shelved changes', descTemplate: 'Shelved pending code review' },
+    { type: 'build', titleTemplate: 'Build triggered', descTemplate: 'CI build completed successfully' }
+  ],
+  mercurial: [
+    { type: 'commit', titleTemplate: 'Commits pushed', descTemplate: 'to default branch in project-repo' },
+    { type: 'commit', titleTemplate: 'Branch merged', descTemplate: 'Merged feature branch into default' },
+    { type: 'commit', titleTemplate: 'Tag created', descTemplate: 'Tagged release v2.1.0' },
+    { type: 'build', titleTemplate: 'Build successful', descTemplate: 'Continuous integration passed' }
+  ],
   aws: [
     { type: 'infrastructure', titleTemplate: 'EC2 instances scaled', descTemplate: 'Auto-scaling group adjusted capacity' },
     { type: 'deployment', titleTemplate: 'Lambda function deployed', descTemplate: 'Updated payment-processor function' },
@@ -115,7 +127,7 @@ export function generateMockActivities(platform: ServicePlatform, count: number 
 }
 
 export function generateAllPlatformActivities(countPerPlatform: number = 10): ServiceActivity[] {
-  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops', 'svn', 'aws', 'gcp', 'azure', 'terraform']
+  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops', 'svn', 'perforce', 'mercurial', 'aws', 'gcp', 'azure', 'terraform']
   const allActivities: ServiceActivity[] = []
   
   platforms.forEach(platform => {
@@ -163,6 +175,22 @@ export function getPlatformServices(): PlatformService[] {
       id: 'svn',
       name: 'Subversion (SVN)',
       description: 'Centralized version control system for source code',
+      enabled: true,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'perforce',
+      name: 'Perforce Helix Core',
+      description: 'Enterprise version control for large-scale development',
+      enabled: true,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'mercurial',
+      name: 'Mercurial',
+      description: 'Distributed version control system',
       enabled: true,
       activityCount: 0,
       healthStatus: 'healthy'
