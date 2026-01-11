@@ -113,7 +113,7 @@ function AppContent() {
                 <Button
                   variant={currentView === 'services' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('services')}
-                  className="gap-2 transition-all duration-200"
+                  className={`gap-2 transition-all duration-200 ${currentView === 'services' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
                 >
                   <Stack size={18} weight={currentView === 'services' ? 'fill' : 'regular'} />
                   Services
@@ -123,7 +123,7 @@ function AppContent() {
                 <Button
                   variant={currentView === 'sows' ? 'default' : 'ghost'}
                   onClick={() => setCurrentView('sows')}
-                  className="gap-2 transition-all duration-200"
+                  className={`gap-2 transition-all duration-200 ${currentView === 'sows' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
                 >
                   <FileText size={18} weight={currentView === 'sows' ? 'fill' : 'regular'} />
                   All SOWs
