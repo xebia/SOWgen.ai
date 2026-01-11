@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getModuleById } from '@/lib/training-catalog'
 import { exportSOWAsPDF } from '@/lib/pdf-export'
 import { exportSOWsToCSV } from '@/lib/csv-export'
 import { ArrowLeft, CheckCircle, XCircle, ChatCircle, Clock, FilePdf, FileCsv } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { useApp } from '@/lib/app-context'
 
 interface SOWDetailProps {
   sow: SOW
@@ -22,9 +24,23 @@ interface SOWDetailProps {
 export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
   const [comment, setComment] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { users } = useApp()
 
   const canApprove = user.role === 'approver' || user.role === 'xebia-admin'
   const isPending = sow.status === 'pending'
+
+  const getUserById = (userId: string) => {
+    return users.find(u => u.id === userId)
+  }
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   const handleAction = async (action: SOWStatus, actionLabel: string) => {
     if (action !== 'approved' && !comment.trim()) {
@@ -284,28 +300,39 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {sow.approvalHistory.map((history, index) => (
-                  <div key={history.id}>
-                    {index > 0 && <Separator className="my-4" />}
-                    <div className="flex gap-3">
-                      <div className="mt-1">
-                        {history.action === 'approved' && <CheckCircle size={20} className="text-success" weight="fill" />}
-                        {history.action === 'rejected' && <XCircle size={20} className="text-destructive" weight="fill" />}
-                        {history.action === 'comment' && <ChatCircle size={20} className="text-muted-foreground" />}
-                        {history.action === 'changes-requested' && <Clock size={20} className="text-warning" weight="fill" />}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold">{history.approverName}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(history.timestamp).toLocaleString()}
-                          </span>
+                {sow.approvalHistory.map((history, index) => {
+                  const approver = getUserById(history.approverId)
+                  return (
+                    <div key={history.id}>
+                      {index > 0 && <Separator className="my-4" />}
+                      <div className="flex gap-3">
+                        <Avatar className="h-10 w-10 border-2 border-primary/20">
+                          <AvatarImage src={approver?.avatarUrl} alt={history.approverName} />
+                          <AvatarFallback className="text-xs font-bold bg-primary/10 text-primary">
+                            {getInitials(history.approverName)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold">{history.approverName}</span>
+                            <div className="flex items-center gap-1">
+                              {history.action === 'approved' && <CheckCircle size={16} className="text-success" weight="fill" />}
+                              {history.action === 'rejected' && <XCircle size={16} className="text-destructive" weight="fill" />}
+                              {history.action === 'comment' && <ChatCircle size={16} className="text-muted-foreground" />}
+                              {history.action === 'changes-requested' && <Clock size={16} className="text-warning" weight="fill" />}
+                              <span className="text-xs text-muted-foreground capitalize">
+                                {history.action === 'changes-requested' ? 'requested changes' : history.action}
+                              </span>
+                            </div>
+                            <span className="text-xs text-muted-foreground">•</span>
+                            <span className="text-xs text-muted-foreground">{new Date(history.timestamp).toLocaleString()}</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-1">{history.comment}</p>
                         </div>
-                        <p className="text-sm">{history.comment}</p>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </CardContent>
           </Card>

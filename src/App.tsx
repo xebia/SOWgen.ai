@@ -7,10 +7,20 @@ import { SOWForm } from '@/components/SOWForm'
 import { SOWList } from '@/components/SOWList'
 import { SOWDetail } from '@/components/SOWDetail'
 import { XebiaLogo } from '@/components/XebiaLogo'
+import { UserProfile } from '@/components/UserProfile'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { SOW, User, ServicePlatform } from '@/lib/types'
-import { House, FileText, Stack, SignOut, Sparkle } from '@phosphor-icons/react'
+import { House, FileText, Stack, SignOut, Sparkle, User as UserIcon, CaretDown } from '@phosphor-icons/react'
 
 type View = 'dashboard' | 'services' | 'sows' | 'sow-form' | 'sow-form-automation' | 'sow-detail'
 
@@ -19,6 +29,7 @@ function AppContent() {
   const [currentView, setCurrentView] = useState<View>('dashboard')
   const [selectedSOW, setSelectedSOW] = useState<SOW | null>(null)
   const [selectedPlatform, setSelectedPlatform] = useState<ServicePlatform | null>(null)
+  const [showProfileDialog, setShowProfileDialog] = useState(false)
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)
@@ -64,6 +75,15 @@ function AppContent() {
 
   const isClient = currentUser.role === 'client'
   const isXebia = currentUser.role === 'xebia-admin' || currentUser.role === 'approver'
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -111,17 +131,47 @@ function AppContent() {
               )}
             </nav>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="font-medium">{currentUser.name}</p>
-              <p className="text-xs text-muted-foreground capitalize">{currentUser.role.replace('-', ' ')}</p>
-            </div>
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
-              <SignOut size={20} />
-            </Button>
+          <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-2 h-auto py-1.5 px-2 hover:bg-muted/50">
+                  <Avatar className="h-9 w-9 border-2 border-primary/20">
+                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
+                    <AvatarFallback className="text-xs font-bold bg-primary/10 text-primary">
+                      {getInitials(currentUser.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="text-left hidden sm:block">
+                    <p className="font-medium text-sm">{currentUser.name}</p>
+                    <p className="text-xs text-muted-foreground capitalize">{currentUser.role.replace('-', ' ')}</p>
+                  </div>
+                  <CaretDown size={16} className="text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium">{currentUser.name}</p>
+                    <p className="text-xs text-muted-foreground">{currentUser.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setShowProfileDialog(true)} className="cursor-pointer gap-2">
+                  <UserIcon size={16} />
+                  <span>Profile Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer gap-2 text-destructive focus:text-destructive">
+                  <SignOut size={16} />
+                  <span>Sign Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
+
+      <UserProfile open={showProfileDialog} onOpenChange={setShowProfileDialog} />
 
       <main className="container mx-auto px-6 py-8 relative">
         {currentView === 'dashboard' && isClient && (

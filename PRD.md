@@ -13,11 +13,18 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 ## Essential Features
 
 ### 1. Authentication & Role-Based Access
-- **Functionality**: Dual authentication system with enhanced visual design supporting external clients and internal Xebia staff with role-based permissions (Client, Xebia Admin, Approver)
-- **Purpose**: Secure access control ensuring clients only see their data while internal staff access admin features, presented through an engaging, modern interface with the official Xebia logo and branding
+- **Functionality**: Dual authentication system with enhanced visual design supporting external clients and internal Xebia staff with role-based permissions (Client, Xebia Admin, Approver). Includes user profile management with avatar upload capabilities.
+- **Purpose**: Secure access control ensuring clients only see their data while internal staff access admin features, presented through an engaging, modern interface with the official Xebia logo and branding. User profiles allow personalization and easy identification across the platform.
 - **Trigger**: Landing page with modern hero section featuring platform highlights and role-based login tabs (Client and Xebia only)
-- **Progression**: View landing page with service highlights → Select role tab (Client/Xebia) → Enter credentials → Verify → Animate transition to appropriate dashboard
-- **Success criteria**: Users land on role-appropriate views; unauthorized access attempts are blocked; role permissions correctly limit feature access; login experience is visually appealing with smooth animations; Xebia logo is prominently displayed
+- **Progression**: View landing page with service highlights → Select role tab (Client/Xebia) → Enter credentials → Verify → Animate transition to appropriate dashboard → Access profile via avatar dropdown in header → Edit profile and upload avatar
+- **Success criteria**: Users land on role-appropriate views; unauthorized access attempts are blocked; role permissions correctly limit feature access; login experience is visually appealing with smooth animations; Xebia logo is prominently displayed; user avatars display throughout the platform; profile edits save correctly; avatar uploads work with validation (image types, 5MB limit)
+
+### 1b. User Profile Management
+- **Functionality**: Comprehensive user profile management accessible via avatar dropdown menu in header. Users can view and edit their profile information including name, email, organization, and upload/change their avatar image. Profile information persists across sessions and displays throughout the platform (header, approval history, SOW lists).
+- **Purpose**: Enable users to personalize their account, maintain accurate contact information, and provide visual identification through avatars, improving user experience and making collaboration more personal
+- **Trigger**: Click on avatar/user menu in application header → Select "Profile Settings"
+- **Progression**: Click avatar in header → View dropdown with user info and options → Select "Profile Settings" → View profile dialog with current information and avatar → Click "Edit Profile" → Update name, email, organization → Upload new avatar (optional) → Preview changes → Save or cancel → Profile updates across all platform views (header, approval history, SOW cards)
+- **Success criteria**: Profile dialog opens smoothly; all user information displays correctly; avatar upload supports common image formats (JPG, PNG, GIF, WebP); image validation prevents files over 5MB; avatar preview shows immediately after selection; "Remove Avatar" option available; profile changes save to persistence layer; updated information displays in header, approval history, and SOW list immediately; avatar displays with fallback initials if no image uploaded; edits can be cancelled without saving
 
 ### 2. Dashboard (Xebia Internal)
 - **Functionality**: Analytics dashboard displaying SOW statistics with filterable charts (total SOWs, approved, pending, approval rates, timeline trends)

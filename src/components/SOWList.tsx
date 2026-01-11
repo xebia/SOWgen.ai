@@ -4,11 +4,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { exportSOWAsPDF } from '@/lib/pdf-export'
 import { exportSOWsToCSV } from '@/lib/csv-export'
 import { MagnifyingGlass, FilePdf, Eye, FileCsv } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { useState } from 'react'
+import { useApp } from '@/lib/app-context'
 
 interface SOWListProps {
   sows: SOW[]
@@ -18,6 +20,20 @@ interface SOWListProps {
 
 export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const { users } = useApp()
+
+  const getUserById = (userId: string) => {
+    return users.find(u => u.id === userId)
+  }
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   const handleExportPDF = (e: React.MouseEvent, sow: SOW) => {
     e.stopPropagation()
@@ -110,8 +126,8 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Project</TableHead>
                   <TableHead>Client</TableHead>
+                  <TableHead>Project</TableHead>
                   <TableHead>Organization</TableHead>
                   <TableHead>Services</TableHead>
                   <TableHead>Status</TableHead>
@@ -120,33 +136,46 @@ export function SOWList({ sows, user, onViewSOW }: SOWListProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredSows.map(sow => (
-                  <TableRow key={sow.id} className="cursor-pointer hover:bg-muted/50" onClick={() => onViewSOW(sow)}>
-                    <TableCell className="font-medium">{sow.projectName}</TableCell>
-                    <TableCell>{sow.clientName}</TableCell>
-                    <TableCell>{sow.clientOrganization}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        {sow.includeMigration && <Badge variant="outline" className="text-xs">Migration</Badge>}
-                        {sow.includeTraining && <Badge variant="outline" className="text-xs">Training</Badge>}
-                      </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(sow.status)}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {new Date(sow.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onViewSOW(sow) }}>
-                          <Eye size={18} />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={(e) => handleExportPDF(e, sow)}>
-                          <FilePdf size={18} weight="duotone" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {filteredSows.map(sow => {
+                  const client = getUserById(sow.clientId)
+                  return (
+                    <TableRow key={sow.id} className="cursor-pointer hover:bg-muted/50" onClick={() => onViewSOW(sow)}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-8 w-8 border border-primary/20">
+                            <AvatarImage src={client?.avatarUrl} alt={sow.clientName} />
+                            <AvatarFallback className="text-xs font-bold bg-primary/10 text-primary">
+                              {getInitials(sow.clientName)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="font-medium">{sow.clientName}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">{sow.projectName}</TableCell>
+                      <TableCell>{sow.clientOrganization}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          {sow.includeMigration && <Badge variant="outline" className="text-xs">Migration</Badge>}
+                          {sow.includeTraining && <Badge variant="outline" className="text-xs">Training</Badge>}
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(sow.status)}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {new Date(sow.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onViewSOW(sow) }}>
+                            <Eye size={18} />
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={(e) => handleExportPDF(e, sow)}>
+                            <FilePdf size={18} weight="duotone" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           )}
