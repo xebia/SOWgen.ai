@@ -42,15 +42,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
   const [selectedTrainings, setSelectedTrainings] = useState<SelectedTraining[]>([])
   const [currentTab, setCurrentTab] = useState(automationMode ? 'scm-integration' : 'details')
   
-  const getInitialSCMType = (): SCMPlatform => {
-    if (selectedPlatform === 'github') return 'github'
-    if (selectedPlatform === 'gitlab') return 'gitlab'
-    if (selectedPlatform === 'bitbucket') return 'bitbucket'
-    if (selectedPlatform === 'azure-devops') return 'azure-devops'
-    return 'github'
-  }
-  
-  const [scmType, setScmType] = useState<SCMPlatform>(getInitialSCMType())
+  const [scmType, setScmType] = useState<SCMPlatform>('github')
   const [repoUrl, setRepoUrl] = useState('')
   const [accessToken, setAccessToken] = useState('')
   const [isFetching, setIsFetching] = useState(false)
