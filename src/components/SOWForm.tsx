@@ -18,6 +18,7 @@ import { fetchRepositoryData, generateProjectDescription, type RepositoryData, t
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
 import { GitHubLogo } from '@/components/GitHubLogo'
+import { PlatformLogo } from '@/components/PlatformLogo'
 
 interface SOWFormProps {
   user: User
@@ -295,7 +296,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                 <div className="space-y-2">
                   <Label className="text-base font-semibold">SCM Platform</Label>
                   <div className="flex items-center gap-3 p-4 border-2 rounded-lg bg-muted/30">
-                    <GithubLogo size={24} weight="duotone" className="text-primary" />
+                    <PlatformLogo platform="github" size={24} className="object-contain" />
                     <div>
                       <div className="font-semibold text-lg">GitHub</div>
                       <div className="text-sm text-muted-foreground">Connect to GitHub repositories</div>
@@ -608,7 +609,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                                 <Label htmlFor="github-emu" className="font-semibold text-base cursor-pointer">
                                   GitHub EMU (Enterprise Managed Users)
                                 </Label>
-                                <GitHubLogo size={16} />
+                                <PlatformLogo platform="github" size={16} className="object-contain" />
                               </div>
                               <p className="text-sm text-muted-foreground">
                                 Enterprise platform with centrally managed user identities and enhanced security
@@ -623,7 +624,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                                 <Label htmlFor="ghes" className="font-semibold text-base cursor-pointer">
                                   GitHub Enterprise Server (GHES)
                                 </Label>
-                                <GitHubLogo size={16} />
+                                <PlatformLogo platform="github" size={16} className="object-contain" />
                               </div>
                               <p className="text-sm text-muted-foreground">
                                 Self-hosted GitHub instance on your own infrastructure

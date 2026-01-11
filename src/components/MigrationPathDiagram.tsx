@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { GithubLogo, GitlabLogo, GitBranch, Cloud, ArrowRight, CheckCircle, Database, GitCommit, Robot, GraduationCap } from '@phosphor-icons/react'
 import { GitHubLogo } from '@/components/GitHubLogo'
+import { PlatformLogo } from '@/components/PlatformLogo'
 import type { ServicePlatform } from '@/lib/types'
 
 interface MigrationPathDiagramProps {
@@ -137,10 +138,10 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
             <Card className="border-2 shadow-lg" style={{ borderColor: source.color }}>
               <CardContent className="p-6 text-center">
                 <div
-                  className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-3 shadow-md"
+                  className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-3 shadow-md p-3"
                   style={{ backgroundColor: source.bgColor }}
                 >
-                  <SourceIcon size={40} weight="duotone" style={{ color: source.color }} />
+                  <PlatformLogo platform={sourcePlatform} size={56} className="object-contain" />
                 </div>
                 <div className="space-y-1">
                   <h4 className="font-bold text-lg">{source.name}</h4>
@@ -210,10 +211,10 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
             <Card className="border-2 shadow-lg" style={{ borderColor: target.color }}>
               <CardContent className="p-6 text-center">
                 <div
-                  className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-3 shadow-md"
+                  className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-3 shadow-md p-3"
                   style={{ backgroundColor: target.bgColor }}
                 >
-                  <GitHubLogo size={40} className="object-contain" />
+                  <PlatformLogo platform="github" size={56} className="object-contain" />
                 </div>
                 <div className="space-y-1">
                   <h4 className="font-bold text-lg">{target.name}</h4>
@@ -235,7 +236,7 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>Migrating to</span>
               <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/5 border border-primary/10">
-                <GitHubLogo size={16} />
+                <PlatformLogo platform="github" size={16} className="object-contain" />
                 <span className="font-medium text-foreground">GitHub</span>
               </div>
             </div>
@@ -281,7 +282,7 @@ export function MigrationPathDiagram({ sourcePlatform, className = '' }: Migrati
               <div className="flex items-center gap-2">
                 <h5 className="font-semibold text-sm">Seamless Migration Process to</h5>
                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-background border border-primary/20">
-                  <GitHubLogo size={14} />
+                  <PlatformLogo platform="github" size={14} className="object-contain" />
                   <span className="text-xs font-semibold">GitHub</span>
                 </div>
               </div>

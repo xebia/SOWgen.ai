@@ -14,6 +14,7 @@ import { ArrowLeft, CheckCircle, XCircle, ChatCircle, Clock, FilePdf, FileCsv } 
 import { toast } from 'sonner'
 import { useApp } from '@/lib/app-context'
 import { GitHubLogo } from '@/components/GitHubLogo'
+import { PlatformLogo } from '@/components/PlatformLogo'
 
 interface SOWDetailProps {
   sow: SOW
@@ -203,7 +204,7 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
                     <div>
                       <Label className="text-xs text-muted-foreground">GitHub Migration Type</Label>
                       <div className="flex items-center gap-2 mt-1">
-                        <GitHubLogo size={16} />
+                        <PlatformLogo platform="github" size={16} className="object-contain" />
                         <Badge variant="outline" className="capitalize">{stage.githubMigrationType.replace(/-/g, ' ')}</Badge>
                       </div>
                     </div>
@@ -256,7 +257,7 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
                         <p className="text-sm">From: <Badge variant="outline">{stage.cicdPlatform}</Badge></p>
                         <span className="text-muted-foreground">→</span>
                         <div className="flex items-center gap-1.5">
-                          <GitHubLogo size={14} />
+                          <PlatformLogo platform="github" size={14} className="object-contain" />
                           <span className="text-sm font-medium">GitHub Actions</span>
                         </div>
                       </div>

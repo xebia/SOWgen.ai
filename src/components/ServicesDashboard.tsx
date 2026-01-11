@@ -30,6 +30,7 @@ import {
 } from '@phosphor-icons/react'
 import { GitHubLogo } from '@/components/GitHubLogo'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
+import { PlatformLogo } from '@/components/PlatformLogo'
 interface ServicesDashboardProps {
   user: User
   onCreateSOWManual?: (platform: ServicePlatform) => void
@@ -149,14 +150,10 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             </Button>
             <div className="flex items-center gap-4 mb-3">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden"
+                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden p-2"
                 style={{ backgroundColor: `color-mix(in oklch, ${platformColors[selectedService]} 10%, transparent)` }}
               >
-                {selectedService === 'github' ? (
-                  <GitHubLogo size={28} className="object-contain" />
-                ) : (
-                  <Icon size={28} weight="duotone" style={{ color: platformColors[selectedService] }} />
-                )}
+                <PlatformLogo platform={selectedService} size={40} className="object-contain" />
               </div>
               <div>
                 <h2 className="text-3xl font-bold tracking-tight">{serviceName}</h2>
@@ -461,7 +458,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                 <CardHeader className="pb-4 relative">
                   <div className="flex items-start justify-between mb-4">
                     <motion.div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden"
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden p-2"
                       style={{ 
                         backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
                         borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
@@ -482,11 +479,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.3 }}
                       >
-                        {service.id === 'github' ? (
-                          <GitHubLogo size={32} className="object-contain relative z-10" />
-                        ) : (
-                          <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} className="relative z-10" />
-                        )}
+                        <PlatformLogo platform={service.id} size={44} className="object-contain relative z-10" />
                       </motion.div>
                     </motion.div>
                   </div>
