@@ -26,6 +26,12 @@ const activityTemplates: Record<ServicePlatform, Array<{ type: ActivityType; tit
     { type: 'build', titleTemplate: 'Pipeline succeeded', descTemplate: 'Build and test completed successfully' },
     { type: 'deployment', titleTemplate: 'Release deployed', descTemplate: 'Release v3.2.1 to production' }
   ],
+  svn: [
+    { type: 'commit', titleTemplate: 'Commits checked in', descTemplate: 'to trunk in project-core' },
+    { type: 'commit', titleTemplate: 'Branch created', descTemplate: 'Created release branch for v2.0' },
+    { type: 'commit', titleTemplate: 'Tag created', descTemplate: 'Tagged stable release v1.9.5' },
+    { type: 'build', titleTemplate: 'Build completed', descTemplate: 'Automated build successful' }
+  ],
   aws: [
     { type: 'infrastructure', titleTemplate: 'EC2 instances scaled', descTemplate: 'Auto-scaling group adjusted capacity' },
     { type: 'deployment', titleTemplate: 'Lambda function deployed', descTemplate: 'Updated payment-processor function' },
@@ -109,7 +115,7 @@ export function generateMockActivities(platform: ServicePlatform, count: number 
 }
 
 export function generateAllPlatformActivities(countPerPlatform: number = 10): ServiceActivity[] {
-  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops', 'aws', 'gcp', 'azure', 'terraform']
+  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops', 'svn', 'aws', 'gcp', 'azure', 'terraform']
   const allActivities: ServiceActivity[] = []
   
   platforms.forEach(platform => {
@@ -149,6 +155,14 @@ export function getPlatformServices(): PlatformService[] {
       id: 'azure-devops',
       name: 'Azure DevOps',
       description: 'DevOps services for version control and CI/CD',
+      enabled: true,
+      activityCount: 0,
+      healthStatus: 'healthy'
+    },
+    {
+      id: 'svn',
+      name: 'Subversion (SVN)',
+      description: 'Centralized version control system for source code',
       enabled: true,
       activityCount: 0,
       healthStatus: 'healthy'

@@ -41,6 +41,7 @@ const platformIcons: Record<ServicePlatform, any> = {
   gitlab: GitlabLogo,
   bitbucket: GitBranch,
   'azure-devops': GitBranch,
+  svn: GitBranch,
   aws: Cloud,
   gcp: GoogleLogo,
   azure: WindowsLogo,
@@ -48,14 +49,15 @@ const platformIcons: Record<ServicePlatform, any> = {
 }
 
 const platformColors: Record<ServicePlatform, string> = {
-  github: 'oklch(0.32 0.08 270)',
-  gitlab: 'oklch(0.52 0.18 30)',
-  bitbucket: 'oklch(0.42 0.16 250)',
-  'azure-devops': 'oklch(0.48 0.18 240)',
-  aws: 'oklch(0.52 0.15 35)',
-  gcp: 'oklch(0.52 0.20 25)',
-  azure: 'oklch(0.45 0.18 245)',
-  terraform: 'oklch(0.48 0.16 290)'
+  github: 'oklch(0.35 0.18 295)',
+  gitlab: 'oklch(0.50 0.14 295)',
+  bitbucket: 'oklch(0.42 0.16 295)',
+  'azure-devops': 'oklch(0.48 0.18 295)',
+  svn: 'oklch(0.52 0.20 295)',
+  aws: 'oklch(0.45 0.16 295)',
+  gcp: 'oklch(0.38 0.18 295)',
+  azure: 'oklch(0.40 0.17 295)',
+  terraform: 'oklch(0.48 0.16 295)'
 }
 
 const statusConfig: Record<ActivityStatus, { icon: any; color: string; label: string }> = {
@@ -70,6 +72,7 @@ const quickActions: Record<ServicePlatform, string[]> = {
   gitlab: ['View Projects', 'Create MR', 'Run Pipeline'],
   bitbucket: ['View Repositories', 'Create PR', 'Run Pipeline'],
   'azure-devops': ['View Repositories', 'Create PR', 'Run Pipeline'],
+  svn: ['View Repositories', 'Commit Changes', 'Create Branch'],
   aws: ['View EC2 Instances', 'Deploy Lambda', 'Check CloudWatch'],
   gcp: ['View GKE Clusters', 'Deploy Function', 'Check Logs'],
   azure: ['View Resources', 'Deploy App Service', 'Check Monitor'],

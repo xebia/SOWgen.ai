@@ -13,26 +13,32 @@ const platformConfig = {
   github: {
     name: 'GitHub',
     icon: GithubLogo,
-    color: 'oklch(0.32 0.08 270)',
-    bgColor: 'oklch(0.32 0.08 270 / 0.1)'
+    color: 'oklch(0.35 0.18 295)',
+    bgColor: 'oklch(0.35 0.18 295 / 0.1)'
   },
   gitlab: {
     name: 'GitLab',
     icon: GitlabLogo,
-    color: 'oklch(0.52 0.18 30)',
-    bgColor: 'oklch(0.52 0.18 30 / 0.1)'
+    color: 'oklch(0.50 0.14 295)',
+    bgColor: 'oklch(0.50 0.14 295 / 0.1)'
   },
   bitbucket: {
     name: 'Bitbucket',
     icon: GitBranch,
-    color: 'oklch(0.42 0.16 250)',
-    bgColor: 'oklch(0.42 0.16 250 / 0.1)'
+    color: 'oklch(0.42 0.16 295)',
+    bgColor: 'oklch(0.42 0.16 295 / 0.1)'
   },
   'azure-devops': {
     name: 'Azure DevOps',
     icon: Cloud,
-    color: 'oklch(0.48 0.18 240)',
-    bgColor: 'oklch(0.48 0.18 240 / 0.1)'
+    color: 'oklch(0.48 0.18 295)',
+    bgColor: 'oklch(0.48 0.18 295 / 0.1)'
+  },
+  svn: {
+    name: 'Subversion (SVN)',
+    icon: GitBranch,
+    color: 'oklch(0.52 0.20 295)',
+    bgColor: 'oklch(0.52 0.20 295 / 0.1)'
   }
 }
 
