@@ -200,15 +200,17 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
-            <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 hover:border-accent/60 group relative overflow-hidden h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.03] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute top-0 right-0 w-40 h-40 bg-accent/5 rounded-full blur-3xl transform translate-x-20 -translate-y-20 group-hover:scale-150 transition-transform duration-500" />
+            <Card className="cursor-pointer hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] border-2 border-accent/40 hover:border-accent/70 group relative overflow-hidden h-full ring-2 ring-accent/20 shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/8 via-accent/4 to-transparent opacity-100 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 xebia-dots-pattern opacity-[0.15]" />
+              <div className="absolute top-0 right-0 w-48 h-48 bg-accent/15 rounded-full blur-3xl transform translate-x-20 -translate-y-20 group-hover:scale-150 transition-transform duration-500 animate-pulse-soft" />
+              <div className="absolute -top-12 -right-12 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
               <CardHeader className="relative pb-4">
                 <div className="flex items-center justify-between mb-5">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm border border-accent/10">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md border-2 border-accent/30 ring-2 ring-accent/10">
                     <GitBranch size={32} weight="duotone" className="text-accent" />
                   </div>
-                  <Badge variant="outline" className="gap-1.5 border-accent/30 text-accent">
+                  <Badge className="gap-1.5 bg-accent/90 text-white border-accent shadow-md hover:bg-accent animate-pulse-soft">
                     <Sparkle size={14} weight="fill" />
                     Recommended
                   </Badge>
@@ -247,12 +249,12 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                 </div>
                 <Button 
                   size="lg" 
-                  variant="secondary"
-                  className="w-full gap-2 mt-6 shadow-sm hover:shadow-md transition-shadow bg-accent/10 hover:bg-accent/20 text-accent-foreground border-accent/20"
+                  className="w-full gap-2 mt-6 shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent text-white border-0 font-semibold text-base h-12"
                   onClick={() => onCreateSOWAutomation?.(selectedService)}
                 >
-                  <GitBranch size={20} weight="duotone" />
+                  <GitBranch size={22} weight="duotone" />
                   Connect & Auto-Import
+                  <Sparkle size={18} weight="fill" className="ml-auto animate-pulse-soft" />
                 </Button>
               </CardContent>
             </Card>
