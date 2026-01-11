@@ -90,7 +90,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                 >
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary">
                     <Sparkle size={16} weight="fill" />
-                    Statement of Work Platform
+                    SOWGen Platform
                   </div>
                 </motion.div>
 
@@ -223,7 +223,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             transition={{ duration: 0.5, delay: 0.8 }}
             className="text-sm text-muted-foreground"
           >
-            © 2024 Xebia. Driving digital transformation.
+            © 2026 Xebia. Driving digital transformation.
           </motion.p>
         </footer>
       </div>

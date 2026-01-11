@@ -156,11 +156,11 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
               </div>
               <div>
                 <h2 className="text-3xl font-bold tracking-tight">{serviceName}</h2>
-                <p className="text-sm text-muted-foreground mt-1">Statement of Work Generation</p>
+                <p className="text-sm text-muted-foreground mt-1">SOWGen Platform - Generate SOW</p>
               </div>
             </div>
             <p className="text-muted-foreground max-w-2xl">
-              Choose your preferred method to create a comprehensive Statement of Work for your {serviceName} project
+              Choose your preferred method to create a comprehensive SOW for your {serviceName} project
             </p>
           </div>
         </div>
@@ -180,7 +180,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                 </div>
                 <CardTitle className="text-2xl mb-2 tracking-tight">Manual Entry</CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Craft your Statement of Work by entering project details through our guided form interface
+                  Craft your SOW by entering project details through our guided form interface
                 </CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-5">
@@ -325,7 +325,7 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight mb-2">Platform Services</h2>
-          <p className="text-muted-foreground">Select a platform to generate your Statement of Work</p>
+          <p className="text-muted-foreground">Select a platform to generate your SOW</p>
           <div className="flex items-center gap-2 mt-3 text-sm font-medium text-accent">
             <Sparkle size={14} weight="fill" />
             <span>Powered by Xebia's intelligent automation</span>
@@ -363,7 +363,6 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
                     >
                       <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} />
                     </div>
-                    {getHealthBadge(service.healthStatus)}
                   </div>
                   <CardTitle className="text-2xl mb-2 tracking-tight">{service.name}</CardTitle>
                   <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>

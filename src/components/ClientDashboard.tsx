@@ -59,7 +59,7 @@ export function ClientDashboard({ sows, user, onCreateSOW, onViewSOW }: ClientDa
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight mb-2">My Dashboard</h2>
-          <p className="text-muted-foreground">Manage your Statement of Work requests</p>
+          <p className="text-muted-foreground">Manage your SOW requests</p>
         </div>
         <div className="flex gap-3">
           {mySows.length > 0 && (
@@ -110,7 +110,7 @@ export function ClientDashboard({ sows, user, onCreateSOW, onViewSOW }: ClientDa
       <Card>
         <CardHeader>
           <CardTitle>Your SOWs</CardTitle>
-          <CardDescription>Track the status of your Statement of Work submissions</CardDescription>
+          <CardDescription>Track the status of your SOW submissions</CardDescription>
         </CardHeader>
         <CardContent>
           {mySows.length === 0 ? (

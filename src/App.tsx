@@ -294,7 +294,7 @@ function AppContent() {
             </div>
           </div>
           <div className="pt-6 border-t flex items-center justify-between text-sm text-muted-foreground">
-            <p>© 2024 Xebia. All rights reserved.</p>
+            <p>© 2026 Xebia. All rights reserved.</p>
             <p className="font-medium text-primary">Building Tomorrow, Today</p>
           </div>
         </div>

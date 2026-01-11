@@ -249,7 +249,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
-            <h2 className="text-3xl font-bold tracking-tight">Create Statement of Work</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Create SOW</h2>
             {automationMode && (
               <Badge variant="secondary" className="gap-1.5 bg-accent/15 text-accent-foreground border-accent/30">
                 <Sparkle size={14} weight="fill" />
