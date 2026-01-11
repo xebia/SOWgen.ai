@@ -30,6 +30,7 @@ import {
 } from '@phosphor-icons/react'
 import { GitHubLogo } from '@/components/GitHubLogo'
 import { MigrationPathDiagram } from '@/components/MigrationPathDiagram'
+import { FlipCard } from '@/components/FlipCard'
 
 interface ServicesDashboardProps {
   user: User
@@ -414,108 +415,204 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-7xl">
         {services.map((service, idx) => {
           const Icon = platformIcons[service.id]
+          
+          const cardFront = (
+            <Card
+              className="cursor-pointer transition-all duration-500 hover:border-primary/60 border-2 group relative overflow-hidden h-full"
+              style={{
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = `0 20px 40px -12px ${platformColors[service.id]}40, 0 10px 20px -8px ${platformColors[service.id]}30`
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+              
+              <div 
+                className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700"
+                style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 12%, transparent)` }}
+              />
+              
+              <div 
+                className="absolute bottom-0 left-0 w-24 h-24 rounded-full blur-2xl transform -translate-x-12 translate-y-12 opacity-0 group-hover:opacity-80 group-hover:scale-125 transition-all duration-700 delay-75"
+                style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 8%, transparent)` }}
+              />
+              
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                style={{
+                  background: `radial-gradient(circle at 50% 0%, ${platformColors[service.id]}08, transparent 70%)`
+                }}
+              />
+              
+              <CardHeader className="pb-4 relative">
+                <div className="flex items-start justify-between mb-4">
+                  <motion.div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden"
+                    style={{ 
+                      backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
+                      borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
+                    }}
+                    whileHover={{ 
+                      scale: 1.15,
+                      rotate: [0, -5, 5, 0],
+                      transition: { duration: 0.5, ease: "easeInOut" }
+                    }}
+                  >
+                    <div 
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: `radial-gradient(circle at center, ${platformColors[service.id]}20, transparent 70%)`
+                      }}
+                    />
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {service.id === 'github' ? (
+                        <GitHubLogo size={32} className="object-contain relative z-10" />
+                      ) : (
+                        <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} className="relative z-10" />
+                      )}
+                    </motion.div>
+                  </motion.div>
+                </div>
+                <CardTitle className="text-2xl mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">{service.name}</CardTitle>
+                <CardDescription className="text-base leading-relaxed group-hover:text-foreground/70 transition-colors duration-300">{service.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 relative">
+                <div className="text-xs text-muted-foreground mb-2 font-medium">Click to see details</div>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Button 
+                    variant="ghost" 
+                    size="lg" 
+                    className="w-full gap-2 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 relative overflow-hidden pointer-events-none"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                    <span className="relative z-10">Flip Card</span>
+                    <CaretRight size={18} className="group-hover:translate-x-2 transition-transform duration-300 relative z-10" weight="bold" />
+                  </Button>
+                </motion.div>
+              </CardContent>
+              
+              <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/0 to-transparent group-hover:via-primary/50 transition-all duration-500"
+                style={{
+                  background: `linear-gradient(to right, transparent, ${platformColors[service.id]}00, ${platformColors[service.id]}, ${platformColors[service.id]}00, transparent)`
+                }}
+              />
+            </Card>
+          )
+          
+          const cardBack = (
+            <Card 
+              className="cursor-pointer border-2 group relative overflow-hidden h-full"
+              style={{
+                boxShadow: `0 20px 40px -12px ${platformColors[service.id]}40, 0 10px 20px -8px ${platformColors[service.id]}30`,
+                borderColor: platformColors[service.id],
+                background: `linear-gradient(135deg, ${platformColors[service.id]}08 0%, ${platformColors[service.id]}03 100%)`
+              }}
+            >
+              <div className="absolute inset-0 xebia-grid-pattern opacity-20" />
+              
+              <div 
+                className="absolute top-0 left-0 w-48 h-48 rounded-full blur-3xl opacity-30"
+                style={{ backgroundColor: platformColors[service.id] }}
+              />
+              
+              <div 
+                className="absolute bottom-0 right-0 w-40 h-40 rounded-full blur-2xl opacity-20"
+                style={{ backgroundColor: platformColors[service.id] }}
+              />
+              
+              <CardHeader className="pb-3 relative">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border-2 relative"
+                    style={{ 
+                      backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`,
+                      borderColor: platformColors[service.id]
+                    }}
+                  >
+                    {service.id === 'github' ? (
+                      <GitHubLogo size={24} className="object-contain" />
+                    ) : (
+                      <Icon size={24} weight="duotone" style={{ color: platformColors[service.id] }} />
+                    )}
+                  </div>
+                  <Badge 
+                    variant="secondary" 
+                    className="text-xs font-semibold"
+                    style={{ 
+                      backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 20%, transparent)`,
+                      color: platformColors[service.id]
+                    }}
+                  >
+                    Quick Actions
+                  </Badge>
+                </div>
+                <CardTitle className="text-xl tracking-tight" style={{ color: platformColors[service.id] }}>
+                  {service.name}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 relative">
+                <div className="space-y-2 mb-4">
+                  {quickActions[service.id].slice(0, 3).map((action, i) => (
+                    <motion.div
+                      key={i}
+                      className="flex items-center gap-2 text-sm p-2 rounded-lg bg-card/50 border border-border/50 hover:bg-card hover:border-primary/30 transition-all duration-200"
+                      whileHover={{ x: 4, scale: 1.02 }}
+                    >
+                      <div 
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: platformColors[service.id] }}
+                      />
+                      <span>{action}</span>
+                    </motion.div>
+                  ))}
+                </div>
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="pt-2"
+                >
+                  <Button 
+                    size="lg"
+                    className="w-full gap-2 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                    style={{
+                      backgroundColor: platformColors[service.id],
+                    }}
+                  >
+                    <Rocket size={20} weight="duotone" />
+                    <span>Generate SOW</span>
+                  </Button>
+                </motion.div>
+                <p className="text-xs text-center text-muted-foreground mt-3">Click again to flip back</p>
+              </CardContent>
+            </Card>
+          )
+          
           return (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: idx * 0.1 }}
-              whileHover={{ y: -8 }}
+              className="min-h-[400px]"
             >
-              <Card
-                className="cursor-pointer transition-all duration-500 hover:border-primary/60 border-2 group relative overflow-hidden h-full"
-                style={{
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
+              <FlipCard
+                front={cardFront}
+                back={cardBack}
                 onClick={() => handleServiceClick(service.id)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = `0 20px 40px -12px ${platformColors[service.id]}40, 0 10px 20px -8px ${platformColors[service.id]}30`
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute inset-0 xebia-dots-pattern opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-                
-                <div 
-                  className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700"
-                  style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 12%, transparent)` }}
-                />
-                
-                <div 
-                  className="absolute bottom-0 left-0 w-24 h-24 rounded-full blur-2xl transform -translate-x-12 translate-y-12 opacity-0 group-hover:opacity-80 group-hover:scale-125 transition-all duration-700 delay-75"
-                  style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 8%, transparent)` }}
-                />
-                
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                  style={{
-                    background: `radial-gradient(circle at 50% 0%, ${platformColors[service.id]}08, transparent 70%)`
-                  }}
-                />
-                
-                <CardHeader className="pb-4 relative">
-                  <div className="flex items-start justify-between mb-4">
-                    <motion.div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border relative overflow-hidden"
-                      style={{ 
-                        backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
-                        borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
-                      }}
-                      whileHover={{ 
-                        scale: 1.15,
-                        rotate: [0, -5, 5, 0],
-                        transition: { duration: 0.5, ease: "easeInOut" }
-                      }}
-                    >
-                      <div 
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                          background: `radial-gradient(circle at center, ${platformColors[service.id]}20, transparent 70%)`
-                        }}
-                      />
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {service.id === 'github' ? (
-                          <GitHubLogo size={32} className="object-contain relative z-10" />
-                        ) : (
-                          <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} className="relative z-10" />
-                        )}
-                      </motion.div>
-                    </motion.div>
-                  </div>
-                  <CardTitle className="text-2xl mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">{service.name}</CardTitle>
-                  <CardDescription className="text-base leading-relaxed group-hover:text-foreground/70 transition-colors duration-300">{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4 relative">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Button 
-                      variant="ghost" 
-                      size="lg" 
-                      className="w-full gap-2 mt-4 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 relative overflow-hidden"
-                    >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                      <span className="relative z-10">Generate SOW</span>
-                      <CaretRight size={18} className="group-hover:translate-x-2 transition-transform duration-300 relative z-10" weight="bold" />
-                    </Button>
-                  </motion.div>
-                </CardContent>
-                
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary/0 to-transparent group-hover:via-primary/50 transition-all duration-500"
-                  style={{
-                    background: `linear-gradient(to right, transparent, ${platformColors[service.id]}00, ${platformColors[service.id]}, ${platformColors[service.id]}00, transparent)`
-                  }}
-                />
-              </Card>
+              />
             </motion.div>
           )
         })}
