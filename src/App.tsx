@@ -118,7 +118,7 @@ function AppContent() {
                 variant={currentView === 'dashboard' ? 'default' : 'ghost'}
                 onClick={() => setCurrentView('dashboard')}
                 size="sm"
-                className={`gap-1.5 h-8 px-3 text-xs transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}`}
+                className={`gap-1.5 h-8 px-3 text-xs transition-all duration-200 ${currentView === 'dashboard' ? 'bg-[oklch(0.52_0.20_295)] hover:bg-[oklch(0.48_0.20_295)] text-white' : ''}bg-pink-900 text-slate-50 bg-pink-900`}
               >
                 <House size={16} weight={currentView === 'dashboard' ? 'fill' : 'regular'} />
                 Dashboard
