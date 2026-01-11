@@ -1,14 +1,30 @@
 import { useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { SOW, DashboardStats } from '@/lib/types'
-import { FileText, CheckCircle, Clock, XCircle } from '@phosphor-icons/react'
+import { exportSOWsToCSV } from '@/lib/csv-export'
+import { FileText, CheckCircle, Clock, XCircle, FileCsv } from '@phosphor-icons/react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts'
+import { toast } from 'sonner'
 
 interface XebiaDashboardProps {
   sows: SOW[]
 }
 
 export function XebiaDashboard({ sows }: XebiaDashboardProps) {
+  const handleExportAllToCSV = () => {
+    if (sows.length === 0) {
+      toast.error('No SOWs to export')
+      return
+    }
+    try {
+      exportSOWsToCSV(sows, `xebia-sows-${Date.now()}.csv`)
+      toast.success(`${sows.length} SOWs exported to CSV successfully`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to export CSV')
+    }
+  }
+
   const stats: DashboardStats = useMemo(() => {
     const total = sows.length
     const approved = sows.filter(s => s.status === 'approved').length
@@ -54,9 +70,17 @@ export function XebiaDashboard({ sows }: XebiaDashboardProps) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight mb-2">Dashboard</h2>
-        <p className="text-muted-foreground">Overview of all SOW activities</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight mb-2">Dashboard</h2>
+          <p className="text-muted-foreground">Overview of all SOW activities</p>
+        </div>
+        {sows.length > 0 && (
+          <Button onClick={handleExportAllToCSV} variant="outline" className="gap-2">
+            <FileCsv size={20} weight="duotone" />
+            Export All SOWs to CSV
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

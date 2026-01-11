@@ -5,21 +5,34 @@ export function exportSOWsToCSV(sows: SOW[], filename: string = 'sows-export.csv
   const headers = [
     'SOW ID',
     'Project Name',
+    'Project Description',
     'Client Name',
     'Organization',
     'Status',
     'Created Date',
     'Submitted Date',
     'Approved Date',
+    'Days to Approval',
     'Migration Included',
     'Migration Stages',
     'GitHub Migration Type',
     'Total Repositories',
+    'Public Repos',
+    'Private Repos',
+    'Total Size (GB)',
     'Estimated Man Hours',
+    'Has Git LFS',
+    'Has Submodules',
     'CI/CD Migration',
+    'CI/CD Platform',
     'Training Included',
     'Training Modules',
     'Total Participants',
+    'Total Training Hours',
+    'Estimated Value',
+    'Estimated Duration (weeks)',
+    'Number of Approval Comments',
+    'Last Updated Date',
     'Approval Comments'
   ]
 
@@ -30,35 +43,59 @@ export function exportSOWsToCSV(sows: SOW[], filename: string = 'sows-export.csv
     const trainingModules = sow.selectedTrainings
       .map(st => {
         const module = getModuleById(st.moduleId)
-        return module ? `${module.title} (${st.participantCount})` : ''
+        return module ? `${module.title} (${st.participantCount} participants)` : ''
       })
       .filter(Boolean)
       .join('; ')
     
     const totalParticipants = sow.selectedTrainings.reduce((sum, st) => sum + st.participantCount, 0)
     
+    const totalTrainingHours = sow.selectedTrainings.reduce((sum, st) => {
+      const module = getModuleById(st.moduleId)
+      return sum + (module ? module.durationHours : 0)
+    }, 0)
+    
     const approvalComments = sow.approvalHistory
-      .map(h => `[${h.approverName}] ${h.comment}`)
-      .join('; ')
+      .map(h => `[${new Date(h.timestamp).toLocaleDateString()} - ${h.approverName}] ${h.comment}`)
+      .join(' | ')
+    
+    const daysToApproval = (sow.submittedAt && sow.approvedAt) 
+      ? Math.round((sow.approvedAt - sow.submittedAt) / (1000 * 60 * 60 * 24))
+      : ''
+
+    const totalEstimatedWeeks = sow.migrationStages.reduce((sum, stage) => sum + stage.timelineWeeks, 0)
 
     return [
       sow.id,
       sow.projectName,
+      sow.projectDescription || '',
       sow.clientName,
       sow.clientOrganization,
       sow.status,
       new Date(sow.createdAt).toLocaleDateString(),
       sow.submittedAt ? new Date(sow.submittedAt).toLocaleDateString() : '',
       sow.approvedAt ? new Date(sow.approvedAt).toLocaleDateString() : '',
+      daysToApproval,
       sow.includeMigration ? 'Yes' : 'No',
       sow.migrationStages.map(s => s.stage.replace(/-/g, ' ')).join(', '),
-      migrationStage?.githubMigrationType || '',
+      migrationStage?.githubMigrationType?.replace(/-/g, ' ').toUpperCase() || '',
       migrationStage?.repositoryInventory?.totalRepositories || '',
+      migrationStage?.repositoryInventory?.publicRepos || '',
+      migrationStage?.repositoryInventory?.privateRepos || '',
+      migrationStage?.repositoryInventory?.totalSizeGB || '',
       migrationStage?.estimatedManHours || '',
+      migrationStage?.repositoryInventory?.hasLFS ? 'Yes' : 'No',
+      migrationStage?.repositoryInventory?.hasSubmodules ? 'Yes' : 'No',
       cicdStage?.includeCICDMigration ? 'Yes' : 'No',
+      cicdStage?.cicdPlatform || '',
       sow.includeTraining ? 'Yes' : 'No',
       trainingModules,
       totalParticipants,
+      totalTrainingHours,
+      sow.estimatedValue || '',
+      totalEstimatedWeeks || sow.estimatedDuration || '',
+      sow.approvalHistory.length,
+      new Date(sow.updatedAt).toLocaleDateString(),
       approvalComments
     ]
   })

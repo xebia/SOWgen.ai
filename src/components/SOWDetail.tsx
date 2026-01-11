@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { getModuleById } from '@/lib/training-catalog'
 import { exportSOWAsPDF } from '@/lib/pdf-export'
-import { ArrowLeft, CheckCircle, XCircle, ChatCircle, Clock, FilePdf } from '@phosphor-icons/react'
+import { exportSOWsToCSV } from '@/lib/csv-export'
+import { ArrowLeft, CheckCircle, XCircle, ChatCircle, Clock, FilePdf, FileCsv } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface SOWDetailProps {
@@ -66,6 +67,15 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
     }
   }
 
+  const handleExportCSV = () => {
+    try {
+      exportSOWsToCSV([sow], `sow-${sow.projectName.replace(/\s+/g, '-')}-${Date.now()}.csv`)
+      toast.success('SOW exported to CSV successfully')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to export CSV')
+    }
+  }
+
   const getStatusBadge = (status: SOW['status']) => {
     const variants: Record<SOW['status'], { variant: any; label: string }> = {
       'draft': { variant: 'secondary', label: 'Draft' },
@@ -90,6 +100,10 @@ export function SOWDetail({ sow, user, onBack, onUpdateSOW }: SOWDetailProps) {
         </div>
         <div className="flex items-center gap-3">
           {getStatusBadge(sow.status)}
+          <Button onClick={handleExportCSV} variant="outline" className="gap-2">
+            <FileCsv size={18} weight="duotone" />
+            Export CSV
+          </Button>
           <Button onClick={handleExportPDF} variant="outline" className="gap-2">
             <FilePdf size={18} weight="duotone" />
             Export PDF

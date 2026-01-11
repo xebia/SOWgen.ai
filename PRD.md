@@ -96,6 +96,13 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Progression**: Click export → System generates formatted PDF in new window → Browser print dialog opens → Save as PDF or print
 - **Success criteria**: PDF includes all SOW details (project info, migration stages, training modules, approval history); formatting is professional and print-ready; all data renders correctly; export works for all SOW statuses
 
+### 10. CSV Export for SOW History Download
+- **Functionality**: Export comprehensive SOW data to CSV format for analysis, reporting, and record-keeping. Available for individual SOWs or bulk export of multiple SOWs.
+- **Purpose**: Enable clients and Xebia admins to download SOW history data in a structured format for integration with other systems, data analysis, reporting dashboards, and long-term archival
+- **Trigger**: Click "Export CSV" or "Export All to CSV" button on SOW detail page, Client Dashboard, Xebia Dashboard, or SOW List view
+- **Progression**: Click export → System generates CSV file with comprehensive SOW data → Browser initiates download → File saves to user's downloads folder
+- **Success criteria**: CSV includes comprehensive SOW data (ID, project details, client info, status, dates, migration details, repository inventory, man-hours, CI/CD info, training modules, participants, approval comments); data is properly formatted with quoted fields; file naming is descriptive with timestamps; export works for single or multiple SOWs; clients can only export their own SOWs while admins can export all SOWs; filtered data exports respect current filters in SOW list view
+
 ## Edge Case Handling
 
 - **Incomplete Forms**: Auto-save drafts every 30 seconds; show validation errors inline; prevent submission until required fields complete
