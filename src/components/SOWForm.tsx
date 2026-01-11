@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -176,208 +177,294 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false }: SOWF
         </TabsList>
 
         {automationMode && (
-          <TabsContent value="scm-integration" className="space-y-4">
-            <Card>
+          <TabsContent value="scm-integration" className="space-y-6">
+            <Card className="border-accent/20 bg-gradient-to-br from-accent/[0.02] to-transparent">
               <CardHeader>
-                <CardTitle>Connect to Your Repository</CardTitle>
-                <CardDescription>Fetch project data automatically from your source code management system</CardDescription>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <CloudArrowDown size={24} weight="duotone" className="text-accent" />
+                  </div>
+                  <div>
+                    <CardTitle>Connect to Your Repository</CardTitle>
+                    <CardDescription>Automatically fetch and analyze project data from your SCM platform</CardDescription>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label>SCM Platform</Label>
-                  <Select value={scmType} onValueChange={(value: any) => setScmType(value)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="github">
-                        <div className="flex items-center gap-2">
-                          <GithubLogo size={16} />
-                          GitHub
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="gitlab">
-                        <div className="flex items-center gap-2">
-                          <GitlabLogo size={16} />
-                          GitLab
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="bitbucket">Bitbucket</SelectItem>
-                    </SelectContent>
-                  </Select>
+              <CardContent className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-base font-semibold">SCM Platform</Label>
+                    <Select value={scmType} onValueChange={(value: any) => setScmType(value)}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="github">
+                          <div className="flex items-center gap-3 py-1">
+                            <GithubLogo size={20} weight="duotone" />
+                            <div>
+                              <div className="font-semibold">GitHub</div>
+                              <div className="text-xs text-muted-foreground">Connect to GitHub repositories</div>
+                            </div>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="gitlab">
+                          <div className="flex items-center gap-3 py-1">
+                            <GitlabLogo size={20} weight="duotone" />
+                            <div>
+                              <div className="font-semibold">GitLab</div>
+                              <div className="text-xs text-muted-foreground">Connect to GitLab projects</div>
+                            </div>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="bitbucket" disabled>
+                          <div className="flex items-center gap-3 py-1 opacity-50">
+                            <GitlabLogo size={20} />
+                            <div>
+                              <div className="font-semibold">Bitbucket</div>
+                              <div className="text-xs text-muted-foreground">Coming soon</div>
+                            </div>
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <Card className="bg-muted/50 border-muted">
+                    <CardContent className="pt-4">
+                      <div className="text-xs text-muted-foreground space-y-1.5">
+                        <p className="font-semibold text-foreground flex items-center gap-1.5">
+                          <Info size={14} />
+                          Platform Details
+                        </p>
+                        {scmType === 'github' && (
+                          <>
+                            <p>• Uses GitHub REST API v3</p>
+                            <p>• Supports public & private repos</p>
+                            <p>• Detects GitHub Actions workflows</p>
+                          </>
+                        )}
+                        {scmType === 'gitlab' && (
+                          <>
+                            <p>• Uses GitLab API v4</p>
+                            <p>• Supports public & private projects</p>
+                            <p>• Detects GitLab CI/CD pipelines</p>
+                          </>
+                        )}
+                        {scmType === 'bitbucket' && (
+                          <p>• Integration coming soon</p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="repo-url">Repository URL *</Label>
+                  <Label htmlFor="repo-url" className="text-base font-semibold">Repository URL *</Label>
                   <Input
                     id="repo-url"
                     value={repoUrl}
                     onChange={e => setRepoUrl(e.target.value)}
-                    placeholder="https://github.com/organization/repository"
+                    placeholder={scmType === 'github' ? 'https://github.com/owner/repository' : 'https://gitlab.com/owner/project'}
+                    className="h-12 text-base"
                   />
+                  <p className="text-xs text-muted-foreground">
+                    Enter the full URL of your repository (e.g., {scmType === 'github' ? 'https://github.com/facebook/react' : 'https://gitlab.com/gitlab-org/gitlab'})
+                  </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="access-token">Access Token (Optional)</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="access-token" className="text-base font-semibold">Access Token (Optional)</Label>
+                    <Badge variant="outline" className="text-xs">Private repos only</Badge>
+                  </div>
                   <Input
                     id="access-token"
                     type="password"
                     value={accessToken}
                     onChange={e => setAccessToken(e.target.value)}
-                    placeholder="For private repositories"
+                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    className="h-12 font-mono text-sm"
                   />
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    <p>Required only for private repositories. Your token is not stored.</p>
-                    {scmType === 'github' && (
-                      <p className="text-accent">
-                        Generate token: Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (select 'repo' scope)
-                      </p>
-                    )}
-                    {scmType === 'gitlab' && (
-                      <p className="text-accent">
-                        Generate token: User Settings → Access Tokens → Add new token (select 'read_api' scope)
-                      </p>
-                    )}
-                  </div>
+                  <Alert className="bg-muted/50 border-muted">
+                    <Info size={16} />
+                    <AlertDescription className="text-xs space-y-2">
+                      <p className="font-semibold text-foreground">How to generate an access token:</p>
+                      {scmType === 'github' && (
+                        <ol className="list-decimal list-inside space-y-1 ml-2">
+                          <li>Go to GitHub Settings → Developer settings</li>
+                          <li>Select Personal access tokens → Tokens (classic)</li>
+                          <li>Click "Generate new token (classic)"</li>
+                          <li>Select the <code className="bg-muted px-1 rounded">repo</code> scope for full access</li>
+                          <li>Copy and paste the generated token above</li>
+                        </ol>
+                      )}
+                      {scmType === 'gitlab' && (
+                        <ol className="list-decimal list-inside space-y-1 ml-2">
+                          <li>Go to GitLab User Settings → Access Tokens</li>
+                          <li>Click "Add new token"</li>
+                          <li>Select the <code className="bg-muted px-1 rounded">read_api</code> scope</li>
+                          <li>Click "Create personal access token"</li>
+                          <li>Copy and paste the generated token above</li>
+                        </ol>
+                      )}
+                      <p className="text-warning font-medium mt-2">🔒 Your token is never stored and only used for this request</p>
+                    </AlertDescription>
+                  </Alert>
                 </div>
 
                 {fetchError && (
                   <Alert variant="destructive">
                     <Info size={16} />
-                    <AlertDescription>{fetchError}</AlertDescription>
+                    <AlertDescription className="font-medium">{fetchError}</AlertDescription>
                   </Alert>
                 )}
 
                 <Button 
                   onClick={handleFetchFromSCM}
                   disabled={isFetching || !repoUrl.trim()}
-                  className="w-full gap-2"
+                  className="w-full h-12 gap-2 text-base shadow-md hover:shadow-lg transition-all"
                   size="lg"
                 >
                   {isFetching ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                      Fetching Data...
+                      <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                      Fetching Repository Data...
                     </>
                   ) : (
                     <>
-                      <CloudArrowDown size={20} weight="duotone" />
-                      Fetch Repository Data
+                      <CloudArrowDown size={24} weight="duotone" />
+                      Fetch & Analyze Repository
                     </>
                   )}
                 </Button>
 
                 {fetchedData && (
-                  <Card className="bg-muted/50 border-success/20">
-                    <CardHeader>
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <CheckCircle size={18} weight="fill" className="text-success" />
-                        Data Fetched Successfully
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <span className="text-xs text-muted-foreground">Repository</span>
-                          <p className="font-semibold">{fetchedData.fullName}</p>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <Card className="border-success/30 bg-gradient-to-br from-success/[0.03] to-transparent shadow-lg">
+                      <CardHeader>
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <CheckCircle size={22} weight="fill" className="text-success" />
+                          Repository Data Successfully Fetched
+                        </CardTitle>
+                        <CardDescription>The following data has been extracted from your repository</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Repository</span>
+                            <p className="font-semibold text-lg">{fetchedData.fullName}</p>
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Visibility</span>
+                            <Badge variant={fetchedData.visibility === 'public' ? 'secondary' : 'default'} className="capitalize text-sm">
+                              {fetchedData.visibility}
+                            </Badge>
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Complexity</span>
+                            <Badge 
+                              variant={fetchedData.estimatedComplexity === 'high' ? 'destructive' : fetchedData.estimatedComplexity === 'medium' ? 'default' : 'secondary'} 
+                              className="capitalize text-sm"
+                            >
+                              {fetchedData.estimatedComplexity}
+                            </Badge>
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Default Branch</span>
+                            <p className="font-mono text-sm font-semibold">{fetchedData.defaultBranch}</p>
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Total Branches</span>
+                            <p className="font-semibold text-lg">{fetchedData.branches}</p>
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Contributors</span>
+                            <p className="font-semibold text-lg">{fetchedData.contributors}</p>
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Total Commits</span>
+                            <p className="font-semibold text-lg">{fetchedData.commits}+</p>
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">CI/CD Detected</span>
+                            <Badge variant={fetchedData.hasCI ? 'default' : 'outline'} className="text-sm">
+                              {fetchedData.hasCI ? 'Yes' : 'No'}
+                            </Badge>
+                          </div>
+                          {fetchedData.stars > 0 && (
+                            <div className="space-y-1.5">
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Stars</span>
+                              <p className="font-semibold text-lg">{fetchedData.stars.toLocaleString()}</p>
+                            </div>
+                          )}
+                          {fetchedData.forks > 0 && (
+                            <div className="space-y-1.5">
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Forks</span>
+                              <p className="font-semibold text-lg">{fetchedData.forks.toLocaleString()}</p>
+                            </div>
+                          )}
+                          {fetchedData.openIssues > 0 && (
+                            <div className="space-y-1.5">
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Open Issues</span>
+                              <p className="font-semibold text-lg">{fetchedData.openIssues}</p>
+                            </div>
+                          )}
+                          {fetchedData.openPRs > 0 && (
+                            <div className="space-y-1.5">
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Open PRs</span>
+                              <p className="font-semibold text-lg">{fetchedData.openPRs}</p>
+                            </div>
+                          )}
                         </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Visibility</span>
-                          <p className="font-semibold capitalize">{fetchedData.visibility}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Complexity</span>
-                          <Badge variant="secondary" className="capitalize">
-                            {fetchedData.estimatedComplexity}
-                          </Badge>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Default Branch</span>
-                          <p className="font-semibold">{fetchedData.defaultBranch}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Branches</span>
-                          <p className="font-semibold">{fetchedData.branches}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Contributors</span>
-                          <p className="font-semibold">{fetchedData.contributors}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Total Commits</span>
-                          <p className="font-semibold">{fetchedData.commits}+</p>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Has CI/CD</span>
-                          <p className="font-semibold">{fetchedData.hasCI ? 'Yes' : 'No'}</p>
-                        </div>
-                        {fetchedData.stars > 0 && (
+                        
+                        {fetchedData.languages.length > 0 && (
                           <div>
-                            <span className="text-xs text-muted-foreground">Stars</span>
-                            <p className="font-semibold">{fetchedData.stars}</p>
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide block mb-2">Programming Languages</span>
+                            <div className="flex flex-wrap gap-2">
+                              {fetchedData.languages.map((lang: string) => (
+                                <Badge key={lang} variant="secondary" className="text-sm px-3 py-1">
+                                  {lang}
+                                </Badge>
+                              ))}
+                            </div>
                           </div>
                         )}
-                        {fetchedData.forks > 0 && (
-                          <div>
-                            <span className="text-xs text-muted-foreground">Forks</span>
-                            <p className="font-semibold">{fetchedData.forks}</p>
-                          </div>
-                        )}
-                        {fetchedData.openIssues > 0 && (
-                          <div>
-                            <span className="text-xs text-muted-foreground">Open Issues</span>
-                            <p className="font-semibold">{fetchedData.openIssues}</p>
-                          </div>
-                        )}
-                        {fetchedData.openPRs > 0 && (
-                          <div>
-                            <span className="text-xs text-muted-foreground">Open PRs</span>
-                            <p className="font-semibold">{fetchedData.openPRs}</p>
-                          </div>
-                        )}
-                      </div>
-                      
-                      {fetchedData.languages.length > 0 && (
-                        <div>
-                          <span className="text-xs text-muted-foreground block mb-1.5">Languages</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {fetchedData.languages.map((lang: string) => (
-                              <Badge key={lang} variant="outline" className="text-xs">
-                                {lang}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
 
-                      {fetchedData.topics.length > 0 && (
-                        <div>
-                          <span className="text-xs text-muted-foreground block mb-1.5">Topics</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {fetchedData.topics.map((topic: string) => (
-                              <Badge key={topic} variant="secondary" className="text-xs">
-                                {topic}
-                              </Badge>
-                            ))}
+                        {fetchedData.topics.length > 0 && (
+                          <div>
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide block mb-2">Topics & Tags</span>
+                            <div className="flex flex-wrap gap-2">
+                              {fetchedData.topics.map((topic: string) => (
+                                <Badge key={topic} variant="outline" className="text-sm px-3 py-1">
+                                  {topic}
+                                </Badge>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {fetchedData.license && (
-                        <div>
-                          <span className="text-xs text-muted-foreground">License</span>
-                          <p className="text-sm font-medium">{fetchedData.license}</p>
-                        </div>
-                      )}
-                      
-                      <Alert>
-                        <Sparkle size={16} weight="fill" />
-                        <AlertDescription className="text-xs">
-                          Project details have been pre-filled. Review them in the next tabs and add additional information as needed.
-                        </AlertDescription>
-                      </Alert>
-                    </CardContent>
-                  </Card>
+                        {fetchedData.license && (
+                          <div>
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide block mb-1.5">License</span>
+                            <Badge variant="secondary" className="text-sm px-3 py-1">{fetchedData.license}</Badge>
+                          </div>
+                        )}
+                        
+                        <Alert className="bg-accent/5 border-accent/20">
+                          <Sparkle size={18} weight="fill" className="text-accent" />
+                          <AlertDescription className="text-sm">
+                            <strong className="text-foreground">Next Steps:</strong> Your project details have been automatically populated. 
+                            Continue to the next tabs to review the information and configure migration services or training modules.
+                          </AlertDescription>
+                        </Alert>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 )}
               </CardContent>
             </Card>

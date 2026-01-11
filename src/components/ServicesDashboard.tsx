@@ -24,7 +24,8 @@ import {
   CaretRight,
   PencilSimple,
   GitBranch,
-  Sparkle
+  Sparkle,
+  Info
 } from '@phosphor-icons/react'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -83,6 +84,10 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
   const [selectedService, setSelectedService] = useState<ServicePlatform | null>(null)
   const [showSOWOptions, setShowSOWOptions] = useState(false)
 
+  const scmServices = useMemo(() => {
+    return services.filter(s => s.id === 'github' || s.id === 'gitlab')
+  }, [services])
+
   const filteredActivities = useMemo(() => {
     return activities.filter(activity => {
       const matchesSearch = 
@@ -108,10 +113,8 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
   }
 
   const handleServiceClick = (serviceId: ServicePlatform) => {
-    if (serviceId === 'github' || serviceId === 'gitlab') {
-      setSelectedService(serviceId)
-      setShowSOWOptions(true)
-    }
+    setSelectedService(serviceId)
+    setShowSOWOptions(true)
   }
 
   const handleBackToServices = () => {
@@ -124,185 +127,243 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
     const serviceName = services.find(s => s.id === selectedService)?.name || selectedService
     
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div className="flex items-start justify-between">
           <div>
             <Button 
               variant="ghost" 
               onClick={handleBackToServices}
-              className="gap-2 mb-4 -ml-3"
+              className="gap-2 mb-4 -ml-3 hover:bg-primary/5"
             >
               <CaretRight size={18} className="rotate-180" />
-              Back to Services
+              Back to Platforms
             </Button>
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-4 mb-3">
               <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: `color-mix(in oklch, ${platformColors[selectedService]} 15%, transparent)` }}
+                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border"
+                style={{ backgroundColor: `color-mix(in oklch, ${platformColors[selectedService]} 10%, transparent)` }}
               >
-                <Icon size={24} weight="duotone" style={{ color: platformColors[selectedService] }} />
+                <Icon size={28} weight="duotone" style={{ color: platformColors[selectedService] }} />
               </div>
-              <h2 className="text-3xl font-bold tracking-tight">{serviceName}</h2>
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight">{serviceName}</h2>
+                <p className="text-sm text-muted-foreground mt-1">Statement of Work Generation</p>
+              </div>
             </div>
-            <p className="text-muted-foreground">Choose how to generate your Statement of Work</p>
+            <p className="text-muted-foreground max-w-2xl">
+              Choose your preferred method to create a comprehensive Statement of Work for your {serviceName} project
+            </p>
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 max-w-4xl">
+        <div className="grid gap-6 lg:grid-cols-2 max-w-5xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
           >
-            <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-primary/50 group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CardHeader className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <PencilSimple size={28} weight="duotone" className="text-primary" />
+            <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 hover:border-primary/60 group relative overflow-hidden h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-3xl transform translate-x-20 -translate-y-20 group-hover:scale-150 transition-transform duration-500" />
+              <CardHeader className="relative pb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-primary/10">
+                  <PencilSimple size={32} weight="duotone" className="text-primary" />
                 </div>
-                <CardTitle className="text-2xl mb-2">Manual Entry</CardTitle>
-                <CardDescription className="text-base">
-                  Enter project details manually to generate your Statement of Work
+                <CardTitle className="text-2xl mb-2 tracking-tight">Manual Entry</CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  Craft your Statement of Work by entering project details through our guided form interface
                 </CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-4">
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                    <span>Complete control over all details</span>
+              <CardContent className="relative space-y-5">
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Complete control over every detail and specification</span>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                    <span>Step-by-step guided form</span>
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Intuitive step-by-step guided workflow</span>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                    <span>Perfect for new projects</span>
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Ideal for greenfield projects and custom requirements</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Save drafts and iterate at your own pace</span>
                   </div>
                 </div>
                 <Button 
                   size="lg" 
-                  className="w-full gap-2 mt-4"
+                  className="w-full gap-2 mt-6 shadow-sm hover:shadow-md transition-shadow"
                   onClick={onCreateSOWManual}
                 >
                   <PencilSimple size={20} weight="duotone" />
-                  Create Manually
+                  Start Manual Entry
                 </Button>
               </CardContent>
             </Card>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
           >
-            <Card className="cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border-2 hover:border-accent/50 group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CardHeader className="relative">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <GitBranch size={28} weight="duotone" className="text-accent" />
+            <Card className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-2 hover:border-accent/60 group relative overflow-hidden h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.03] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-accent/5 rounded-full blur-3xl transform translate-x-20 -translate-y-20 group-hover:scale-150 transition-transform duration-500" />
+              <CardHeader className="relative pb-4">
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm border border-accent/10">
+                    <GitBranch size={32} weight="duotone" className="text-accent" />
                   </div>
-                  <Badge variant="outline" className="gap-1">
+                  <Badge variant="outline" className="gap-1.5 border-accent/30 text-accent">
                     <Sparkle size={14} weight="fill" />
                     Recommended
                   </Badge>
                 </div>
-                <CardTitle className="text-2xl mb-2">Automation</CardTitle>
-                <CardDescription className="text-base">
-                  Connect to {serviceName} via REST API to automatically fetch repository data
+                <CardTitle className="text-2xl mb-2 tracking-tight">Automated Import</CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  Connect directly to your {serviceName} repository via REST API and auto-populate project data
                 </CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-4">
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                    <span>Real-time data from {serviceName}</span>
+              <CardContent className="relative space-y-5">
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Real-time data fetched directly from {serviceName}</span>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                    <span>Auto-detect CI/CD pipelines</span>
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Automatic detection of CI/CD pipelines and workflows</span>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle size={18} weight="fill" className="text-success mt-0.5 flex-shrink-0" />
-                    <span>Analyze complexity & languages</span>
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Intelligent analysis of codebase complexity and languages</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} weight="fill" className="text-success" />
+                    </div>
+                    <span className="text-foreground/80">Drastically reduces data entry time and errors</span>
                   </div>
                 </div>
                 <Button 
                   size="lg" 
                   variant="secondary"
-                  className="w-full gap-2 mt-4"
+                  className="w-full gap-2 mt-6 shadow-sm hover:shadow-md transition-shadow bg-accent/10 hover:bg-accent/20 text-accent-foreground border-accent/20"
                   onClick={onCreateSOWAutomation}
                 >
                   <GitBranch size={20} weight="duotone" />
-                  Use Automation
+                  Connect & Auto-Import
                 </Button>
               </CardContent>
             </Card>
           </motion.div>
         </div>
+
+        <Card className="max-w-5xl bg-muted/30 border-muted">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Info size={20} className="text-muted-foreground" />
+              Integration Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <p>
+              <strong className="text-foreground">Automated Import</strong> uses the official {serviceName} REST API to securely fetch repository metadata including:
+            </p>
+            <ul className="list-disc list-inside space-y-1 ml-4">
+              <li>Repository structure, branches, and commit history</li>
+              <li>Programming languages and technology stack</li>
+              <li>CI/CD configuration and workflow definitions</li>
+              <li>Contributor count and collaboration metrics</li>
+              <li>Open issues, pull requests, and project activity</li>
+            </ul>
+            <p className="pt-2">
+              Your access token is only used for the API request and is never stored. Private repositories require a valid token with appropriate read permissions.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">Services Dashboard</h2>
-          <p className="text-muted-foreground">Select a service to generate your Statement of Work</p>
+          <h2 className="text-3xl font-bold tracking-tight mb-2">SCM Platforms</h2>
+          <p className="text-muted-foreground">Select a source code management platform to generate your Statement of Work</p>
         </div>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {services.slice(0, 4).map((service, idx) => {
+      <div className="grid gap-6 md:grid-cols-2 max-w-4xl">
+        {scmServices.map((service, idx) => {
           const Icon = platformIcons[service.id]
-          const isClickable = service.id === 'github' || service.id === 'gitlab'
           return (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              transition={{ duration: 0.4, delay: idx * 0.1 }}
             >
               <Card
-                className={`transition-all group ${
-                  isClickable 
-                    ? 'cursor-pointer hover:shadow-lg hover:scale-[1.02] hover:border-primary' 
-                    : 'opacity-60 cursor-not-allowed'
-                }`}
-                onClick={() => isClickable && handleServiceClick(service.id)}
+                className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:border-primary/60 border-2 group relative overflow-hidden h-full"
+                onClick={() => handleServiceClick(service.id)}
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between mb-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl transform translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-500"
+                  style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 8%, transparent)` }}
+                />
+                <CardHeader className="pb-4 relative">
+                  <div className="flex items-start justify-between mb-4">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
-                      style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)` }}
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm border"
+                      style={{ 
+                        backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 10%, transparent)`,
+                        borderColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)`
+                      }}
                     >
-                      <Icon size={24} weight="duotone" style={{ color: platformColors[service.id] }} />
+                      <Icon size={32} weight="duotone" style={{ color: platformColors[service.id] }} />
                     </div>
                     {getHealthBadge(service.healthStatus)}
                   </div>
-                  <CardTitle className="text-lg">{service.name}</CardTitle>
-                  <CardDescription className="text-xs line-clamp-2">{service.description}</CardDescription>
+                  <CardTitle className="text-2xl mb-2 tracking-tight">{service.name}</CardTitle>
+                  <CardDescription className="text-base leading-relaxed">{service.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Activity</span>
-                    <span className="font-semibold">{service.activityCount}</span>
-                  </div>
-                  {service.lastActivity && (
-                    <div className="text-xs text-muted-foreground">
-                      Last: {formatDistanceToNow(service.lastActivity, { addSuffix: true })}
+                <CardContent className="space-y-4 relative">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <span className="text-xs text-muted-foreground">Activity Count</span>
+                      <p className="text-2xl font-bold">{service.activityCount}</p>
                     </div>
-                  )}
-                  {isClickable && (
-                    <Button variant="ghost" size="sm" className="w-full gap-2 mt-2">
-                      Generate SOW
-                      <CaretRight size={16} />
-                    </Button>
-                  )}
+                    {service.lastActivity && (
+                      <div className="space-y-1">
+                        <span className="text-xs text-muted-foreground">Last Active</span>
+                        <p className="text-sm font-semibold">{formatDistanceToNow(service.lastActivity, { addSuffix: true })}</p>
+                      </div>
+                    )}
+                  </div>
+                  <Button variant="ghost" size="lg" className="w-full gap-2 mt-4 group-hover:bg-primary/5">
+                    Generate SOW
+                    <CaretRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
@@ -310,234 +371,52 @@ export function ServicesDashboard({ user, onCreateSOWManual, onCreateSOWAutomati
         })}
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="activity">Activity Logs</TabsTrigger>
-          <TabsTrigger value="all-services">All Services</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {activities.slice(0, 5).map((activity) => {
-                  const Icon = platformIcons[activity.platform]
-                  const StatusIcon = statusConfig[activity.status].icon
-                  return (
-                    <div key={activity.id} className="flex items-start gap-3 pb-3 border-b last:border-0">
-                      <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style={{ backgroundColor: `color-mix(in oklch, ${platformColors[activity.platform]} 15%, transparent)` }}
-                      >
-                        <Icon size={16} style={{ color: platformColors[activity.platform] }} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="font-medium text-sm truncate">{activity.title}</p>
-                          <StatusIcon size={14} weight="fill" className={statusConfig[activity.status].color} />
-                        </div>
-                        <p className="text-xs text-muted-foreground truncate">{activity.description}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
-                        </p>
-                      </div>
-                    </div>
-                  )
-                })}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {['github', 'aws', 'kubernetes', 'terraform'].map((platform) => {
-                  const Icon = platformIcons[platform as ServicePlatform]
-                  const actions = quickActions[platform as ServicePlatform]
-                  return (
-                    <div key={platform} className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm font-semibold">
-                        <Icon size={16} style={{ color: platformColors[platform as ServicePlatform] }} />
-                        {services.find(s => s.id === platform)?.name}
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        {actions.map((action, idx) => (
-                          <Button key={idx} variant="outline" size="sm" className="text-xs">
-                            {action}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })}
-              </CardContent>
-            </Card>
+      <Card className="max-w-4xl bg-gradient-to-br from-muted/50 to-muted/30 border-muted">
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <Rocket size={24} weight="duotone" className="text-accent" />
+            Why Use Automated SCM Integration?
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <h4 className="font-semibold flex items-center gap-2">
+              <CheckCircle size={18} weight="fill" className="text-success" />
+              Accuracy & Speed
+            </h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Eliminate manual data entry errors by connecting directly to your repository. Fetch accurate metrics, CI/CD configurations, and codebase statistics in seconds.
+            </p>
           </div>
-        </TabsContent>
-
-        <TabsContent value="activity" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                    <Input
-                      placeholder="Search activities..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
-                <Select value={filterPlatform} onValueChange={setFilterPlatform}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue placeholder="All Platforms" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Platforms</SelectItem>
-                    {services.map(service => (
-                      <SelectItem key={service.id} value={service.id}>
-                        {service.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={filterStatus} onValueChange={setFilterStatus}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue placeholder="All Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="success">Success</SelectItem>
-                    <SelectItem value="failed">Failed</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="warning">Warning</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {filteredActivities.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Article size={48} className="mx-auto mb-3 opacity-50" />
-                    No activities found
-                  </div>
-                ) : (
-                  filteredActivities.map((activity) => {
-                    const Icon = platformIcons[activity.platform]
-                    const StatusIcon = statusConfig[activity.status].icon
-                    return (
-                      <div
-                        key={activity.id}
-                        className="flex items-start gap-4 p-4 rounded-lg border hover:bg-muted/30 transition-colors"
-                      >
-                        <div
-                          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: `color-mix(in oklch, ${platformColors[activity.platform]} 15%, transparent)` }}
-                        >
-                          <Icon size={20} style={{ color: platformColors[activity.platform] }} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <p className="font-semibold">{activity.title}</p>
-                            <Badge variant="outline" className="text-xs">
-                              {services.find(s => s.id === activity.platform)?.name}
-                            </Badge>
-                            <StatusIcon size={16} weight="fill" className={statusConfig[activity.status].color} />
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-2">{activity.description}</p>
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span>{formatDistanceToNow(activity.timestamp, { addSuffix: true })}</span>
-                            {activity.user && <span>by {activity.user}</span>}
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="icon" className="flex-shrink-0">
-                          <CaretRight size={18} />
-                        </Button>
-                      </div>
-                    )
-                  })
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="all-services" className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, idx) => {
-              const Icon = platformIcons[service.id]
-              const actions = quickActions[service.id]
-              const isClickable = service.id === 'github' || service.id === 'gitlab'
-              return (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2, delay: idx * 0.03 }}
-                >
-                  <Card className={`transition-shadow ${isClickable ? 'hover:shadow-md' : 'opacity-60'}`}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between mb-3">
-                        <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center"
-                          style={{ backgroundColor: `color-mix(in oklch, ${platformColors[service.id]} 15%, transparent)` }}
-                        >
-                          <Icon size={24} weight="duotone" style={{ color: platformColors[service.id] }} />
-                        </div>
-                        {getHealthBadge(service.healthStatus)}
-                      </div>
-                      <CardTitle className="text-lg">{service.name}</CardTitle>
-                      <CardDescription className="text-sm">{service.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Total Activity</span>
-                          <span className="font-semibold">{service.activityCount}</span>
-                        </div>
-                        {service.lastActivity && (
-                          <div className="text-xs text-muted-foreground">
-                            Last active {formatDistanceToNow(service.lastActivity, { addSuffix: true })}
-                          </div>
-                        )}
-                      </div>
-                      {isClickable && (
-                        <Button 
-                          variant="default" 
-                          size="sm" 
-                          className="w-full gap-2"
-                          onClick={() => handleServiceClick(service.id)}
-                        >
-                          Generate SOW
-                          <CaretRight size={16} />
-                        </Button>
-                      )}
-                      <div className="space-y-2">
-                        <p className="text-xs font-semibold text-muted-foreground">Quick Actions</p>
-                        <div className="flex flex-wrap gap-2">
-                          {actions.map((action, idx) => (
-                            <Button key={idx} variant="outline" size="sm" className="text-xs h-8">
-                              {action}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            })}
+          <div className="space-y-3">
+            <h4 className="font-semibold flex items-center gap-2">
+              <CheckCircle size={18} weight="fill" className="text-success" />
+              Comprehensive Analysis
+            </h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Get instant insights into project complexity, technology stack, team size, and development activity to create more accurate project proposals.
+            </p>
           </div>
-        </TabsContent>
-      </Tabs>
+          <div className="space-y-3">
+            <h4 className="font-semibold flex items-center gap-2">
+              <CheckCircle size={18} weight="fill" className="text-success" />
+              Secure & Private
+            </h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Your access tokens are never stored and only used for API requests. All data fetching happens securely through official platform APIs with read-only access.
+            </p>
+          </div>
+          <div className="space-y-3">
+            <h4 className="font-semibold flex items-center gap-2">
+              <CheckCircle size={18} weight="fill" className="text-success" />
+              Always Up-to-Date
+            </h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Real-time data ensures your Statement of Work reflects the current state of your project, including the latest commits, branches, and workflow configurations.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
