@@ -238,44 +238,8 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
   }
 
   const getRelevantTrainingModules = () => {
-    if (!includeMigration) {
-      return {
-        github: TRAINING_MODULES.filter(m => m.track === 'github'),
-        gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
-        bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
-        'azure-devops': TRAINING_MODULES.filter(m => m.track === 'azure-devops'),
-        azure: TRAINING_MODULES.filter(m => m.track === 'azure'),
-        gcp: TRAINING_MODULES.filter(m => m.track === 'gcp'),
-        aws: TRAINING_MODULES.filter(m => m.track === 'aws'),
-        'ai-sap': TRAINING_MODULES.filter(m => m.track === 'ai-sap'),
-      }
-    }
-
-    const scmPlatform = scmType || selectedPlatform
-    
-    if (scmPlatform === 'github') {
-      return {
-        github: TRAINING_MODULES.filter(m => m.track === 'github'),
-      }
-    } else if (scmPlatform === 'gitlab') {
-      return {
-        gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
-      }
-    } else if (scmPlatform === 'bitbucket') {
-      return {
-        bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
-      }
-    } else if (scmPlatform === 'azure-devops' || scmPlatform === 'azure') {
-      return {
-        'azure-devops': TRAINING_MODULES.filter(m => m.track === 'azure-devops'),
-      }
-    }
-    
     return {
       github: TRAINING_MODULES.filter(m => m.track === 'github'),
-      gitlab: TRAINING_MODULES.filter(m => m.track === 'gitlab'),
-      bitbucket: TRAINING_MODULES.filter(m => m.track === 'bitbucket'),
-      'azure-devops': TRAINING_MODULES.filter(m => m.track === 'azure-devops'),
     }
   }
 
@@ -1042,22 +1006,17 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
                 <div className="space-y-4">
                   <div className="flex items-start justify-between mb-2">
                     <Label className="text-base font-semibold">Available Training Modules</Label>
-                    {includeMigration && (scmType === 'github' || scmType === 'gitlab') && (
-                      <Badge variant="outline" className="gap-1.5 text-xs">
-                        <Info size={12} />
-                        Filtered for {scmType === 'github' ? 'GitHub' : 'GitLab'} migration
-                      </Badge>
-                    )}
+                    <Badge variant="outline" className="gap-1.5 text-xs">
+                      <Info size={12} />
+                      GitHub Training
+                    </Badge>
                   </div>
-                  {includeMigration && (scmType === 'github' || scmType === 'gitlab') && (
-                    <Alert className="bg-accent/5 border-accent/20 mb-4">
-                      <Info size={16} className="text-accent" />
-                      <AlertDescription className="text-sm">
-                        Training modules are filtered based on your selected migration platform ({scmType === 'github' ? 'GitHub' : 'GitLab'}). 
-                        Only {scmType === 'github' ? 'GitHub' : 'GitLab'}-specific training is displayed for better alignment with your migration needs.
-                      </AlertDescription>
-                    </Alert>
-                  )}
+                  <Alert className="bg-accent/5 border-accent/20 mb-4">
+                    <Info size={16} className="text-accent" />
+                    <AlertDescription className="text-sm">
+                      All training modules focus on GitHub platform and best practices, regardless of migration source platform.
+                    </AlertDescription>
+                  </Alert>
                   {Object.entries(trackGroups).map(([track, modules]) => (
                     <div key={track} className="border rounded-lg p-4">
                       <h4 className="font-semibold capitalize mb-3">{track.replace('-', ' / ')} Training</h4>

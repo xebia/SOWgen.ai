@@ -76,11 +76,11 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Migration type selection updates man-hour calculations; repository inventory inputs validated; calculations accurate for all migration types; CI/CD platform options displayed when enabled; training modules organized by track and level; participant counts adjustable; all configurations saved correctly in SOW; clear visual separation between migration and training sections while maintaining unified workflow
 
 ### 6. Training Module Catalog
-- **Functionality**: Within the Migration & Training tab, training modules are displayed organized by technology track (GitHub, GitLab, Bitbucket, Azure DevOps, Azure, GCP, AWS, AI/SAP) and expertise level (Beginner, Intermediate, Advanced). When migration services are enabled with a specific SCM platform selected (GitHub, GitLab, Bitbucket, or Azure DevOps), training modules are intelligently filtered to show only relevant modules for that platform. For example, GitHub migrations display only GitHub training modules, GitLab migrations display only GitLab training modules, Bitbucket migrations display only Bitbucket training modules, and Azure DevOps migrations display only Azure DevOps training modules.
-- **Purpose**: Enable clients to select appropriate training for their team's needs as part of the comprehensive SOW, with clear module descriptions, durations, and participant count configuration. Smart filtering ensures training aligns with the migration platform, creating a cohesive migration and training strategy.
+- **Functionality**: Within the Migration & Training tab, only GitHub training modules are displayed, organized by expertise level (Beginner, Intermediate, Advanced). All migrations from any SCM platform (GitHub, GitLab, Bitbucket, or Azure DevOps) will exclusively show GitHub training modules to standardize training on the GitHub platform regardless of source platform.
+- **Purpose**: Enable clients to select appropriate GitHub training for their team's needs as part of the comprehensive SOW, with clear module descriptions, durations, and participant count configuration. All training focuses on GitHub to provide consistent, platform-specific expertise after migration.
 - **Trigger**: Enable "Training Services" checkbox in Project Details tab, then navigate to Migration & Training tab
-- **Progression**: View training modules organized by track → System automatically filters modules based on migration SCM platform (if applicable) → See informational badge and alert explaining the filtering → Expand track sections to see available levels → Review module details (title, level, duration) → Click "Add" to include in SOW → Set participant count for each module → Remove modules if needed
-- **Success criteria**: All training options visible and organized by track/level when no migration selected; modules intelligently filtered to GitHub-only when GitHub migration selected; modules filtered to GitLab-only when GitLab migration selected; modules filtered to Bitbucket-only when Bitbucket migration selected; modules filtered to Azure DevOps-only when Azure DevOps migration selected; clear UI indication (badge and alert) explaining the filtering logic; module details display correctly; "Add" button adds to selected list; participant counts adjustable; selected modules show in summary; pricing calculated based on modules and participants; selections persist correctly in SOW
+- **Progression**: View GitHub training modules organized by level → See informational badge and alert explaining GitHub-only training → Expand level sections to see available modules → Review module details (title, level, duration) → Click "Add" to include in SOW → Set participant count for each module → Remove modules if needed
+- **Success criteria**: Only GitHub training modules visible regardless of migration source platform; clear UI indication (badge and alert) explaining GitHub-only training approach; module details display correctly; "Add" button adds to selected list; participant counts adjustable; selected modules show in summary; pricing calculated based on modules and participants; selections persist correctly in SOW
 
 ### 7. Approval Workflow System
 - **Functionality**: Multi-level approval process with email notifications, commenting, and status tracking
@@ -208,11 +208,6 @@ A professional yet distinctive palette aligned with Xebia's official brand ident
 - Innovation at Scale
 - Client-Centric Excellence
 - Continuous Learning
-
-**Platform Features (displayed in footer)**:
-- Multi-Cloud Integration
-- DevOps Automation
-- Intelligent Insights
 
 **Pattern Usage**:
 - Login page background: Grid pattern with floating gradient orbs

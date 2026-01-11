@@ -176,7 +176,7 @@ function AppContent() {
               <div className="absolute inset-0 xebia-pattern opacity-40" />
               <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
               <div className="relative z-10">
-                <h2 className="text-3xl font-bold mb-2 tracking-tight">Welcome to Xebia SOWGen</h2>
+                <h2 className="text-3xl font-bold mb-2 tracking-tight">Welcome to Xebia</h2>
                 <p className="text-muted-foreground mb-4 text-base">Transforming ideas into actionable solutions</p>
                 <div className="flex items-center gap-2 text-sm font-semibold text-primary">
                   <Sparkle size={18} weight="fill" />
@@ -204,7 +204,7 @@ function AppContent() {
               <div className="absolute inset-0 xebia-pattern opacity-40" />
               <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
               <div className="relative z-10">
-                <h2 className="text-3xl font-bold mb-2 tracking-tight">Xebia SOW Dashboard</h2>
+                <h2 className="text-3xl font-bold mb-2 tracking-tight">Xebia Dashboard</h2>
                 <p className="text-muted-foreground mb-4 text-base">Monitor, analyze, and optimize your Statement of Work pipeline</p>
                 <div className="flex items-center gap-2 text-sm font-semibold text-primary">
                   <Sparkle size={18} weight="fill" />
@@ -276,7 +276,7 @@ function AppContent() {
       <footer className="border-t bg-card/50 backdrop-blur-sm mt-16 relative overflow-hidden">
         <div className="absolute inset-0 xebia-pattern opacity-30" />
         <div className="container mx-auto px-6 py-8 relative z-10">
-          <div className="grid md:grid-cols-3 gap-8 mb-6">
+          <div className="grid md:grid-cols-2 gap-8 mb-6">
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <XebiaLogo size={100} />
@@ -299,23 +299,6 @@ function AppContent() {
                 <li className="flex items-center gap-2">
                   <div className="w-1 h-1 rounded-full bg-primary" />
                   Continuous Learning
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 text-sm">Platform Features</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <div className="w-1 h-1 rounded-full bg-accent" />
-                  Multi-Cloud Integration
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1 h-1 rounded-full bg-accent" />
-                  DevOps Automation
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1 h-1 rounded-full bg-accent" />
-                  Intelligent Insights
                 </li>
               </ul>
             </div>
