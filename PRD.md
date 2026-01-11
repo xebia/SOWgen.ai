@@ -34,11 +34,11 @@ A comprehensive platform for Xebia to streamline Statement of Work creation, app
 - **Success criteria**: Charts accurately reflect data; filters work correctly; performance remains smooth with large datasets
 
 ### 3. Dashboard (Client)
-- **Functionality**: Modern services dashboard showcasing Xebia's platform offerings (GitHub, GitLab, Bitbucket, AWS, Azure, GCP, Kubernetes, Docker, Terraform) with real-time activity logs, health monitoring, and quick actions. Features prominent SOW generation options: Manual Entry and Automation modes.
-- **Purpose**: Provide clients with unified visibility into their cloud and DevOps services, activity monitoring, service health status, and streamlined SOW creation workflows
+- **Functionality**: Modern services dashboard showcasing Xebia's SCM platform offerings (GitHub, GitLab, Bitbucket, Azure DevOps) with real-time activity logs, health monitoring, and quick actions. Features prominent SOW generation options: Manual Entry and Automation modes.
+- **Purpose**: Provide clients with unified visibility into their SCM services, activity monitoring, service health status, and streamlined SOW creation workflows
 - **Trigger**: Successful client login
-- **Progression**: Login → View services overview with SOW creation cards (Manual/Automation) → Select creation method → View platform services with activity logs → Filter activities by platform/status → Access quick actions → Navigate to detailed service views
-- **Success criteria**: SOW creation options are prominent and clearly differentiated; all platform services display with accurate health status; activity logs update in real-time; filters work correctly; quick actions are contextual to each platform; responsive on all devices
+- **Progression**: Login → View SCM platform services with activity logs → Filter activities by platform/status → Access quick actions → Select platform for SOW generation → Choose creation method (Manual/Automation) → Navigate to form
+- **Success criteria**: SOW creation options are prominent and clearly differentiated; all SCM platform services display with accurate health status; activity logs update in real-time; filters work correctly; quick actions are contextual to each platform; responsive on all devices
 
 ### 3b. SOW Generation Mode Selection
 - **Functionality**: Two prominent card options for SOW creation: Manual Entry (guided form input) and Automation (SCM data fetching via REST API)

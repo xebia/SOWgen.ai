@@ -20,42 +20,11 @@ const activityTemplates: Record<ServicePlatform, Array<{ type: ActivityType; tit
     { type: 'build', titleTemplate: 'Pipeline successful', descTemplate: 'Build and deploy completed' },
     { type: 'deployment', titleTemplate: 'Deployed to production', descTemplate: 'Release v2.1.0' }
   ],
-  aws: [
-    { type: 'deployment', titleTemplate: 'EC2 instance launched', descTemplate: 'i-0abc123 in us-east-1' },
-    { type: 'infrastructure', titleTemplate: 'S3 bucket created', descTemplate: 'company-backups-prod' },
-    { type: 'security', titleTemplate: 'IAM role updated', descTemplate: 'Added CloudWatch permissions' },
-    { type: 'infrastructure', titleTemplate: 'Auto-scaling triggered', descTemplate: 'Scaled from 2 to 5 instances' },
-    { type: 'deployment', titleTemplate: 'Lambda function updated', descTemplate: 'payment-processor v2.1' }
-  ],
-  azure: [
-    { type: 'deployment', titleTemplate: 'App Service deployed', descTemplate: 'api-gateway to production slot' },
-    { type: 'infrastructure', titleTemplate: 'Resource group created', descTemplate: 'rg-project-prod-eastus' },
-    { type: 'security', titleTemplate: 'Key Vault access granted', descTemplate: 'New service principal added' },
-    { type: 'deployment', titleTemplate: 'AKS cluster scaled', descTemplate: 'Node pool increased to 6 nodes' }
-  ],
-  gcp: [
-    { type: 'deployment', titleTemplate: 'Cloud Run service deployed', descTemplate: 'api-service revision 42' },
-    { type: 'infrastructure', titleTemplate: 'GKE cluster upgraded', descTemplate: 'Kubernetes v1.28.0' },
-    { type: 'security', titleTemplate: 'IAM policy updated', descTemplate: 'Storage admin role assigned' },
-    { type: 'build', titleTemplate: 'Cloud Build completed', descTemplate: 'frontend-app trigger successful' }
-  ],
-  kubernetes: [
-    { type: 'deployment', titleTemplate: 'Deployment scaled', descTemplate: 'frontend-app: 3 → 6 replicas' },
-    { type: 'deployment', titleTemplate: 'Pod restarted', descTemplate: 'backend-api-7d9f8b in namespace prod' },
-    { type: 'infrastructure', titleTemplate: 'ConfigMap updated', descTemplate: 'app-config in production' },
-    { type: 'security', titleTemplate: 'Network policy applied', descTemplate: 'Restricted ingress to prod namespace' }
-  ],
-  docker: [
-    { type: 'build', titleTemplate: 'Image built', descTemplate: 'company/api:v2.4.1 pushed to registry' },
-    { type: 'deployment', titleTemplate: 'Container started', descTemplate: 'postgres-primary on node-01' },
-    { type: 'infrastructure', titleTemplate: 'Volume mounted', descTemplate: 'data-volume to app-server' },
-    { type: 'security', titleTemplate: 'Image scanned', descTemplate: 'Vulnerability scan completed' }
-  ],
-  terraform: [
-    { type: 'infrastructure', titleTemplate: 'Plan executed', descTemplate: '12 resources to be added' },
-    { type: 'infrastructure', titleTemplate: 'Apply completed', descTemplate: 'Successfully created VPC and subnets' },
-    { type: 'infrastructure', titleTemplate: 'State locked', descTemplate: 'by user@xebia.com' },
-    { type: 'infrastructure', titleTemplate: 'Resource destroyed', descTemplate: 'Removed staging environment' }
+  'azure-devops': [
+    { type: 'commit', titleTemplate: 'Commits pushed', descTemplate: 'to main branch in project-backend' },
+    { type: 'pr', titleTemplate: 'Pull request completed', descTemplate: 'Implement user authentication service' },
+    { type: 'build', titleTemplate: 'Pipeline succeeded', descTemplate: 'Build and test completed successfully' },
+    { type: 'deployment', titleTemplate: 'Release deployed', descTemplate: 'Release v3.2.1 to production' }
   ]
 }
 
@@ -116,7 +85,7 @@ export function generateMockActivities(platform: ServicePlatform, count: number 
 }
 
 export function generateAllPlatformActivities(countPerPlatform: number = 10): ServiceActivity[] {
-  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'aws', 'azure', 'gcp', 'kubernetes', 'docker', 'terraform']
+  const platforms: ServicePlatform[] = ['github', 'gitlab', 'bitbucket', 'azure-devops']
   const allActivities: ServiceActivity[] = []
   
   platforms.forEach(platform => {
@@ -156,57 +125,12 @@ export function getPlatformServices(): PlatformService[] {
       healthStatus: 'healthy'
     },
     {
-      id: 'aws',
-      name: 'Amazon Web Services',
-      description: 'Cloud infrastructure and services',
+      id: 'azure-devops',
+      name: 'Azure DevOps',
+      description: 'DevOps services for version control, CI/CD, and project management',
       enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 8,
-      activityCount: 256,
-      healthStatus: 'healthy'
-    },
-    {
-      id: 'azure',
-      name: 'Microsoft Azure',
-      description: 'Cloud computing platform and services',
-      enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 22,
-      activityCount: 198,
-      healthStatus: 'warning'
-    },
-    {
-      id: 'gcp',
-      name: 'Google Cloud Platform',
-      description: 'Suite of cloud computing services',
-      enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 120,
-      activityCount: 134,
-      healthStatus: 'healthy'
-    },
-    {
-      id: 'kubernetes',
-      name: 'Kubernetes',
-      description: 'Container orchestration platform',
-      enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 5,
-      activityCount: 312,
-      healthStatus: 'healthy'
-    },
-    {
-      id: 'docker',
-      name: 'Docker',
-      description: 'Container platform and registry',
-      enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 35,
-      activityCount: 178,
-      healthStatus: 'healthy'
-    },
-    {
-      id: 'terraform',
-      name: 'Terraform',
-      description: 'Infrastructure as code platform',
-      enabled: true,
-      lastActivity: Date.now() - 1000 * 60 * 90,
-      activityCount: 67,
+      lastActivity: Date.now() - 1000 * 60 * 20,
+      activityCount: 95,
       healthStatus: 'healthy'
     }
   ]

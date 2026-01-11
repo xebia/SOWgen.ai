@@ -171,31 +171,17 @@ function AppContent() {
 
       <main className="container mx-auto px-6 py-8 relative">
         {currentView === 'dashboard' && isClient && (
-          <>
-            <div className="mb-8 p-8 rounded-2xl bg-gradient-to-r from-primary/8 via-accent/8 to-primary/8 border-2 border-primary/15 relative overflow-hidden shadow-lg">
-              <div className="absolute inset-0 xebia-pattern opacity-40" />
-              <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-              <div className="relative z-10">
-                <h2 className="text-3xl font-bold mb-2 tracking-tight">Welcome to Xebia</h2>
-                <p className="text-muted-foreground mb-4 text-base">Transforming ideas into actionable solutions</p>
-                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                  <Sparkle size={18} weight="fill" />
-                  <span>Accelerate your project delivery with intelligent automation</span>
-                </div>
-              </div>
-            </div>
-            <ServicesDashboard 
-              user={currentUser} 
-              onCreateSOWManual={(platform) => {
-                setSelectedPlatform(platform)
-                setCurrentView('sow-form')
-              }}
-              onCreateSOWAutomation={(platform) => {
-                setSelectedPlatform(platform)
-                setCurrentView('sow-form-automation')
-              }}
-            />
-          </>
+          <ServicesDashboard 
+            user={currentUser} 
+            onCreateSOWManual={(platform) => {
+              setSelectedPlatform(platform)
+              setCurrentView('sow-form')
+            }}
+            onCreateSOWAutomation={(platform) => {
+              setSelectedPlatform(platform)
+              setCurrentView('sow-form-automation')
+            }}
+          />
         )}
 
         {currentView === 'dashboard' && isXebia && (

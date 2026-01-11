@@ -46,7 +46,7 @@ export function SOWForm({ user, onSave, onCancel, automationMode = false, select
     if (selectedPlatform === 'github') return 'github'
     if (selectedPlatform === 'gitlab') return 'gitlab'
     if (selectedPlatform === 'bitbucket') return 'bitbucket'
-    if (selectedPlatform === 'azure') return 'azure-devops'
+    if (selectedPlatform === 'azure-devops') return 'azure-devops'
     return 'github'
   }
   
