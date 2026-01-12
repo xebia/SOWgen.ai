@@ -202,7 +202,7 @@ SOWGen.ai is an enterprise-grade web application designed to streamline how Xebi
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js**: v18.0.0 or higher ([Download](https://nodejs.org/))
+- **Node.js**: v18.0.0 or higher (v20 LTS recommended) ([Download](https://nodejs.org/))
 - **npm**: v9.0.0 or higher (comes with Node.js)
 - **Git**: For cloning the repository ([Download](https://git-scm.com/))
 - **Modern Web Browser**: Chrome, Firefox, Safari, or Edge (latest versions)
