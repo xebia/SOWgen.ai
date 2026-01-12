@@ -45,7 +45,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (useBackend) {
       loadUserFromToken()
     }
-  }, [useBackend])
+  }, [])
 
   const loadUserFromToken = async () => {
     const token = localStorage.getItem('auth_token')
@@ -129,9 +129,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   // Legacy compatibility: version migration for KV storage
   useEffect(() => {
-    if (!useBackend && sows && sows.length > 0) {
+    if (!useBackend && kvSows && kvSows.length > 0) {
       let needsUpdate = false
-      const updatedSows = sows.map(sow => {
+      const updatedSows = kvSows.map(sow => {
         if (sow.currentVersion === undefined || sow.revisionHistory === undefined) {
           needsUpdate = true
           return {
@@ -147,7 +147,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setKvSows(updatedSows)
       }
     }
-  }, [useBackend])
+  }, [kvSows])
 
   return (
     <AppContext.Provider
