@@ -1,0 +1,25 @@
+{
+  "name": "SOWgen.ai Backend",
+  "description": "FastAPI backend with MongoDB for SOWgen.ai",
+  "repository": "https://github.com/xebia/SOWgen.ai",
+  "keywords": ["fastapi", "mongodb", "python", "sow", "backend"],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "env": {
+    "SECRET_KEY": {
+      "description": "Secret key for JWT token signing",
+      "generator": "secret"
+    },
+    "MONGODB_URL": {
+      "description": "MongoDB connection string",
+      "required": false
+    },
+    "ALLOWED_ORIGINS": {
+      "description": "Comma-separated list of allowed CORS origins",
+      "value": "https://xebia.github.io"
+    }
+  }
+}
