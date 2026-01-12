@@ -6,64 +6,48 @@ interface XebiaLogoProps {
   embedded?: boolean
 }
 
+// Shared embedded logo wrapper component
+const EmbeddedLogoWrapper = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
+  <div 
+    className={`relative ${className}`.trim()}
+    style={{ 
+      filter: 'contrast(1.25) saturate(1.2)',
+    }}
+  >
+    {children}
+  </div>
+)
+
 export function XebiaLogo({ size = 40, className = '', embedded = false }: XebiaLogoProps) {
-  if (embedded) {
-    return (
-      <div 
-        className={`relative ${className}`.trim()}
-        style={{ 
-          width: size, 
-          height: 'auto',
-          filter: 'contrast(1.25) saturate(1.2)',
-        }}
-      >
-        <img 
-          src={xebiaLogo} 
-          alt="Xebia" 
-          width={size} 
-          height={size}
-          className="mix-blend-darken opacity-95"
-          style={{ width: size, height: 'auto' }}
-        />
-      </div>
-    )
-  }
-  
-  return (
+  const logoImg = (
     <img 
       src={xebiaLogo} 
       alt="Xebia" 
-      width={size} 
-      height={size}
-      className={className}
+      width={size}
+      className={embedded ? 'mix-blend-darken opacity-95' : className}
       style={{ width: size, height: 'auto' }}
     />
   )
+  
+  if (embedded) {
+    return <EmbeddedLogoWrapper className={className}>{logoImg}</EmbeddedLogoWrapper>
+  }
+  
+  return logoImg
 }
 
 export function XebiaLogoMark({ className = '', embedded = false }: { className?: string, embedded?: boolean }) {
-  if (embedded) {
-    return (
-      <div 
-        className={`relative ${className}`.trim()}
-        style={{ 
-          filter: 'contrast(1.25) saturate(1.2)',
-        }}
-      >
-        <img 
-          src={xebiaLogo} 
-          alt="Xebia" 
-          className="mix-blend-darken opacity-95"
-        />
-      </div>
-    )
-  }
-  
-  return (
+  const logoImg = (
     <img 
       src={xebiaLogo} 
       alt="Xebia" 
-      className={className}
+      className={embedded ? 'mix-blend-darken opacity-95' : className}
     />
   )
+  
+  if (embedded) {
+    return <EmbeddedLogoWrapper className={className}>{logoImg}</EmbeddedLogoWrapper>
+  }
+  
+  return logoImg
 }
