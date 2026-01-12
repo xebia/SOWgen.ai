@@ -682,6 +682,7 @@ Comprehensive documentation is available in the repository:
 - **[BRD.md](BRD.md)**: Business Requirements Document with detailed requirements, personas, and success metrics
 - **[PRD.md](PRD.md)**: Product Requirements Document with complete feature specifications and design direction
 - **[SCM_API_GUIDE.md](SCM_API_GUIDE.md)**: Detailed guide for SCM API integration, authentication, and troubleshooting
+- **[UI_SCREENSHOTS_README.md](UI_SCREENSHOTS_README.md)**: Complete visual documentation with all UI screenshots in Word and PDF format
 - **[SECURITY.md](SECURITY.md)**: Security policies and vulnerability reporting
 
 ---
@@ -774,6 +775,7 @@ Maintained by the Xebia Product Team
 
 - 🏠 [GitHub Pages Demo](https://xebia.github.io/SOWgen.ai/)
 - 📚 [Full Documentation](docs/)
+- 📸 [UI Screenshots Documentation](UI_SCREENSHOTS_README.md) - Complete visual guide with Word & PDF
 - 🐛 [Report Bug](https://github.com/xebia/SOWgen.ai/issues/new?template=bug_report.md)
 - 💡 [Request Feature](https://github.com/xebia/SOWgen.ai/issues/new?template=feature_request.md)
 - 📖 [API Guide](SCM_API_GUIDE.md)
