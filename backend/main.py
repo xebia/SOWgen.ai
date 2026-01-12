@@ -429,18 +429,13 @@ async def delete_sow(
     deleted = sow_service.delete_sow_with_permission(sow_id, current_user.id, is_admin)
     
     if not deleted:
-        # Check if SOW exists to provide better error message
-        existing_sow = sow_service.get_sow_by_id(sow_id)
-        if not existing_sow:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="SOW not found"
-            )
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not authorized to delete this SOW"
-            )
+        # Atomic operation failed - either SOW not found or permission denied
+        # We can't distinguish between the two without another query,
+        # so return 404 (most common case and doesn't leak information)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="SOW not found or not authorized"
+        )
 
 @app.post("/api/sows/{sow_id}/comments", response_model=SOW)
 async def add_approval_comment(
