@@ -78,7 +78,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   whileHover={{ opacity: 1 }}
                 />
                 {/* Embedded logo with pure blending */}
-                <XebiaLogo size={140} embedded className="relative" />
+                <XebiaLogo size={90} embedded className="relative" />
               </div>
             </motion.div>
           </div>
