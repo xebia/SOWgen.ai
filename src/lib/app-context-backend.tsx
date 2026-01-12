@@ -147,7 +147,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setKvSows(updatedSows)
       }
     }
-  }, [kvSows, setKvSows])
+  }, [kvSows])
 
   return (
     <AppContext.Provider
