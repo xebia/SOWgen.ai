@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException, Depends, status, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import List, Optional
+from datetime import datetime, timezone
 import os
 from dotenv import load_dotenv
 
@@ -143,7 +144,7 @@ async def health_check():
         return {
             "status": "healthy",
             "database": "connected",
-            "timestamp": int(datetime.utcnow().timestamp() * 1000)
+            "timestamp": int(datetime.now(timezone.utc).timestamp() * 1000)
         }
     except Exception as e:
         return {
@@ -439,9 +440,6 @@ async def add_approval_comment(
         )
     
     return sow
-
-# Import datetime for health check
-from datetime import datetime
 
 if __name__ == "__main__":
     import uvicorn

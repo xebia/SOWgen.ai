@@ -3,7 +3,7 @@ CRUD operations for Users, SOWs, and related data.
 """
 from typing import List, Optional, Dict, Any
 from pymongo.database import Database
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 from models import (
@@ -94,7 +94,7 @@ class SOWService:
         
         # Generate ID and timestamps
         sow_dict["id"] = str(uuid.uuid4())
-        current_timestamp = int(datetime.utcnow().timestamp() * 1000)
+        current_timestamp = int(datetime.now(timezone.utc).timestamp() * 1000)
         sow_dict["createdAt"] = current_timestamp
         sow_dict["updatedAt"] = current_timestamp
         sow_dict["status"] = SOWStatus.DRAFT.value
@@ -136,7 +136,7 @@ class SOWService:
             return self.get_sow_by_id(sow_id)
         
         # Add updated timestamp
-        update_dict["updatedAt"] = int(datetime.utcnow().timestamp() * 1000)
+        update_dict["updatedAt"] = int(datetime.now(timezone.utc).timestamp() * 1000)
         
         # Get current SOW for revision tracking
         current_sow = self.get_sow_by_id(sow_id)
@@ -199,7 +199,7 @@ class SOWService:
             {"id": sow_id},
             {
                 "$push": {"approvalHistory": comment_dict},
-                "$set": {"updatedAt": int(datetime.utcnow().timestamp() * 1000)}
+                "$set": {"updatedAt": int(datetime.now(timezone.utc).timestamp() * 1000)}
             }
         )
         
