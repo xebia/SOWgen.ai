@@ -70,8 +70,6 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               className="flex items-center gap-3"
             >
               <div className="relative group">
-                {/* Subtle gradient container for better blending */}
-                <div className="absolute inset-0 bg-gradient-to-br from-background/40 via-primary/5 to-accent/5 rounded-2xl blur-sm" />
                 {/* Subtle glow effect on hover */}
                 <motion.div 
                   className="absolute -inset-4 bg-gradient-to-br from-primary/12 via-accent/12 to-primary/12 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-700"
@@ -80,7 +78,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   whileHover={{ opacity: 1 }}
                 />
                 {/* Embedded logo with pure blending */}
-                <XebiaLogo size={140} embedded className="relative px-3 py-2" />
+                <XebiaLogo size={140} embedded className="relative" />
               </div>
             </motion.div>
           </div>

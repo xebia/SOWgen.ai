@@ -11,7 +11,7 @@ const EmbeddedLogoWrapper = ({ children, className = '' }: { children: React.Rea
   <div 
     className={`relative ${className}`.trim()}
     style={{ 
-      filter: 'contrast(1.25) saturate(1.2)',
+      filter: 'contrast(1.35) saturate(1.3) brightness(0.97)',
     }}
   >
     {children}
@@ -24,7 +24,7 @@ export function XebiaLogo({ size = 40, className = '', embedded = false }: Xebia
       src={xebiaLogo} 
       alt="Xebia" 
       width={size}
-      className={embedded ? 'mix-blend-darken opacity-95' : className}
+      className={embedded ? 'mix-blend-multiply opacity-[0.88]' : className}
       style={{ width: size, height: 'auto' }}
     />
   )
@@ -41,7 +41,7 @@ export function XebiaLogoMark({ className = '', embedded = false }: { className?
     <img 
       src={xebiaLogo} 
       alt="Xebia" 
-      className={embedded ? 'mix-blend-darken opacity-95' : className}
+      className={embedded ? 'mix-blend-multiply opacity-[0.88]' : className}
     />
   )
   
