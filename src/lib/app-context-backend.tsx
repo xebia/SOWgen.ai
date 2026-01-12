@@ -45,7 +45,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (useBackend) {
       loadUserFromToken()
     }
-  }, [useBackend])
+  }, [])
 
   const loadUserFromToken = async () => {
     const token = localStorage.getItem('auth_token')
