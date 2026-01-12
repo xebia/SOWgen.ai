@@ -21,30 +21,42 @@ class MongoDB:
         mongodb_url = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
         db_name = os.getenv("MONGODB_DB_NAME", "sowgen_db")
         
-        cls.client = MongoClient(mongodb_url)
-        cls.db = cls.client[db_name]
-        print(f"✅ Connected to MongoDB: {db_name}")
-        
-        # Create indexes
-        cls._create_indexes()
+        try:
+            cls.client = MongoClient(mongodb_url, serverSelectionTimeoutMS=5000)
+            # Test the connection
+            cls.client.server_info()
+            cls.db = cls.client[db_name]
+            print(f"✅ Connected to MongoDB: {db_name}")
+            
+            # Create indexes
+            cls._create_indexes()
+        except Exception as e:
+            print(f"❌ Failed to connect to MongoDB: {e}")
+            print(f"   Connection string: {mongodb_url}")
+            print(f"   Please ensure MongoDB is running and accessible.")
+            raise
         
     @classmethod
     def _create_indexes(cls):
         """Create necessary indexes for optimal query performance."""
         if cls.db is None:
             return
+        
+        try:
+            # Users collection indexes
+            cls.db.users.create_index("email", unique=True)
+            cls.db.users.create_index("id", unique=True)
             
-        # Users collection indexes
-        cls.db.users.create_index("email", unique=True)
-        cls.db.users.create_index("id", unique=True)
-        
-        # SOWs collection indexes
-        cls.db.sows.create_index("id", unique=True)
-        cls.db.sows.create_index("clientId")
-        cls.db.sows.create_index("status")
-        cls.db.sows.create_index("createdAt")
-        
-        print("✅ Database indexes created")
+            # SOWs collection indexes
+            cls.db.sows.create_index("id", unique=True)
+            cls.db.sows.create_index("clientId")
+            cls.db.sows.create_index("status")
+            cls.db.sows.create_index("createdAt")
+            
+            print("✅ Database indexes created")
+        except Exception as e:
+            print(f"⚠️  Warning: Could not create some indexes: {e}")
+            print("   The application will continue but performance may be affected.")
         
     @classmethod
     def close(cls):
