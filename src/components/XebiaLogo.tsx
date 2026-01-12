@@ -19,15 +19,11 @@ const EmbeddedLogoWrapper = ({ children, className = '' }: { children: React.Rea
 )
 
 export function XebiaLogo({ size = 40, className = '', embedded = false }: XebiaLogoProps) {
-  // Calculate height to maintain aspect ratio (280x80 = 3.5:1)
-  const height = size / 3.5
-  
   const logoImg = (
     <img 
       src={xebiaLogoSvg} 
       alt="Xebia" 
       width={size}
-      height={height}
       className={embedded ? 'transition-all duration-300' : className}
       style={{ width: size, height: 'auto' }}
     />
@@ -45,8 +41,9 @@ export function XebiaLogoMark({ className = '', embedded = false }: { className?
     <img 
       src={xebiaLogoSvg} 
       alt="Xebia" 
+      width={120}
       className={embedded ? 'transition-all duration-300' : className}
-      style={{ height: 'auto' }}
+      style={{ width: 120, height: 'auto' }}
     />
   )
   
