@@ -1,6 +1,6 @@
-"""
-API client for communicating with the backend.
-"""
+/**
+ * API client for communicating with the backend.
+ */
 import axios from 'axios'
 import { User, SOW, SOWCreate, SOWUpdate, UserCreate, UserUpdate, ApprovalComment } from './types'
 
