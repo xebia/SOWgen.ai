@@ -2,7 +2,7 @@
 FastAPI Backend for SOWgen.ai
 MongoDB integration for data persistence on GitHub Pages.
 """
-from fastapi import FastAPI, HTTPException, Depends, status, Header
+from fastapi import FastAPI, HTTPException, Depends, status, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import List, Optional
@@ -18,6 +18,7 @@ from models import (
 )
 from crud import UserService, SOWService
 from auth import verify_password, create_access_token, decode_access_token
+from rate_limiter import login_limiter
 
 # Load environment variables
 load_dotenv()
@@ -60,26 +61,29 @@ async def startup_event():
                 email="client@example.com",
                 role="client",
                 organization="Acme Corp",
-                password="demo123"
+                password="Demo123!"
             ),
             UserCreate(
                 name="Xebia Admin",
                 email="admin@xebia.com",
                 role="xebia-admin",
                 organization="Xebia",
-                password="demo123"
+                password="Admin123!"
             ),
             UserCreate(
                 name="Xebia Approver",
                 email="approver@xebia.com",
                 role="approver",
                 organization="Xebia",
-                password="demo123"
+                password="Approver123!"
             )
         ]
         
         for user_data in demo_users:
-            user_service.create_user(user_data)
+            try:
+                user_service.create_user(user_data)
+            except Exception as e:
+                print(f"⚠️  Warning: Could not create demo user {user_data.email}: {e}")
         
         print("✅ Demo users initialized")
 
@@ -155,8 +159,24 @@ async def health_check():
 
 # Authentication endpoints
 @app.post("/api/auth/login", response_model=dict)
-async def login(login_data: LoginRequest):
-    """Authenticate user and return JWT token."""
+async def login(login_data: LoginRequest, request: Request):
+    """Authenticate user and return JWT token with rate limiting."""
+    # Get client IP for rate limiting
+    client_ip = request.client.host if request.client else "unknown"
+    
+    # Check rate limit
+    allowed, remaining = login_limiter.is_allowed(client_ip)
+    if not allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many login attempts. Please try again later.",
+            headers={
+                "Retry-After": "300",  # 5 minutes
+                "X-RateLimit-Limit": "5",
+                "X-RateLimit-Remaining": "0"
+            }
+        )
+    
     db = mongodb.get_db()
     user_service = UserService(db)
     
@@ -166,7 +186,10 @@ async def login(login_data: LoginRequest):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
+            headers={
+                "WWW-Authenticate": "Bearer",
+                "X-RateLimit-Remaining": str(remaining - 1)
+            },
         )
     
     access_token = create_access_token(data={"sub": user_dict["email"]})
@@ -397,30 +420,27 @@ async def delete_sow(
     sow_id: str,
     current_user: User = Depends(get_current_user)
 ):
-    """Delete a SOW."""
+    """Delete a SOW with atomic permission check."""
     db = mongodb.get_db()
     sow_service = SOWService(db)
     
-    # Get existing SOW to check permissions
-    existing_sow = sow_service.get_sow_by_id(sow_id)
-    if not existing_sow:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="SOW not found"
-        )
+    # Use atomic delete with permission check to prevent race conditions
+    is_admin = current_user.role == "xebia-admin"
+    deleted = sow_service.delete_sow_with_permission(sow_id, current_user.id, is_admin)
     
-    # Only admins and the SOW owner can delete
-    if current_user.role != "xebia-admin" and existing_sow.clientId != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to delete this SOW"
-        )
-    
-    if not sow_service.delete_sow(sow_id):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="SOW not found"
-        )
+    if not deleted:
+        # Check if SOW exists to provide better error message
+        existing_sow = sow_service.get_sow_by_id(sow_id)
+        if not existing_sow:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="SOW not found"
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to delete this SOW"
+            )
 
 @app.post("/api/sows/{sow_id}/comments", response_model=SOW)
 async def add_approval_comment(

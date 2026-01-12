@@ -166,9 +166,11 @@ The backend automatically creates demo users on first startup:
 
 | Email | Password | Role |
 |-------|----------|------|
-| client@example.com | demo123 | Client |
-| admin@xebia.com | demo123 | Xebia Admin |
-| approver@xebia.com | demo123 | Approver |
+| client@example.com | Demo123! | Client |
+| admin@xebia.com | Admin123! | Xebia Admin |
+| approver@xebia.com | Approver123! | Approver |
+
+**Note**: Demo passwords meet security requirements (8+ chars, uppercase, lowercase, digit).
 
 ## Authentication Flow
 
@@ -176,7 +178,7 @@ The backend automatically creates demo users on first startup:
    ```bash
    curl -X POST http://localhost:8000/api/auth/login \
      -H "Content-Type: application/json" \
-     -d '{"email": "client@example.com", "password": "demo123"}'
+     -d '{"email": "client@example.com", "password": "Demo123!"}'
    ```
 
 2. **Use the returned token**
@@ -207,7 +209,7 @@ Example with curl:
 # Login
 TOKEN=$(curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email": "client@example.com", "password": "demo123"}' \
+  -d '{"email": "client@example.com", "password": "Demo123!"}' \
   | jq -r '.access_token')
 
 # Get SOWs
@@ -271,11 +273,26 @@ Deploy using Docker or traditional VPS hosting. See deployment guides in the mai
 
 ## Security Notes
 
-- **Change SECRET_KEY** in production to a secure random string
-- **Use HTTPS** in production
+### Authentication Security
+- **SECRET_KEY**: Automatically generates secure random key if not set (development mode)
+  - ⚠️ Always set SECRET_KEY environment variable in production
+  - Use a strong random string (32+ characters)
+- **Password Requirements**: 
+  - Minimum 8 characters
+  - Must contain uppercase, lowercase, and digit
+  - Prevents weak passwords like "password" or "123456"
+- **Rate Limiting**: 
+  - Login endpoint limited to 5 attempts per 5 minutes per IP
+  - Prevents brute force attacks
+  - Returns HTTP 429 when limit exceeded
+
+### Production Deployment
+- **Use HTTPS** in production for encrypted communications
 - **Secure MongoDB** with authentication and firewall rules
-- **Rotate JWT tokens** regularly
-- **Validate input** thoroughly (handled by Pydantic models)
+- **Rotate JWT tokens** regularly (default: 30 minutes)
+- **Monitor failed login attempts** for suspicious activity
+- **Validate input** thoroughly (handled by Pydantic models with Field validators)
+- **Atomic operations**: Race conditions prevented in delete operations
 
 ## Troubleshooting
 

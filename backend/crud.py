@@ -191,6 +191,20 @@ class SOWService:
         result = self.collection.delete_one({"id": sow_id})
         return result.deleted_count > 0
     
+    def delete_sow_with_permission(self, sow_id: str, user_id: str, is_admin: bool) -> bool:
+        """
+        Delete a SOW with permission check in a single atomic operation.
+        Returns True if deleted, False if not found or not authorized.
+        """
+        # Build query that includes permission check
+        query = {"id": sow_id}
+        if not is_admin:
+            # Non-admins can only delete their own SOWs
+            query["clientId"] = user_id
+        
+        result = self.collection.delete_one(query)
+        return result.deleted_count > 0
+    
     def add_approval_comment(self, sow_id: str, comment: ApprovalComment) -> Optional[SOW]:
         """Add an approval comment to a SOW."""
         comment_dict = comment.model_dump()
