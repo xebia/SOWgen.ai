@@ -69,7 +69,17 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               transition={{ duration: 0.5 }}
               className="flex items-center gap-3"
             >
-              <XebiaLogo size={140} />
+              <div className="relative group">
+                {/* Subtle glow effect on hover */}
+                <motion.div 
+                  className="absolute -inset-4 bg-gradient-to-br from-primary/12 via-accent/12 to-primary/12 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-700"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                />
+                {/* Embedded logo with pure blending */}
+                <XebiaLogo size={140} embedded className="relative" />
+              </div>
             </motion.div>
           </div>
         </header>
