@@ -586,6 +586,15 @@ Kills any process running on port 5000 (useful if the dev server doesn't shut do
 
 ## Deployment
 
+### Data Persistence Options
+
+SOWgen.ai supports two modes of data persistence:
+
+1. **Local Mode** (Default): Uses in-browser storage (GitHub Spark KV) - data is stored locally in the browser
+2. **Backend Mode**: Uses MongoDB backend via REST API - data is stored on a server and persists across devices
+
+For production deployments where data needs to persist and be accessible from multiple devices, see the [MongoDB Backend Integration Guide](MONGODB_BACKEND_GUIDE.md).
+
 ### GitHub Pages
 
 This application is configured to deploy automatically to GitHub Pages when changes are pushed to the `main` branch.
@@ -596,6 +605,16 @@ This application is configured to deploy automatically to GitHub Pages when chan
 2. **Trigger**: Pushes to the `main` branch automatically trigger a new deployment
 3. **Build Process**: The workflow installs dependencies, builds the application with Vite, and deploys to GitHub Pages
 4. **Access**: Once deployed, the application will be available at `https://xebia.github.io/SOWgen.ai/`
+
+#### With MongoDB Backend
+
+To deploy with MongoDB backend for persistent data storage:
+
+1. **Deploy the Backend**: Follow the [MongoDB Backend Guide](MONGODB_BACKEND_GUIDE.md) to set up your backend
+2. **Configure Environment**: Set `VITE_API_URL` and `VITE_USE_BACKEND=true` in your GitHub Actions workflow
+3. **Deploy**: Push to main branch as usual
+
+See the [MongoDB Backend Integration Guide](MONGODB_BACKEND_GUIDE.md) for detailed instructions.
 
 #### Manual Deployment
 

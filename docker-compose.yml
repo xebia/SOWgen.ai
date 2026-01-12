@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: sowgen-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: sowgen_db
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sowgen-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017
+      MONGODB_DB_NAME: sowgen_db
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-key-in-production}
+      ALLOWED_ORIGINS: http://localhost:5000,https://xebia.github.io
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:

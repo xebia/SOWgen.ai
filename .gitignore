@@ -25,6 +25,7 @@ dist-ssr
 *.sw?
 
 .env
+.env.local
 **/agent-eval-report*
 packages
 pids
@@ -32,3 +33,14 @@ pids
 .devcontainer/
 
 .spark-workbench-id
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+backend/venv/
+backend/.env
