@@ -584,6 +584,51 @@ Kills any process running on port 5000 (useful if the dev server doesn't shut do
 
 ---
 
+## Deployment
+
+### GitHub Pages
+
+This application is configured to deploy automatically to GitHub Pages when changes are pushed to the `main` branch.
+
+#### Automatic Deployment
+
+1. **Workflow Configuration**: The GitHub Actions workflow (`.github/workflows/deploy-github-pages.yml`) handles automatic deployment
+2. **Trigger**: Pushes to the `main` branch automatically trigger a new deployment
+3. **Build Process**: The workflow installs dependencies, builds the application with Vite, and deploys to GitHub Pages
+4. **Access**: Once deployed, the application will be available at `https://xebia.github.io/SOWgen.ai/`
+
+#### Manual Deployment
+
+To manually trigger a deployment:
+
+1. Go to the **Actions** tab in the GitHub repository
+2. Select the **Deploy to GitHub Pages** workflow
+3. Click **Run workflow** and select the `main` branch
+4. Click **Run workflow** to start the deployment
+
+#### Repository Settings
+
+For the initial setup, ensure GitHub Pages is enabled in the repository settings:
+
+1. Go to **Settings** → **Pages**
+2. Under **Source**, select **GitHub Actions**
+3. Save the settings
+
+The application will now deploy automatically on every push to `main`.
+
+#### Local Testing
+
+To test the production build locally with the GitHub Pages configuration:
+
+```bash
+GITHUB_PAGES=true npm run build
+npm run preview
+```
+
+This will build the app with the correct base path (`/SOWgen.ai/`) and allow you to preview it locally.
+
+---
+
 ## API Integration
 
 SOWGen.ai integrates with multiple SCM platforms to automatically fetch repository data:
@@ -727,7 +772,7 @@ Maintained by the Xebia Product Team
 
 ## Quick Links
 
-- 🏠 [Live Demo](https://sowgen.xebia.com) (if deployed)
+- 🏠 [GitHub Pages Demo](https://xebia.github.io/SOWgen.ai/)
 - 📚 [Full Documentation](docs/)
 - 🐛 [Report Bug](https://github.com/xebia/SOWgen.ai/issues/new?template=bug_report.md)
 - 💡 [Request Feature](https://github.com/xebia/SOWgen.ai/issues/new?template=feature_request.md)
