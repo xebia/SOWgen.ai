@@ -1,4 +1,4 @@
-import xebiaLogo from '@/assets/images/xebia-logo-png.webp'
+import xebiaLogoSvg from '@/assets/images/xebia-logo-redesign.svg'
 
 interface XebiaLogoProps {
   size?: number
@@ -6,12 +6,12 @@ interface XebiaLogoProps {
   embedded?: boolean
 }
 
-// Shared embedded logo wrapper component
+// Shared embedded logo wrapper component with soft lighting effect
 const EmbeddedLogoWrapper = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
   <div 
     className={`relative ${className}`.trim()}
     style={{ 
-      filter: 'contrast(1.35) saturate(1.3) brightness(0.97)',
+      filter: 'drop-shadow(0 2px 8px rgba(168, 85, 247, 0.15))',
     }}
   >
     {children}
@@ -19,12 +19,16 @@ const EmbeddedLogoWrapper = ({ children, className = '' }: { children: React.Rea
 )
 
 export function XebiaLogo({ size = 40, className = '', embedded = false }: XebiaLogoProps) {
+  // Calculate height to maintain aspect ratio (280x80 = 3.5:1)
+  const height = size / 3.5
+  
   const logoImg = (
     <img 
-      src={xebiaLogo} 
+      src={xebiaLogoSvg} 
       alt="Xebia" 
       width={size}
-      className={embedded ? 'mix-blend-multiply opacity-[0.88]' : className}
+      height={height}
+      className={embedded ? 'transition-all duration-300' : className}
       style={{ width: size, height: 'auto' }}
     />
   )
@@ -39,9 +43,10 @@ export function XebiaLogo({ size = 40, className = '', embedded = false }: Xebia
 export function XebiaLogoMark({ className = '', embedded = false }: { className?: string, embedded?: boolean }) {
   const logoImg = (
     <img 
-      src={xebiaLogo} 
+      src={xebiaLogoSvg} 
       alt="Xebia" 
-      className={embedded ? 'mix-blend-multiply opacity-[0.88]' : className}
+      className={embedded ? 'transition-all duration-300' : className}
+      style={{ height: 'auto' }}
     />
   )
   
